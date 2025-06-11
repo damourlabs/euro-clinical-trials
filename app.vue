@@ -71,20 +71,4 @@ provide('trialsStore', trialsStore)
 provide('sitesStore', sitesStore)
 
 
-const updateDashboardSidebarProps = inject<
-  (newProps: NavigationSidebarProps) => void>('updateNavigationConfig');
-
-onMounted(() => {
-  // Simulate fetching user data
-  if (updateDashboardSidebarProps !== undefined) {
-    updateDashboardSidebarProps({
-      ...sidebarProps.value,
-      user: {
-        name: 'John Doe',
-        email: '',
-        avatar: 'https://example.com/avatar.jpg',
-      },
-    });
-  }
-});
 </script>
