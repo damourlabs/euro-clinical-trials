@@ -1,270 +1,269 @@
 <template>
-  <div class="bg-gray-50 p-6 min-h-screen">
-    <div class="mx-auto max-w-7xl">
-      <!-- Header -->
-      <div class="mb-8">
-        <h1 class="font-bold text-gray-900 text-3xl">Trials Dashboard</h1>
-        <p class="mt-2 text-gray-600">Overview of all clinical trials and their key metrics</p>
-      </div>
+  <div class="mx-auto max-w-7xl">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="font-bold text-gray-900 text-3xl">Trials Dashboard</h1>
+      <p class="mt-2 text-gray-600">Overview of all clinical trials and their key metrics</p>
+    </div>
 
-      <!-- Loading State -->
-      <div
-        v-if="isLoading"
-        class="flex justify-center items-center h-64">
-        <div class="border-b-2 border-blue-600 rounded-full w-12 h-12 animate-spin"/>
-        <span class="ml-3 text-gray-600">Loading trial data...</span>
-      </div>
+    <!-- Loading State -->
+    <div
+      v-if="isLoading"
+      class="flex justify-center items-center h-64">
+      <div class="border-b-2 border-blue-600 rounded-full w-12 h-12 animate-spin"/>
+      <span class="ml-3 text-gray-600">Loading trial data...</span>
+    </div>
 
-      <!-- Dashboard Grid -->
-      <div
-        v-else
-        class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        
-        <!-- Trial Overview Card -->
-        <UiDashboardCard size="md">
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2 text-lg">
-              <FlaskConical class="w-5 h-5 text-blue-600" />
-              Trial Overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-4">
+    <!-- Dashboard Grid -->
+    <div
+      v-else
+      class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      
+      <!-- Trial Overview Card -->
+      <UiDashboardCard size="md">
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2 text-lg">
+            <FlaskConical class="w-5 h-5 text-blue-600" />
+            Trial Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-4">
+            <div class="text-center">
+              <div class="font-bold text-blue-600 text-3xl">{{ totalTrials }}</div>
+              <div class="text-gray-600 text-sm">Total Trials</div>
+            </div>
+            <div class="gap-4 grid grid-cols-2 text-sm">
               <div class="text-center">
-                <div class="font-bold text-blue-600 text-3xl">{{ totalTrials }}</div>
-                <div class="text-gray-600 text-sm">Total Trials</div>
+                <div class="font-semibold text-green-600">{{ activeTrials }}</div>
+                <div class="text-gray-600">Active</div>
               </div>
-              <div class="gap-4 grid grid-cols-2 text-sm">
-                <div class="text-center">
-                  <div class="font-semibold text-green-600">{{ activeTrials }}</div>
-                  <div class="text-gray-600">Active</div>
-                </div>
-                <div class="text-center">
-                  <div class="font-semibold text-blue-600">{{ completedTrials }}</div>
-                  <div class="text-gray-600">Completed</div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </UiDashboardCard>
-
-        <!-- Enrollment Progress Card -->
-        <UiDashboardCard size="md">
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2 text-lg">
-              <Users class="w-5 h-5 text-green-600" />
-              Enrollment Progress
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-4">
               <div class="text-center">
-                <div class="font-bold text-green-600 text-2xl">{{ totalEnrolled }}</div>
-                <div class="text-gray-600 text-sm">Total Enrolled</div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1 text-sm">
-                  <span>Progress</span>
-                  <span>{{ enrollmentPercentage }}%</span>
-                </div>
-                <Progress
-                  :value="enrollmentPercentage"
-                  class="h-2" />
-              </div>
-              <div class="text-gray-500 text-xs text-center">
-                Target: {{ totalTarget }} participants
+                <div class="font-semibold text-blue-600">{{ completedTrials }}</div>
+                <div class="text-gray-600">Completed</div>
               </div>
             </div>
-          </CardContent>
-        </UiDashboardCard>
+          </div>
+        </CardContent>
+      </UiDashboardCard>
 
-        <!-- Phase Distribution Card -->
-        <UiDashboardCard size="sm">
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2 text-lg">
-              <BarChart3 class="w-5 h-5 text-purple-600" />
-              Phase Distribution
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-3">
-              <div
-                v-for="(count, phase) in phaseDistribution"
-                :key="phase" class="flex justify-between items-center">
-                <span class="font-medium text-sm">Phase {{ phase }}</span>
-                <Badge :class="getPhaseColor(phase)">{{ count }}</Badge>
-              </div>
+      <!-- Enrollment Progress Card -->
+      <UiDashboardCard size="md">
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2 text-lg">
+            <Users class="w-5 h-5 text-green-600" />
+            Enrollment Progress
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-4">
+            <div class="text-center">
+              <div class="font-bold text-green-600 text-2xl">{{ totalEnrolled }}</div>
+              <div class="text-gray-600 text-sm">Total Enrolled</div>
             </div>
-          </CardContent>
-        </UiDashboardCard>
-
-        <!-- Status Overview Card -->
-        <UiDashboardCard size="sm">
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2 text-lg">
-              <Activity class="w-5 h-5 text-orange-600" />
-              Status Overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-3">
-              <div
-                v-for="(count, status) in statusDistribution"
-                :key="status" class="flex justify-between items-center">
-                <span class="font-medium text-sm">{{ status }}</span>
-                <Badge :class="getStatusColor(status)">{{ count }}</Badge>
+            <div>
+              <div class="flex justify-between mb-1 text-sm">
+                <span>Progress</span>
+                <span>{{ enrollmentPercentage }}%</span>
               </div>
+              <Progress
+                :value="enrollmentPercentage"
+                class="h-2" />
             </div>
-          </CardContent>
-        </UiDashboardCard>
+            <div class="text-gray-500 text-xs text-center">
+              Target: {{ totalTarget }} participants
+            </div>
+          </div>
+        </CardContent>
+      </UiDashboardCard>
 
-        <!-- Recent Trials Card -->
-        <UiDashboardCard size="lg">
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2 text-lg">
-              <Clock class="w-5 h-5 text-indigo-600" />
-              Recent Trials
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+      <!-- Phase Distribution Card -->
+      <UiDashboardCard size="sm">
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2 text-lg">
+            <BarChart3 class="w-5 h-5 text-purple-600" />
+            Phase Distribution
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-3">
             <div
-              v-for="trial in recentTrials" :key="trial.id"
-              class="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-lg transition-colors cursor-pointer">
-              <TrialPreview
-                :trial="trial"
-                :get-status-color="getStatusColor" :format-date="formatDate" />
+              v-for="(count, phase) in phaseDistribution"
+              :key="phase" class="flex justify-between items-center">
+              <span class="font-medium text-sm">Phase {{ phase }}</span>
+              <Badge :class="getPhaseColor(phase)">{{ count }}</Badge>
             </div>
+          </div>
+        </CardContent>
+      </UiDashboardCard>
+
+      <!-- Status Overview Card -->
+      <UiDashboardCard size="sm">
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2 text-lg">
+            <Activity class="w-5 h-5 text-orange-600" />
+            Status Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-3">
             <div
-              v-if="recentTrials.length === 0"
-              class="py-4 text-gray-500 text-center">
-              No recent trials
+              v-for="(count, status) in statusDistribution"
+              :key="status" class="flex justify-between items-center">
+              <span class="font-medium text-sm">{{ status }}</span>
+              <Badge :class="getStatusColor(status)">{{ count }}</Badge>
             </div>
-          </CardContent>
-        </UiDashboardCard>
+          </div>
+        </CardContent>
+      </UiDashboardCard>
 
-        <!-- Compliance Status Card -->
-        <UiDashboardCard size="md">
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2 text-lg">
-              <Shield class="w-5 h-5 text-red-600" />
-              Compliance Status
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-4">
-              <div class="text-center">
-                <div class="font-bold text-red-600 text-2xl">{{ gdprCompliantTrials }}</div>
-                <div class="text-gray-600 text-sm">GDPR Compliant</div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1 text-sm">
-                  <span>Compliance Rate</span>
-                  <span>{{ compliancePercentage }}%</span>
-                </div>
-                <Progress
-                  :value="compliancePercentage"
-                  class="h-2" />
-              </div>
-              <div class="gap-2 grid grid-cols-2 text-xs">
-                <div class="bg-green-50 p-2 rounded text-center">
-                  <div class="font-semibold text-green-600">{{ protocolDeviations.low }}</div>
-                  <div class="text-gray-600">Low Risk</div>
-                </div>
-                <div class="bg-red-50 p-2 rounded text-center">
-                  <div class="font-semibold text-red-600">{{ protocolDeviations.high }}</div>
-                  <div class="text-gray-600">High Risk</div>
-                </div>
-              </div>
+      <!-- Recent Trials Card -->
+      <UiDashboardCard size="lg">
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2 text-lg">
+            <Clock class="w-5 h-5 text-indigo-600" />
+            Recent Trials
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div
+            v-for="trial in recentTrials" :key="trial.id"
+            class="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-lg transition-colors cursor-pointer">
+            <TrialPreview
+              :trial="trial"
+              :get-status-color="getStatusColor" :format-date="formatDate" />
+          </div>
+          <div
+            v-if="recentTrials.length === 0"
+            class="py-4 text-gray-500 text-center">
+            No recent trials
+          </div>
+        </CardContent>
+      </UiDashboardCard>
+
+      <!-- Compliance Status Card -->
+      <UiDashboardCard size="md">
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2 text-lg">
+            <Shield class="w-5 h-5 text-red-600" />
+            Compliance Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-4">
+            <div class="text-center">
+              <div class="font-bold text-red-600 text-2xl">{{ gdprCompliantTrials }}</div>
+              <div class="text-gray-600 text-sm">GDPR Compliant</div>
             </div>
-          </CardContent>
-        </UiDashboardCard>
-
-        <!-- Timeline Overview Card -->
-        <UiDashboardCard size="xl">
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2 text-lg">
-              <CalendarDays class="w-5 h-5 text-teal-600" />
-              Timeline Overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-4">
-              <div class="gap-4 grid grid-cols-3 text-center">
-                <div class="bg-blue-50 p-3 rounded-lg">
-                  <div class="font-bold text-blue-600 text-lg">{{ upcomingTrials }}</div>
-                  <div class="text-gray-600 text-xs">Starting Soon</div>
-                </div>
-                <div class="bg-green-50 p-3 rounded-lg">
-                  <div class="font-bold text-green-600 text-lg">{{ activeTrials }}</div>
-                  <div class="text-gray-600 text-xs">In Progress</div>
-                </div>
-                <div class="bg-orange-50 p-3 rounded-lg">
-                  <div class="font-bold text-orange-600 text-lg">{{ endingSoonTrials }}</div>
-                  <div class="text-gray-600 text-xs">Ending Soon</div>
-                </div>
+            <div>
+              <div class="flex justify-between mb-1 text-sm">
+                <span>Compliance Rate</span>
+                <span>{{ compliancePercentage }}%</span>
               </div>
-              
-              <!-- Quick Actions -->
-              <div class="pt-4 border-t">
-                <h4 class="mb-3 font-medium text-gray-700 text-sm">Quick Actions</h4>
-                <div class="gap-2 grid grid-cols-2">
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    class="text-xs">
-                    <NuxtLink to="/trials"> 
-                      
-                      View All Trials
-                    </NuxtLink>
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline" >
-                    <NuxtLink
-                      to="/trials/create" class="flex justify-center items-center gap-2">
-                      <PlusIcon class="mr-1 w-4 h-4" />
-                      Create New Trial
-                    </NuxtLink>
-                  </Button>
-                </div>
+              <Progress
+                :value="compliancePercentage"
+                class="h-2" />
+            </div>
+            <div class="gap-2 grid grid-cols-2 text-xs">
+              <div class="bg-green-50 p-2 rounded text-center">
+                <div class="font-semibold text-green-600">{{ protocolDeviations.low }}</div>
+                <div class="text-gray-600">Low Risk</div>
+              </div>
+              <div class="bg-red-50 p-2 rounded text-center">
+                <div class="font-semibold text-red-600">{{ protocolDeviations.high }}</div>
+                <div class="text-gray-600">High Risk</div>
               </div>
             </div>
-          </CardContent>
-        </UiDashboardCard>
+          </div>
+        </CardContent>
+      </UiDashboardCard>
 
-        <!-- Key Metrics Card -->
-        <UiDashboardCard size="md">
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2 text-lg">
-              <TrendingUp class="w-5 h-5 text-emerald-600" />
-              Key Metrics
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-4">
-              <div class="flex justify-between items-center">
-                <span class="text-gray-600 text-sm">Avg. Duration</span>
-                <span class="font-medium">{{ averageDuration }} months</span>
+      <!-- Timeline Overview Card -->
+      <UiDashboardCard size="xl">
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2 text-lg">
+            <CalendarDays class="w-5 h-5 text-teal-600" />
+            Timeline Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-4">
+            <div class="gap-4 grid grid-cols-3 text-center">
+              <div class="bg-blue-50 p-3 rounded-lg">
+                <div class="font-bold text-blue-600 text-lg">{{ upcomingTrials }}</div>
+                <div class="text-gray-600 text-xs">Starting Soon</div>
               </div>
-              <div class="flex justify-between items-center">
-                <span class="text-gray-600 text-sm">Sites per Trial</span>
-                <span class="font-medium">{{ averageSitesPerTrial }}</span>
+              <div class="bg-green-50 p-3 rounded-lg">
+                <div class="font-bold text-green-600 text-lg">{{ activeTrials }}</div>
+                <div class="text-gray-600 text-xs">In Progress</div>
               </div>
-              <div class="flex justify-between items-center">
-                <span class="text-gray-600 text-sm">Success Rate</span>
-                <span class="font-medium text-green-600">{{ successRate }}%</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-gray-600 text-sm">Total Approvals</span>
-                <span class="font-medium">{{ totalApprovals }}</span>
+              <div class="bg-orange-50 p-3 rounded-lg">
+                <div class="font-bold text-orange-600 text-lg">{{ endingSoonTrials }}</div>
+                <div class="text-gray-600 text-xs">Ending Soon</div>
               </div>
             </div>
-          </CardContent>
-        </UiDashboardCard>
+            
+            <!-- Quick Actions -->
+            <div class="pt-4 border-t">
+              <h4 class="mb-3 font-medium text-gray-700 text-sm">Quick Actions</h4>
+              <div class="gap-2 grid grid-cols-2">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  class="text-xs">
+                  <NuxtLink to="/trials"> 
+                    
+                    View All Trials
+                  </NuxtLink>
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline" >
+                  <NuxtLink
+                    to="/trials/create" class="flex justify-center items-center gap-2">
+                    <PlusIcon class="mr-1 w-4 h-4" />
+                    Create New Trial
+                  </NuxtLink>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </UiDashboardCard>
 
-      </div>
+      <!-- Key Metrics Card -->
+      <UiDashboardCard size="md">
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2 text-lg">
+            <TrendingUp class="w-5 h-5 text-emerald-600" />
+            Key Metrics
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 text-sm">Avg. Duration</span>
+              <span class="font-medium">{{ averageDuration }} months</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 text-sm">Sites per Trial</span>
+              <span class="font-medium">{{ averageSitesPerTrial }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 text-sm">Success Rate</span>
+              <span class="font-medium text-green-600">{{ successRate }}%</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 text-sm">Total Approvals</span>
+              <span class="font-medium">{{ totalApprovals }}</span>
+            </div>
+          </div>
+        </CardContent>
+      </UiDashboardCard>
+
     </div>
   </div>
+  
 </template>
 
 <script setup lang="ts">
