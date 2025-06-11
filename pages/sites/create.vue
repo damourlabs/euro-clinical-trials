@@ -17,12 +17,16 @@
 
 
     <CardContent>
-      <UiFormsDynamicForm ref="form" :sections="false" :schema="testDynamicFormSchema" :on-submit="onFormSubmit" />
+      <UiFormsDynamicForm
+        ref="form"
+        :sections="false" :schema="testDynamicFormSchema" :on-submit="onFormSubmit" />
     </CardContent>
 
     <CardFooter>
       <div class="flex justify-end space-x-4">
-        <UiCommonNavLink to="/trials" variant="secondary" icon="i-heroicons-x-mark">
+        <UiCommonNavLink
+          to="/trials"
+          variant="secondary" icon="i-heroicons-x-mark">
           Cancel
         </UiCommonNavLink>
 
