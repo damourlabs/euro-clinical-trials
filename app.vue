@@ -1,16 +1,29 @@
 <template>
-  <NuxtLayout v-bind="sidebarProps">
+  <NuxtLayout v-bind="props" >
     <NuxtPage />
   </NuxtLayout>
 </template>
 
 
 <script setup lang="ts">
-import { CircleHelp, Cog, FlaskConical, LayoutDashboardIcon, UserRoundIcon, MapPinIcon } from 'lucide-vue-next';
-import type { NavigationSidebarProps } from '~ui/components/nav/SideBar.vue';
+import { LayoutDashboardIcon, FlaskConical, UserRoundIcon, MapPinIcon, Cog, CircleHelp } from 'lucide-vue-next'
+import type { FooterProps } from '~ui/components/nav/Footer.vue'
+import type { NavigationSidebarProps } from '~ui/components/nav/SideBar.vue'
 
+
+const { updateNavigationConfig } = useNavigation();
+
+// Update the navigation configuration with the provided props
+onMounted(() => {
+  updateNavigationConfig(sidebarProps.value);
+});
+
+
+const { navigationConfig } = useNavigation();
+// provide('updateNavigationConfig', updateNavigationConfig);
 
 const sidebarProps = ref<NavigationSidebarProps>({
+  hasBreadcrumbs: true,
   mainMenuUrl: '/',
   items: [
     {
@@ -58,9 +71,8 @@ const sidebarProps = ref<NavigationSidebarProps>({
     name: ' ',
     email: '',
     avatar: '',
-  }
+  },
 })
-
 
 const patientsStore = usePatientsStore()
 const trialsStore = useTrialsStore()
@@ -70,5 +82,18 @@ provide('patientsStore', patientsStore)
 provide('trialsStore', trialsStore)
 provide('sitesStore', sitesStore)
 
+const footerProps = ref<FooterProps>({
+  credits: `© ${new Date().getFullYear()} Euro Clinical Trials`,
+  links: [
+    { name: 'Privacy Policy', url: '/privacy', icon: CircleHelp },
+    { name: 'Terms of Service', url: '/terms', icon: CircleHelp },
+    { name: 'Contact Us', url: '/contact', icon: CircleHelp },
+    { name: 'About Us', url: '/about', icon: CircleHelp },
+  ],
+})
 
+const props = {
+  navigationConfig: navigationConfig.value,
+  footerConfig: footerProps.value,
+}
 </script>
