@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.24.2
+
+### 🐛 Bug Fixes
+
+- make id field mandatory in GDPRConsentSchema &nbsp;-&nbsp; [<samp>(04d2fbc)</samp>](https://github.com/damourChris/damourlabs-portfolio/commit/04d2fbc)
+
+### ♻️ Refactoring
+
+- implement updating of fotter config via useFooter() instead of props &nbsp;-&nbsp; [<samp>(c4cf79b)</samp>](https://github.com/damourChris/damourlabs-portfolio/commit/c4cf79b)
+
 ## Latest
 
 ### ✨ Features
