@@ -2,7 +2,7 @@ import { z } from "zod";
 import { ApprovalTypeEnum, ApprovalStatusEnum, ConsentStatusEnum, ConsentTypeEnum, DataCategoriesEnum, PurposeEnum, WithdrawalMethodEnum, ProtocolDeviationSeverityEnum } from "./enums";
 
 export const GDPRConsentSchema = z.object({
-    id: z.string().uuid().optional().describe("Unique identifier for the GDPR consent record"),
+    id: z.string().uuid().describe("Unique identifier for the GDPR consent record"),
     trialId: z.string().uuid().describe("Unique identifier for the trial associated with this consent"),
     patientId: z.string().uuid().describe("Unique identifier for the patient providing consent"),
     consentGiven: z.boolean().default(false).describe("Whether the patient has given consent for data processing"),
