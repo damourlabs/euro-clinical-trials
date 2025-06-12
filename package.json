@@ -1,7 +1,7 @@
 {
   "name": "@damourlabs-portfolio/euro-clinical-trials",
   "private": true,
-  "version": "0.23.0",
+  "version": "0.23.1",
   "type": "module",
   "scripts": {
     "build": "nuxt build",
