@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout v-bind="props" >
+  <NuxtLayout >
     <NuxtPage />
   </NuxtLayout>
 </template>
@@ -12,14 +12,15 @@ import type { NavigationSidebarProps } from '~ui/components/nav/SideBar.vue'
 
 
 const { updateNavigationConfig } = useNavigation();
+const { updateFooterConfig } = useFooter();
 
 // Update the navigation configuration with the provided props
 onMounted(() => {
   updateNavigationConfig(sidebarProps.value);
+  updateFooterConfig(footerProps.value);
 });
 
 
-const { navigationConfig } = useNavigation();
 // provide('updateNavigationConfig', updateNavigationConfig);
 
 const sidebarProps = ref<NavigationSidebarProps>({
@@ -92,8 +93,4 @@ const footerProps = ref<FooterProps>({
   ],
 })
 
-const props = {
-  navigationConfig: navigationConfig.value,
-  footerConfig: footerProps.value,
-}
 </script>
