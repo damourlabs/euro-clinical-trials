@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   modules: ['nuxt-auth-utils', '@pinia/nuxt'],
-  extends: ['@damourlabs-portfolio/ui'],
+  extends: ['github:damourlabs/ui'],
   runtimeConfig: {
     session: {
       name: 'session',
