@@ -1,6 +1,6 @@
 import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
-import type { Trial } from '~/models/trials'
+import type { Trial } from '~/server/database/schema'
 import { TrialDataTableDropDown } from '~/components/trial'
 
 export const TRIAL_COLUMNS: ColumnDef<Trial>[] = [
@@ -9,7 +9,7 @@ export const TRIAL_COLUMNS: ColumnDef<Trial>[] = [
     header: () => h('div', { class: 'text-right' }, 'Trial ID'),
     cell: ({ row }) => {
       const trial = row.original
-      return h('div', { class: 'text-right' }, trial.id)
+      return h('div', { class: 'text-right' }, trial.uuid)
     },
   },
   {
@@ -17,7 +17,7 @@ export const TRIAL_COLUMNS: ColumnDef<Trial>[] = [
     header: () => h('div', { class: 'text-left' }, 'Trial Title'),
     cell: ({ row }) => {
       const trial = row.original
-      return h('div', { class: 'text-left' }, trial.basicInfo.title)
+      return h('div', { class: 'text-left' }, trial.title)
     }
   },
   {
@@ -25,7 +25,7 @@ export const TRIAL_COLUMNS: ColumnDef<Trial>[] = [
     header: () => h('div', { class: 'text-center' }, 'Phase'),
     cell: ({ row }) => {
       const trial = row.original
-      return h('div', { class: 'text-center' }, trial.basicInfo.phase)
+      return h('div', { class: 'text-center' }, trial.phase)
     }
   },
   {
@@ -33,7 +33,7 @@ export const TRIAL_COLUMNS: ColumnDef<Trial>[] = [
     header: () => h('div', { class: 'text-center' }, 'Status'),
     cell: ({ row }) => {
       const trial = row.original
-      return h('div', { class: 'text-center' }, trial.timeline.status)
+      return h('div', { class: 'text-center' }, trial.status)
     }
   },
   {
@@ -41,7 +41,7 @@ export const TRIAL_COLUMNS: ColumnDef<Trial>[] = [
     header: () => h('div', { class: 'text-right' }, 'Start Date'),
     cell: ({ row }) => {
       const trial = row.original
-      return h('div', { class: 'text-right' }, trial.timeline.startDate)
+      return h('div', { class: 'text-right' }, trial.startDate)
     }
   },
   {
@@ -49,7 +49,7 @@ export const TRIAL_COLUMNS: ColumnDef<Trial>[] = [
     header: () => h('div', { class: 'text-right' }, 'Estimated End Date'),
     cell: ({ row }) => {
       const trial = row.original
-      return h('div', { class: 'text-right' }, trial.timeline.estimatedEndDate)
+      return h('div', { class: 'text-right' }, trial.estimatedEndDate)
     }
   },
   {
