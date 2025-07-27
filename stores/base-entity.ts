@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import type { BaseRepositoryFilters, ResourceRepository } from '~/repositories/ResourceRepository';
 
 interface Entity {
-  id: string | number
+  uuid: string | number
 }
 export type EntityStore = ReturnType<typeof createEntityStore>;
 
@@ -18,7 +18,7 @@ export function createEntityStore<T extends Entity>(
 
 
     const getById = computed(() => (id: string | number) =>
-      items.value && items.value.find((item: T) => item.id === id) || null
+      items.value && items.value.find((item: T) => item.uuid === id) || null
     )
 
     const isLoading = computed(() => loading)
@@ -61,7 +61,7 @@ export function createEntityStore<T extends Entity>(
         if (!items.value) {
           throw createError('Items list is not initialized')
         }
-        const index = items.value.findIndex((i: T) => i.id === id)
+        const index = items.value.findIndex((i: T) => i.uuid === id)
 
         if (index !== -1) {
           items.value[index] = item
@@ -88,7 +88,7 @@ export function createEntityStore<T extends Entity>(
 
       try {
         // Generate a unique ID
-        item.id = crypto.randomUUID()
+        item.uuid = crypto.randomUUID()
 
         const newItem = await repository.create(item)
         if (!items.value) {
@@ -117,7 +117,7 @@ export function createEntityStore<T extends Entity>(
         if (!items.value) {
           throw createError('Items list is not initialized')
         }
-        const index = items.value.findIndex((i: T) => i.id === id)
+        const index = items.value.findIndex((i: T) => i.uuid === id)
 
         if (index !== -1) {
           items.value[index] = updatedItem
@@ -150,7 +150,7 @@ export function createEntityStore<T extends Entity>(
         console.log(`Deleting item with ID: ${id}`)
 
         // Remove the item from the local items array
-        items.value = items.value.filter((item: T) => item.id !== id)
+        items.value = items.value.filter((item: T) => item.uuid !== id)
         console.log(`Item with ID ${id} removed from local store`)
         console.log(`New items list:`, items.value)
 
