@@ -1,4 +1,4 @@
-import type { Trial } from "~/models/trials"
+import type { Trial } from "~/server/database/schema"
 import { TrialsRepository } from "~/repositories/TrialsRepository"
 
 const trialRepository = new TrialsRepository('cached')

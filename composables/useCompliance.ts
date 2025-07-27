@@ -1,7 +1,7 @@
-import { generateUUID } from "@damourlabs-portfolio/utils"
+// import { generateUUID } from "@damourlabs-portfolio/utils"
 import { today, getLocalTimeZone } from "@internationalized/date"
 import type { GDPRConsent } from "~/models/regulations"
-import { WithdrawalReasonEnum, type DataCategories, type ConsentType, type Purpose } from "~/models/enums";
+import { WithdrawalReasonEnum, type DataCategories, type ConsentType, type Purpose } from "~/server/database/schema/enums";
 
 
 export const useGDPR = () => {
@@ -9,23 +9,23 @@ export const useGDPR = () => {
   const { auditLog } = useAuditLogger()
 
   const recordConsent = async (patientId: string, consentType: ConsentType, purpose: Purpose, trialId: string,
-    dataCategories: DataCategories[] = ['Health data', 'Identification data', 'Contact data'],
+    dataCategories: DataCategories[] = ['Health_data', 'Identification_data', 'Contact_data'],
     dataProcessingDetails: string = 'Data will be processed for clinical trial management and regulatory compliance.'
   ) => {
     const consent: GDPRConsent = {
-      id: generateUUID(),
+      id: crypto.randomUUID(), // Generate a unique ID for the consent record
       trialId: trialId, // Generate a new trial ID if not provided
       patientId,
       consentGiven: true,
       consentDate: today(getLocalTimeZone()).toString(),
       legalBasis: 'Consent',
       withdrawalDate: undefined,
-      withdrawalMethod: 'Patient portal',
+      withdrawalMethod: 'Patient_portal',
       withdrawalReason: WithdrawalReasonEnum.Enum.Other,
       consentType,
       purpose,
       userAgent: navigator.userAgent,
-      consentStatus: 'consented',
+      consentStatus: 'Consented',
       dataCategories: dataCategories,
       retentionPeriod: calculateRetentionPeriod(consentType),
       dataProcessingDetails: dataProcessingDetails,
@@ -44,7 +44,7 @@ export const useGDPR = () => {
     consentRecords.value.push(consent)
 
     // Audit log for GDPR compliance
-    await auditLog('gdpr_consent_recorded',
+    await auditLog('Create',
       'GDPRConsent',
       {
         consentId: consent.id,
@@ -62,7 +62,7 @@ export const useGDPR = () => {
     const consent = consentRecords.value.find(c => c.id === consentId)
     if (!consent) return
 
-    consent.consentStatus = 'withdrawn'
+    consent.consentStatus = 'Withdrawn'
     consent.withdrawalDate = today(getLocalTimeZone()).toString()
 
     if (!reason) {
@@ -87,11 +87,11 @@ export const useGDPR = () => {
 
   const calculateRetentionPeriod = (consentType: ConsentType) => {
     switch (consentType) {
-      case 'data_processing':
+      case 'Data_processing':
         return 24 // 2 years
-      case 'data_transfer':
+      case 'Data_transfer':
         return 12 // 1 year
-      case 'marketing':
+      case 'Marketing':
         return 6 // 6 months
       default:
         return 12 // Default to 1 year for other types

@@ -1,6 +1,6 @@
 // ~/repositories/TrialsRepository.ts
-import type { Trial } from '~/models/trials'
-import type { TrialStatus, TrialPhase } from '~/models/enums'
+import type { Trial } from '~/server/database/schema'
+import type { TrialStatus, TrialPhase } from '~/server/database/schema/enums'
 import type { ServerResponse } from '~/models/utils'
 import type { PatientStatistics } from '~/models/patients'
 import { ResourceRepository, type REPOSITORY_TYPE } from './ResourceRepository'

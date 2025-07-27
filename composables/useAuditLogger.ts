@@ -1,7 +1,7 @@
 // Plugin to handle audit loggin for GDPR compliance
 
 import type { AuditLogDetails, AuditLogEvent } from "~/models/audits";
-import type { AuditActionType, AuditEntityTypeType } from "~/models/enums";
+import type { AuditActionType, AuditEntityTypeType } from "~/server/database/schema/enums";
 
 
 export const useAuditLogger = () => {
@@ -21,7 +21,7 @@ export const useAuditLogger = () => {
             action: action,
             entityType: entityType,
             details: auditLogDetails,
-            timestamp: new Date()
+            timestamp: new Date().toISOString(),
         };
 
 

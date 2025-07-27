@@ -1,6 +1,6 @@
 // ~/repositories/PatientsRepository.ts
-import type { Patient, PatientStatistics } from '~/models/patients'
-import type { PatientStatus } from '~/models/enums'
+import type { Patient, PatientStatistics } from '~/server/database/schema'
+import type { PatientStatus } from '~/server/database/schema/enums'
 import type { ServerResponse } from '~/models/utils'
 import { type BasePaginatedResponse, ResourceRepository, type BaseRepositoryFilters, type REPOSITORY_TYPE } from './ResourceRepository'
 
@@ -117,7 +117,7 @@ export class PatientsRepository extends ResourceRepository<Patient> {
         if (status === 'error') {
             switch (statusCode) {
                 case 404:
-                    return { totalPatients: 0, activePatients: 0, completedPatients: 0, withdrawnPatients: 0, patientsByStatus: {}, enrollmentTrend: [] } // No statistics found
+                    return { totalPatients: 0, activePatients: 0, completedPatients: 0, withdrawnPatients: 0, patientsByStatus: {} } // No statistics found
                 default:
                     throw createError({
                         statusCode,

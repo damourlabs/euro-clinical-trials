@@ -1,7 +1,7 @@
 import type { ServerResponse } from "~/models/utils"
 
 export interface Entity {
-    id: string | number
+    uuid: string | number
 }
 
 
@@ -95,7 +95,7 @@ export abstract class BaseRepository<T extends Entity> {
 
         // Generate a unique ID for the new item 
         const newItemId = crypto.randomUUID()
-        item.id = newItemId;
+        item.uuid = newItemId;
         const url = `${this.apiUrl}/${newItemId}`
 
         const { data, status, statusCode, statusText, message } = await $fetch<ServerResponse<T>>(url, {
