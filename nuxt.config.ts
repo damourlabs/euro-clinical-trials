@@ -39,7 +39,22 @@ export default defineNuxtConfig({
         scopes: [],
         emailRequired: true
       }
-    }
+  nitro: {
+    experimental: {
+      database: true
+    },
+    database: {
+      default: {
+        connector: 'pglite',
+      },
+      pglite: {
+        connector: 'pglite',
+        options: {
+          name: 'db-euro-clinical-trials',
+          dataDir: 'db/pglite',
+        }
+      }
+    },
   },
   $development: {
     nitro: {
