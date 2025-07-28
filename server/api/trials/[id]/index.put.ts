@@ -1,10 +1,9 @@
 // PUT // Endpoint to update a trial
-import { useStorage } from "#imports"
-import { TrialSchema, type Trial } from "~/models/trials"
+import { TrialSchema, type Trial } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
+import { useDb } from "~/server/utils/drizzle"
 
 export default defineEventHandler(async (event) => {
-    const storage = useStorage<Trial>('trials')
     const id = getRouterParam(event, 'id')
 
     if (!id) {
@@ -15,16 +14,28 @@ export default defineEventHandler(async (event) => {
     }
 
     // Check if the trial exists
-    const existingTrial = await storage.getItem(id)
-    if (!existingTrial) {
+    const existingTrials = await useDb().select().from(tables.trials).where(eq(tables.trials.uuid, id))
+
+    if (!existingTrials) {
         throw createError({
             statusCode: 404,
             statusMessage: 'Trial not found'
         })
     }
 
+    if (existingTrials.length > 1) {
+        throw createError({
+            statusCode: 500,
+            statusMessage: 'Multiple trials found with the same ID, this should not happen'
+        })
+    }
+
+    // Get the existing trial data
+    const existingTrial = existingTrials[0]
+
     // Get the updated data from the request body
     const { success, error, data } = await readValidatedBody(event, TrialSchema.safeParse)
+
     if (!success) {
         console.error('Invalid trial data:', error);
         throw createError({
@@ -48,7 +59,9 @@ export default defineEventHandler(async (event) => {
     }
 
     // Update the trial in storage
-    await storage.setItem(id, newTrialData)
+    await useDb().update(tables.trials)
+        .set(newTrialData)
+        .where(eq(tables.trials.uuid, id))
 
     const response: ServerResponse<Trial> = {
         status: 'success',

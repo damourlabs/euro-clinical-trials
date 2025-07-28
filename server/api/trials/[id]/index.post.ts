@@ -1,11 +1,9 @@
-import { TrialSchema } from "~/models/trials";
-import { useStorage } from "#imports"
-import type { Trial } from "~/models/trials"
+import { TrialSchema, type Trial } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
 import { z } from "zod";
+import { useDb } from "~/server/utils/drizzle";
 export default defineEventHandler(async (event) => {
-    const storage = useStorage<Trial>('trials')
-    // Generate a unique trial ID
+
     const { data: params } = await getValidatedRouterParams(event, z.object({
         id: z.string().uuid()
     }).spa)
@@ -38,8 +36,16 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    console.log('Creating trial with data:', data)
+
     // Save the new trial to storage
-    await storage.setItem(id, data)
+    await useDb().insert(tables.trials).values(
+        {
+            ...data
+        }
+    )
+
+
     // Return the created trial
     const response: ServerResponse<Trial> = {
         status: 'success',

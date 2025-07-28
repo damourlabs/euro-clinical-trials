@@ -1,10 +1,12 @@
 import { useStorage } from "#imports"
-import type { Trial } from "~/models/trials"
+import type { Trial } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
+import { exists } from "drizzle-orm";
+import { useDb } from "~/server/utils/drizzle";
 
 // DELETE // Endpoint to delete a clinical trial by ID
 export default defineEventHandler(async (event) => {
-    const storage = useStorage<Trial>('trials')
+    const db = useDb()
     const id = getRouterParam(event, 'id')
 
     if (!id) {
@@ -15,8 +17,14 @@ export default defineEventHandler(async (event) => {
     }
 
     // Check if the trial exists
-    const existingTrial = await storage.getItem(id)
-    if (!existingTrial) {
+    //  currently drizzle doesnt allow for SELECT EXISTS
+    // https://www.answeroverflow.com/m/1187887664398094357
+    const query = await db.select().from(tables.trials).where(eq(tables.trials.uuid, id)).limit(1)
+    const trialExists = query.length > 0;
+
+    console.log('Existing Trial:', trialExists)
+
+    if (!trialExists) {
         throw createError({
             statusCode: 404,
             statusMessage: 'Trial not found'
@@ -24,8 +32,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Delete the trial from storage
-    await storage.removeItem(id)
-
+    await db.delete(tables.trials).where(eq(tables.trials.uuid, id))
 
     const response: ServerResponse<null> = {
         status: 'success',

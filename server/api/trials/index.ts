@@ -1,26 +1,15 @@
-import { useStorage } from "#imports"
-import type { Trial } from "~/models/trials"
+import type { Trial } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils";
+import { useDb } from "~/server/utils/drizzle";
 
 export default defineEventHandler(async () => {
-  const storage = useStorage<Trial>('trials')
-  const trialIds = await storage.getKeys();
-
-  if (!trialIds || trialIds.length === 0) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'No trials found'
-    })
-  }
+  const db = useDb()
+  const trialsTable = tables.trials
 
   // Fetch all trials
-  const trials = await Promise.all(trialIds.map(async (trialId) => {
-    const trial = await storage.getItem(trialId)
-    return trial
-  }))
+  const trials = await db.select().from(trialsTable).limit(100)
 
-  const validTrials = trials.filter((trial): trial is Trial => trial !== null && trial !== undefined)
-  if (validTrials.length === 0) {
+  if (trials.length === 0) {
     throw createError({
       statusCode: 404,
       statusMessage: 'No valid trials found'
@@ -32,7 +21,7 @@ export default defineEventHandler(async () => {
     status: 'success',
     statusText: 'OK',
     statusCode: 200,
-    data: validTrials
+    data: trials
   }
 
   return response
