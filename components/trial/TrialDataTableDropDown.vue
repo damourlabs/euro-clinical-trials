@@ -2,7 +2,7 @@
 import { MoreHorizontal } from 'lucide-vue-next'
 import { Button } from '~ui/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '~ui/components/ui/dropdown-menu'
-import type { Trial } from '@/models/trials'
+import type { Trial } from '@/server/database/schema'
 
 defineProps<{
   trial: Trial
@@ -25,17 +25,17 @@ function copy(id: string) {
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-      <DropdownMenuItem @click="copy(trial.id)">
+      <DropdownMenuItem @click="copy(trial.uuid)">
         Copy trial ID
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem>
-        <NuxtLink :to="`/trials/${trial.id}`">
+        <NuxtLink :to="`/trials/${trial.uuid}`">
           View trial details
         </NuxtLink>
       </DropdownMenuItem>
       <DropdownMenuItem>
-        <NuxtLink :to="`/trials/${trial.id}/edit`">
+        <NuxtLink :to="`/trials/${trial.uuid}/edit`">
           Edit trial
         </NuxtLink>
       </DropdownMenuItem>

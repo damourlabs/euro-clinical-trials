@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { TRIAL_COLUMNS } from '~/models/columns/trials-column';
-import type { Trial } from '~/models/trials';
+import type { Trial } from '~/server/database/schema';
 
 
 defineProps<{

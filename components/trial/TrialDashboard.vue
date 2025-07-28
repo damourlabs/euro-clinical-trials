@@ -285,7 +285,7 @@ import { Badge } from '~ui/components/ui/badge'
 import { Button } from '~ui/components/ui/button'
 import { Progress } from '~ui/components/ui/progress'
 import UiDashboardCard from '~ui/components/dashboard/Card.vue'
-import type { TrialStatus, TrialPhase } from '~/models/enums'
+import type { TrialStatus, TrialPhase } from '~/server/database/schema/enums'
 import TrialPreview from './TrialPreview.vue'
 
 // Store and data
@@ -297,15 +297,15 @@ const { fetchAll, isLoading } = store
 const totalTrials = computed(() => trials.value?.length || 0)
 
 const activeTrials = computed(() => 
-  trials.value?.filter(trial => trial.timeline.status === 'Active').length || 0
+  trials.value?.filter(trial => trial.status === 'Active').length || 0
 )
 
 const completedTrials = computed(() => 
-  trials.value?.filter(trial => trial.timeline.status === 'Completed').length || 0
+  trials.value?.filter(trial => trial.status === 'Completed').length || 0
 )
 
 const upcomingTrials = computed(() => 
-  trials.value?.filter(trial => trial.timeline.status === 'Planning').length || 0
+  trials.value?.filter(trial => trial.status === 'Planning').length || 0
 )
 
 const endingSoonTrials = computed(() => {
@@ -314,18 +314,18 @@ const endingSoonTrials = computed(() => {
   const threeMonthsFromNow = new Date(today.getTime() + (90 * 24 * 60 * 60 * 1000))
   
   return trials.value.filter(trial => {
-    if (trial.timeline.status !== 'Active') return false
-    const endDate = new Date(trial.timeline.estimatedEndDate)
+    if (trial.status !== 'Active') return false
+    const endDate = new Date(trial.estimatedEndDate)
     return endDate <= threeMonthsFromNow && endDate > today
   }).length
 })
 
 const totalEnrolled = computed(() => 
-  trials.value?.reduce((sum, trial) => sum + trial.participantEnrollment.currentEnrollment, 0) || 0
+  trials.value?.reduce((sum, trial) => sum + trial.currentEnrollment, 0) || 0
 )
 
 const totalTarget = computed(() => 
-  trials.value?.reduce((sum, trial) => sum + trial.participantEnrollment.targetEnrollment, 0) || 0
+  trials.value?.reduce((sum, trial) => sum + trial.targetEnrollment, 0) || 0
 )
 
 const enrollmentPercentage = computed(() => {
@@ -397,8 +397,8 @@ const protocolDeviations = computed(() => {
   
   trials.value.forEach(trial => {
     trial.regulatoryCompliance.protocolDeviations.forEach(deviation => {
-      if (deviation.severity === 'Low') low++
-      else if (deviation.severity === 'High') high++
+      if (deviation.severity === 'Minor') low++
+      else if (deviation.severity === 'Major') high++
     })
   })
   

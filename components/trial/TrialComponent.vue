@@ -1,87 +1,84 @@
-
 <template>
-  <Card
-    v-if="trial"
-    class="p-6">
-    <CardHeader>
-      <div class="mb-8">
-        <CardTitle class="text-3xl">
-          
-          {{ trial.basicInfo.title  }}
-        </CardTitle>
-        <CardDescription>
-          {{ trial.basicInfo.description }}
-        </CardDescription>
-        <div class="flex justify-end space-x-4 mb-6">
-          <Button
-            variant="default"
-            @click="deleteTrial">Delete</Button>
-          <UiCommonNavLink
-            class="p-0"
-            :to="`/trials/${trial.id}/edit`">Edit
-          </UiCommonNavLink>
+  <div>
+    <Card class="p-6">
+      <CardHeader>
+        <div class="mb-8">
+          <CardTitle class="text-3xl">
+            {{ trial.title }}
+          </CardTitle>
+          <CardDescription>
+            {{ trial.description }}
+          </CardDescription>
+          <div class="flex justify-end space-x-4 mb-6">
+            <Button
+              variant="default"
+              @click="deleteTrial">Delete</Button>
+            <UiCommonNavLink
+              class="p-0"
+              :to="`/trials/${trial.uuid}/edit`">Edit
+            </UiCommonNavLink>
+          </div>
         </div>
-      </div>
-    </CardHeader>
+      </CardHeader>
     
-    <CardContent>      
-      <div
-        class="space-y-6">
-        <!-- Status Badge and Basic Info -->
-        <div class="flex justify-between items-center">
-          <div class="flex items-center space-x-3">
-            <Badge :class="getStatusBadgeClass(trial.timeline.status)">
-              {{ trial?.timeline.status }}
-            </Badge>
-            <Badge :class="getPhaseClass(trial.basicInfo.phase)">
-              Phase {{ trial.basicInfo.phase }}
-            </Badge>
+      <CardContent>      
+        <div
+          class="space-y-6">
+          <!-- Status Badge and Basic Info -->
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <Badge :class="getStatusBadgeClass(trial.status)">
+                {{ trial.status }}
+              </Badge>
+              <Badge :class="getPhaseClass(trial.phase)">
+                Phase {{ trial.phase }}
+              </Badge>
+            </div>
+            <!-- <div class="text-muted-foreground text-sm">
+              Protocol: {{ trialProtocol?.name }}
+            </div> -->
           </div>
-          <div class="text-muted-foreground text-sm">
-            Protocol: {{ trial.basicInfo.protocolNumber }}
-          </div>
-        </div>
 
-        <!-- Tabs for detailed information -->
-        <Tabs
-          default-value="overview"
-          class="w-full">
-          <TabsList class="grid grid-cols-5 w-full">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="study-design">Study Design</TabsTrigger>
-            <TabsTrigger value="timeline">Timeline</TabsTrigger>
-            <TabsTrigger value="administrative">Administrative</TabsTrigger>
-            <TabsTrigger value="compliance">Compliance</TabsTrigger>
-          </TabsList>
+          <!-- Tabs for detailed information -->
+          <Tabs
+            default-value="overview"
+            class="w-full">
+            <TabsList class="grid grid-cols-5 w-full">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="study-design">Study Design</TabsTrigger>
+              <TabsTrigger value="timeline">Timeline</TabsTrigger>
+              <TabsTrigger value="administrative">Administrative</TabsTrigger>
+              <TabsTrigger value="compliance">Compliance</TabsTrigger>
+            </TabsList>
 
-          <!-- Overview Tab -->
-          <TabsContent
-            value="overview"
-            class="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle class="text-lg">Trial Overview</CardTitle>
-              </CardHeader>
-              <CardContent class="space-y-4">
-                <div class="gap-4 grid grid-cols-1 md:grid-cols-2">
-                  <div>
+            <!-- Overview Tab -->
+            <TabsContent
+              value="overview"
+              class="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle class="text-lg">Trial Overview</CardTitle>
+                </CardHeader>
+                <CardContent class="space-y-4">
+                  <div class="gap-4 grid grid-cols-1 md:grid-cols-2">
+                    <!-- <div>
                     <Label class="font-medium text-muted-foreground text-sm">EudraCT Number</Label>
                     <p class="text-sm">{{ trial.basicInfo.eudraCTNumber }}</p>
+                  </div> -->
+                    <div>
+                      <Label class="font-medium text-muted-foreground text-sm">Indication</Label>
+                      <p class="text-sm">{{ trial.indication }}</p>
+                    </div>
                   </div>
-                  <div>
-                    <Label class="font-medium text-muted-foreground text-sm">Indication</Label>
-                    <p class="text-sm">{{ trial.basicInfo.indication }}</p>
-                  </div>
-                </div>
                 
-                <Separator />
+                  <Separator />
                 
-                <div>
+                <!-- <div>
                   <Label class="font-medium text-muted-foreground text-sm">Enrollment Progress</Label>
                   <div class="space-y-2 mt-2">
                     <div class="flex justify-between text-sm">
-                      <span>Current: {{ trial.participantEnrollment.currentEnrollment }}</span>
-                      <span>Target: {{ trial.participantEnrollment.targetEnrollment }}</span>
+                      <span>Current: {{ trial.currentEnrollment }}</span>
+                      <span>Target: {{ trial.targetEnrollment }}</span>
                     </div>
                     <Progress 
                       :value="getEnrollmentProgress(trial)" 
@@ -91,13 +88,13 @@
                       {{ getEnrollmentProgress(trial) }}% complete
                     </p>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+                </div> -->
+                </CardContent>
+              </Card>
+            </TabsContent>
 
           <!-- Study Design Tab -->
-          <TabsContent
+          <!-- <TabsContent
             value="study-design"
             class="space-y-4">
             <Card>
@@ -108,7 +105,7 @@
                 <div class="gap-4 grid grid-cols-1 md:grid-cols-2">
                   <div>
                     <Label class="font-medium text-muted-foreground text-sm">Blinding</Label>
-                    <p class="text-sm">{{ formatBlinding(trial.studyDesign.blinding) }}</p>
+                    <p class="text-sm">{{ formatBlinding(trial) }}</p>
                   </div>
                   <div>
                     <Label class="font-medium text-muted-foreground text-sm">Randomization Strategy</Label>
@@ -148,10 +145,10 @@
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent> -->
 
           <!-- Timeline Tab -->
-          <TabsContent
+          <!-- <TabsContent
             value="timeline"
             class="space-y-4">
             <Card>
@@ -201,10 +198,10 @@
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent> -->
 
           <!-- Administrative Tab -->
-          <TabsContent
+          <!-- <TabsContent
             value="administrative"
             class="space-y-4">
             <Card>
@@ -249,10 +246,10 @@
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent> -->
 
           <!-- Compliance Tab -->
-          <TabsContent
+          <!-- <TabsContent
             value="compliance"
             class="space-y-4">
             <Card>
@@ -324,40 +321,61 @@
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
-      </div>    
+          </TabsContent> -->
+          </Tabs>
+        </div>    
       
-    </CardContent>
-  </Card>
-  
+      </CardContent>
+    </Card>
+  </div>
 </template>
 
 
-<script  setup lang="ts">
-import type { Trial, TrialTimeline} from '~/models/trials'
-import type { Blinding, TrialStatus, SiteStatus, ApprovalStatus, ProtocolDeviationSeverity } from '~/models/enums'
+<script setup lang="ts">
+import type { TrialStatus } from '~/server/database/schema/enums'
 import { Badge } from '~ui/components/ui/badge'
 
-const { trial } = defineProps<{trial: Trial | undefined}>()
+// Get trial ID from props instead of the trial object
+const props = defineProps<{
+  trialId: string
+}>()
 
-const { remove } = useTrialsStore()
+// Fetch trial data asynchronously
+const { getById, remove } = useTrialsStore()
 
+// Use await to make this component async
+const trial = await getById(props.trialId)
 
-const deleteTrial = async () => {
-  if (!trial) return
-  
-  console.log('Deleting trial:', trial.id)
-  await remove(trial.id)
-  console.log('Trial deleted:', trial.id)
-
-  // Emit an event to notify parent component about deletion
-  // Optionally, you can also navigate back to the trials list or show a success message
-  await navigateTo('/trials',{
-      replace: true
-    })
+// Handle case where trial is not found
+if (!trial) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Trial not found',
+    message: `Trial with ID ${props.trialId} not found`
+  })
 }
 
+// Set dynamic SEO based on the trial data
+useHead({
+  title: `${trial.title} - CTMS`,
+  meta: [
+    {
+      name: 'description',
+      content: trial.description
+    }
+  ]
+})
+
+const deleteTrial = async () => {
+  console.log('Deleting trial:', trial.uuid)
+  await remove(trial.uuid)
+  console.log('Trial deleted:', trial.uuid)
+
+  // Navigate back to trials list after deletion
+  await navigateTo('/trials', {
+    replace: true
+  })
+}
 
 // Helper functions
 const getStatusBadgeClass = (status: TrialStatus) => {
@@ -379,79 +397,6 @@ const getPhaseClass = (phase: string) => {
     'IV': 'bg-red-100 text-red-800'
   }
   return classes[phase] || 'bg-gray-100 text-gray-800'
-}
-
-const getSiteStatusClass = (status: SiteStatus) => {
-  const classes: Record<SiteStatus, string> = {
-    'Active': 'bg-green-100 text-green-800',
-    'Inactive': 'bg-gray-100 text-gray-800',
-    'Pending': 'bg-yellow-100 text-yellow-800',
-  }
-  return classes[status] || 'bg-gray-100 text-gray-800'
-}
-
-const getApprovalStatusClass = (status: ApprovalStatus) => {
-  const classes: Record<ApprovalStatus, string> = {
-    'Approved': 'bg-green-100 text-green-800',
-    'Pending': 'bg-yellow-100 text-yellow-800',
-    'Rejected': 'bg-red-100 text-red-800'
-  }
-  return classes[status] || 'bg-gray-100 text-gray-800'
-}
-
-const getSeverityClass = (severity: ProtocolDeviationSeverity) => {
-  const classes: Record<ProtocolDeviationSeverity, string> = {
-    'Low': 'bg-green-100 text-green-800',
-    'Medium': 'bg-yellow-100 text-yellow-800',
-    'High': 'bg-red-100 text-red-800'
-  }
-  return classes[severity] || 'bg-gray-100 text-gray-800'
-}
-
-const getEnrollmentProgress = (trial: Trial) => {
-  if (!trial.participantEnrollment.targetEnrollment) return 0
-  return Math.round((trial.participantEnrollment.currentEnrollment / trial.participantEnrollment.targetEnrollment) * 100)
-}
-
-const formatBlinding = (blinding: Blinding) => {
-  const blindingMap: Record<Blinding, string> = {
-    'Single': 'Single Blind',
-    'Double': 'Double Blind',
-    'Triple': 'Triple Blind',
-    'OpenLabel': 'Open Label'
-  }
-  return blindingMap[blinding] || blinding
-}
-
-const formatDate = (dateString: string) => {
-  if (!dateString) return 'Not specified'
-  try {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  } catch (error) {
-    console.error('Invalid date format:', dateString, error)
-    return dateString
-  }
-}
-
-const calculateDuration = (timeline: TrialTimeline) => {
-  const startDate = new Date(timeline.startDate)
-  const endDate = timeline.actualEndDate ? new Date(timeline.actualEndDate) : new Date(timeline.estimatedEndDate)
-  const diffTime = Math.abs(endDate.getTime() - startDate.getTime())
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  
-  if (diffDays < 30) {
-    return `${diffDays} days`
-  } else if (diffDays < 365) {
-    const months = Math.round(diffDays / 30)
-    return `${months} months`
-  } else {
-    const years = Math.round(diffDays / 365)
-    return `${years} years`
-  }
 }
 
 </script>
