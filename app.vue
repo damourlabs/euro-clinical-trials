@@ -78,10 +78,14 @@ const sidebarProps = ref<NavigationSidebarProps>({
 const patientsStore = usePatientsStore()
 const trialsStore = useTrialsStore()
 const sitesStore = useSitesStore()
+const protocolStore = useProtocolsStore()
+const usersStore = useUsersStore()
 
 provide('patientsStore', patientsStore)
 provide('trialsStore', trialsStore)
 provide('sitesStore', sitesStore)
+provide('protocolsStore', protocolStore)
+provide('usersStore', usersStore)
 
 const footerProps = ref<FooterProps>({
   credits: `© ${new Date().getFullYear()} Euro Clinical Trials`,
