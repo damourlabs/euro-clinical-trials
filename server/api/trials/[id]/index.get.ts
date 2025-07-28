@@ -1,20 +1,25 @@
-import { useStorage } from "#imports"
 import type { Trial } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
 import { useDb } from "~/server/utils/drizzle"
-import { QueryBuilder } from "drizzle-orm/pg-core"
+import { z } from "zod"
 
 export default defineEventHandler(async (event) => {
     const db = useDb()
 
-    const id = getRouterParam(event, 'id')
+    const { data, success, error } = await getValidatedRouterParams(event, z.object({
+        id: z.string().uuid()
+    }).spa)
 
-    if (!id) {
+    if (!success) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Trial ID is required'
+            statusMessage: 'Trial ID is required',
+            data: error
         })
     }
+
+    const { id } = data;
+
     const trials = await db.select().from(tables.trials).where(eq(tables.trials.uuid, id)).limit(1)
 
     if (!trials || trials.length === 0) {
