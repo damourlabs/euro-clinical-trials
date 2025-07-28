@@ -1,7 +1,4 @@
-import { useStorage } from "#imports"
-import type { Trial } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
-import { exists } from "drizzle-orm";
 import { useDb } from "~/server/utils/drizzle";
 
 // DELETE // Endpoint to delete a clinical trial by ID
@@ -21,8 +18,6 @@ export default defineEventHandler(async (event) => {
     // https://www.answeroverflow.com/m/1187887664398094357
     const query = await db.select().from(tables.trials).where(eq(tables.trials.uuid, id)).limit(1)
     const trialExists = query.length > 0;
-
-    console.log('Existing Trial:', trialExists)
 
     if (!trialExists) {
         throw createError({
