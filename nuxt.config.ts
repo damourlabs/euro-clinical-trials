@@ -3,8 +3,32 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   modules: ['nuxt-auth-utils', '@pinia/nuxt'],
-  extends: ['github:damourlabs/ui'],
+  extends: ['github:damourlabs/ui', {
+    giget: {
+      forceClean: true
+    }
+  }],
+  ignore: [
+    "**/.db/**"
+  ],
   runtimeConfig: {
+    // Private keys (server-side)
+    jwtSecret: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
+    jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key-change-in-production',
+    pgliteMigrations: {
+      dataDir: '.db/pglite',
+    },
+    pgliteSeeds: {
+      enabled: true,
+      seedsPath: 'server/database/seeds',
+      environment: 'development',
+      forceReseed: false,
+      dataDir: '.db/pglite',
+      seedsTable: 'seeds',
+      autoSeed: true,
+      apiEndpoints: true,
+      skipIfDataExists: true
+    },
     session: {
       name: 'session',
       maxAge: 60 * 60 * 24 * 7, // 7 days,
@@ -39,6 +63,12 @@ export default defineNuxtConfig({
         scopes: [],
         emailRequired: true
       }
+    },
+    // Public keys (client-side)
+    public: {
+      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    }
+  },
   nitro: {
     experimental: {
       database: true
