@@ -6,34 +6,41 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "dev:clean": "nuxt cleanup && nuxt dev",
+    "typecheck:watch": "nuxt typecheck --watch",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",
+    "db:test-migrations": "node scripts/test-migrations.js",
     "generate": "nuxt generate",
     "typecheck": "nuxt typecheck",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "release": "release-it --ci"
+    "release": "release-it"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.4",
     "@nuxt/eslint": "^1.4.1",
     "@nuxt/fonts": "^0.11.4",
     "@nuxt/icon": "^1.13.0",
+    "@nuxthub/core": "0.9.0",
     "@pinia/nuxt": "^0.11.0",
     "@tailwindcss/vite": "^4.1.10",
     "@tanstack/vue-table": "^8.21.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "@vee-validate/zod": "^4.15.1",
     "class-variance-authority": "^0.7.1",
     "drizzle-orm": "^0.44.2",
     "drizzle-zod": "^0.8.2",
     "ioredis": "^5.6.1",
+    "jsonwebtoken": "^9.0.2",
     "lucide-vue-next": "^0.516.0",
     "nuxt": "^3.17.4",
     "nuxt-auth-utils": "0.5.20",
     "nuxt-charts": "^0.1.11",
     "pinia": "^3.0.2",
     "reka-ui": "^2.3.1",
+    "release-it": "^19.0.3",
     "shadcn-nuxt": "^2.2.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
@@ -48,5 +55,10 @@
       "publish": false
     }
   },
-  "packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac"
+  "packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac",
+  "devDependencies": {
+    "@nuxtjs/color-mode": "^3.5.2",
+    "drizzle-kit": "^0.31.1",
+    "wrangler": "^4.20.3"
+  }
 }
