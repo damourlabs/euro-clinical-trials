@@ -1,7 +1,6 @@
 <!-- pages/trials/create.vue -->
 <template>
   <Card class="p-6">
-    <!-- Header -->
     <CardHeader>
       <div class="mb-8">
 
@@ -17,13 +16,14 @@
 
 
     <CardContent>
-      <UiFormsDynamicForm
-        ref="form"
-        :schema="testDynamicFormSchema" 
-        sections
-        :on-submit="onFormSubmit" />
+      <ClientOnly>
+        <UiFormsDynamicForm
+          :schema="trialForm" 
+          :sections="false"
+          :submit-fn="onFormSubmit" />
+      </ClientOnly>
     </CardContent>
-
+      
     <CardFooter>
       <div class="flex justify-end space-x-4">
         <UiCommonNavLink
@@ -41,33 +41,46 @@
 
 <script setup lang="ts">
 
-import { TrialSchema  } from '~/models/trials'
-
-
+import { TrialSchema } from '~/server/database/schema/trials'
 
 definePageMeta({
   layout: 'simple'
 })
-// Auth check
-// const { user, isAuthenticated } = useAuth()
-// if (!isAuthenticated.value) {
-//   await navigateTo('/login')
-// }
 
 
-const testDynamicFormSchema = createDynamicForm(TrialSchema)
+const trialForm = createDynamicForm(TrialSchema, {
+  fieldsToIgnore: ["uuid", 
+    "updatedAt",
+    "createdAt",
+  ],
+  resourceFields: [
+    {
+    field: 'protocolUuid',
+    store: 'protocolsStore',
+    displayField: 'name'
+  },
+    {
+    field: 'sponsorUuid',
+    store: 'usersStore',
+    displayField: 'name'
+  },
+    {
+    field: 'principalInvestigatorUuid',
+    store: 'usersStore',
+    displayField: 'name'
+  }
+]
+})
 
+console.log(trialForm)
 
 const { create: createTrial } = useTrialsStore()
 
-
-const onFormSubmit = async (formValues: Record<string, unknown>) => {
-  // alert(JSON.stringify(formValues, null, 2))
-  console.log('Form Values:', formValues)
+const onFormSubmit = async (formValues: Record<string, unknown>,) => {
   try {
 
     // We can validate the form values here if needed
-    const { success, data: validatedValues, error} = await TrialSchema.safeParse(formValues)
+    const { success, data: validatedValues, error} = await TrialSchema.safeParseAsync(formValues)
 
     if (!success) {
       throw createError({
@@ -88,7 +101,10 @@ const onFormSubmit = async (formValues: Record<string, unknown>) => {
 
     console.log('Validated Values:', validatedValues) 
 
-    const trial = await createTrial(validatedValues)
+    const trial = await createTrial({
+      ...validatedValues,
+      actualEndDate: null, // Set to null initially
+    })
     if (!trial) {
       throw createError({
         statusCode: 500,
@@ -99,7 +115,7 @@ const onFormSubmit = async (formValues: Record<string, unknown>) => {
     console.log('Trial created successfully:', trial)
 
     // Redirect to the trial details page or another appropriate page
-    navigateTo(`/trials/${trial.id}`, {
+    navigateTo(`/trials/${trial.uuid}`, {
       replace: true
     })
     
