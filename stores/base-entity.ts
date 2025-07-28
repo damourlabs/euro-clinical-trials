@@ -7,9 +7,12 @@ interface Entity {
 }
 export type EntityStore = ReturnType<typeof createEntityStore>;
 
-export function createEntityStore<T extends Entity>(
+export function createEntityStore<
+  T extends Entity,
+  R extends ResourceRepository<T>
+>(
   storeName: string,
-  repository: ResourceRepository<T>
+  repository: R
 ) {
   return defineStore(storeName, () => {
     const items = ref<T[]>();
@@ -17,14 +20,32 @@ export function createEntityStore<T extends Entity>(
     const error = ref<string>();
 
 
-    const getById = computed(() => (id: string | number) =>
-      items.value && items.value.find((item: T) => item.uuid === id) || null
-    )
+
 
     const isLoading = computed(() => loading)
     const hasError = computed(() => !!error)
     const isEmpty = computed(() => !loading && (!items.value || items.value.length === 0))
     const hasItems = computed(() => items.value ? items.value.length > 0 : false)
+
+    const getById = async (id: string | number) => {
+      loading.value = true
+      error.value = undefined
+      let response = undefined
+      try {
+        response = await repository.findById(id)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          error.value = err.message || 'Failed to fetch item'
+        } else {
+          error.value = 'An unknown error occurred'
+        }
+        throw error
+      } finally {
+        loading.value = false
+      }
+
+      return response
+    }
 
     const fetchAll = async (filters?: BaseRepositoryFilters) => {
       loading.value = true
@@ -177,9 +198,7 @@ export function createEntityStore<T extends Entity>(
     }
 
     // We want to expose any custom methods from the repository
-    const customMethods = getAllMethods(repository);
-
-
+    const customMethods = getAllMethods(repository) as Omit<R, keyof ResourceRepository<T>>;
 
     return {
       items,
@@ -209,22 +228,35 @@ export type MethodNames<T> = {
   [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? K : never;
 }[keyof T];
 
+// Base CRUD methods that should be excluded from custom methods
+type BaseCrudMethods = 'findAll' | 'findById' | 'create' | 'update' | 'delete' | 'findWithFilters' | 'apiUrl' | 'resource';
 
+// Get all method names except base CRUD methods
+export type CustomMethodNames<T> = Exclude<MethodNames<T>, BaseCrudMethods>;
 
-function getAllMethods<T extends ResourceRepository<Entity>>(classInstance: T): Partial<Pick<T, MethodNames<T>>> {
-  const methods: Partial<Pick<T, MethodNames<T>>> = {};
+function getAllMethods<R extends ResourceRepository<Entity>>(classInstance: R): Record<string, (...args: unknown[]) => unknown> {
+  const methods: Record<string, (...args: unknown[]) => unknown> = {};
   let currentPrototype = Object.getPrototypeOf(classInstance);
 
+  // Base CRUD methods to exclude
+  const baseMethods = new Set([
+    'findAll', 'findById', 'create', 'update', 'delete', 'findWithFilters',
+    'constructor', 'apiUrl', 'resource'
+  ]);
+
   while (currentPrototype && currentPrototype !== Object.prototype) {
-    const propertyNames = Object.getOwnPropertyNames(currentPrototype) as Array<keyof T>;
+    const propertyNames = Object.getOwnPropertyNames(currentPrototype);
 
     for (const name of propertyNames) {
       if (
-        name !== 'constructor' &&
-        typeof classInstance[name as keyof T] === 'function' &&
-        !methods[name as MethodNames<T>]
+        !baseMethods.has(name) &&
+        typeof classInstance[name as keyof R] === 'function' &&
+        !(name in methods)
       ) {
-        methods[name as MethodNames<T>] = (classInstance[name as keyof T] as T[MethodNames<T>]);
+        const method = classInstance[name as keyof R];
+        if (typeof method === 'function') {
+          methods[name] = method.bind(classInstance) as (...args: unknown[]) => unknown;
+        }
       }
     }
 
