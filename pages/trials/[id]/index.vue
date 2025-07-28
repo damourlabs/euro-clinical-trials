@@ -1,66 +1,93 @@
-<!-- pages/trials/[id].vue -->
+<!-- pages/trials/[id]/index.vue -->
 <template>
   <div>
-
-
-    <template v-if="doWeHaveData">
-      <TrialComponent :trial="trial" />
-    </template>
-
-
-    <div
-      v-show="trial === undefined"
-      class="flex justify-center items-center h-32">
-      <p class="text-muted-foreground">Loading trial data...</p>
-    </div>
+    <NuxtErrorBoundary @error="handleError">
+      <Suspense>
+        <TrialComponent :trial-id="trialId" />
+        
+        <template #fallback>
+          <TrialLoadingFallback />
+        </template>
+      </Suspense>
+      
+      <template #error="{ error, clearError }">
+        <TrialErrorBoundary
+          :title="getErrorTitle(error)"
+          :message="getErrorMessage(error)"
+          :status-code="getErrorStatusCode(error)"
+          @retry="clearError"
+        />
+      </template>
+    </NuxtErrorBoundary>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Trial } from '~/models/trials'
-
+// Define error interface for better type safety
+interface AppError {
+  statusCode?: number
+  statusMessage?: string
+  message?: string
+}
 
 // Route params
 const route = useRoute()
 const trialId = route.params.id as string
 
-// Composables
-const { getById  } = useTrialsStore()
+// Validate that we have a trial ID
+if (!trialId) {
+  throw createError({
+    statusCode: 400,
+    statusMessage: 'Bad Request',
+    message: 'Trial ID is required'
+  })
+}
 
-const trial = ref<Trial>()
+// Error handling utilities
+const handleError = (error: AppError | Error | unknown) => {
+  console.error('Trial page error:', error)
+}
 
+const getErrorTitle = (error: AppError | Error | unknown): string => {
+  const appError = error as AppError
+  if (appError?.statusCode === 404) {
+    return 'Trial Not Found'
+  }
+  if (appError?.statusCode === 403) {
+    return 'Access Denied'
+  }
+  return 'Something went wrong'
+}
 
-onMounted(async () => {
-    const val = await getById(trialId)
-    if (val) {
-        trial.value = val
-    } else {
-        createError({
-            statusCode: 404,
-            statusMessage: 'Trial not found',
-            message: `Trial with ID ${trialId} not found`
-        })
-    }
-})
+const getErrorMessage = (error: AppError | Error | unknown): string => {
+  const appError = error as AppError
+  if (appError?.statusCode === 404) {
+    return `The trial with ID "${trialId}" could not be found. It may have been deleted or the ID might be incorrect.`
+  }
+  if (appError?.statusCode === 403) {
+    return 'You do not have permission to view this trial.'
+  }
+  return appError?.message || (error as Error)?.message || 'We encountered an error while loading the trial data. Please try again.'
+}
 
-const doWeHaveData = computed(() => { 
-    return trial.value !== undefined && Object.keys(trial).length > 0
-})
+const getErrorStatusCode = (error: AppError | Error | unknown): number => {
+  const appError = error as AppError
+  return appError?.statusCode || 500
+}
 
-
-// SEO
+// SEO - We'll set dynamic title in the component since it has the trial data
 useHead({
-    title: computed(() => trial.value !== undefined ? `${trial.value.basicInfo.title} - CTMS` : 'Trial Details - CTMS')
+  title: 'Trial Details - CTMS',
+  meta: [
+    {
+      name: 'description',
+      content: 'Details of the clinical trial'
+    }
+  ]
 })
 
 definePageMeta({
-    layout: 'simple',
-    title: computed(() => trial.value !== undefined ? `${trial.value.basicInfo.title} - CTMS` : 'Trial Details - CTMS'),
-    meta: [
-        {
-            name: 'description',
-            content: computed(() => trial.value !== undefined ? trial.value.basicInfo.description : 'Details of the clinical trial')
-        }
-    ]
+  layout: 'simple',
+  title: 'Trial Details - CTMS'
 })
 </script>
