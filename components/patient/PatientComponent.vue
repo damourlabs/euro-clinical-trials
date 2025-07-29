@@ -299,7 +299,7 @@
 
 <script setup lang="ts">
 import type { Patient } from '~/models/patients'
-import type { PatientStatus, ConsentStatus, AESeverity, AEOutcome } from '~/models/enums'
+import type { PatientStatus, ConsentStatus, AESeverity, AEOutcome } from '~/server/database/schema/enums'
 import { Badge } from '~ui/components/ui/badge'
 import { Button } from '~ui/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~ui/components/ui/card'
