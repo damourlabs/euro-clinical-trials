@@ -3,11 +3,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   modules: ['nuxt-auth-utils', '@pinia/nuxt'],
-  extends: ['github:damourlabs/ui', {
-    giget: {
-      forceClean: true
-    }
-  }],
+  extends: [
+    ['github:damourlabs/ui', {
+      giget: {
+        forceClean: true,
+      },
+    }],
+  ],
   ignore: [
     "**/.db/**"
   ],
