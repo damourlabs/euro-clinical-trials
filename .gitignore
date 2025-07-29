@@ -31,3 +31,6 @@ logs
 
 # Coverage reports
 coverage
+
+# DB persitent storage
+.db
