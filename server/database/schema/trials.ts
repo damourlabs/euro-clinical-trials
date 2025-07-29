@@ -127,9 +127,11 @@ export const TrialSchema = z.object({
   ,
   createdAt: z.date()
     .describe("Timestamp of when the trial was created, automatically set to now")
+    .optional()
   ,
   updatedAt: z.date()
     .describe("Timestamp of when the trial was last updated, automatically set to now")
+    .optional()
   ,
 })
 // .refine((data) => {
@@ -191,11 +193,11 @@ export const trialAdministrativeInfoSchema = z.object({
   ,
   createdAt: z.date()
     .describe("Timestamp of when the trial administrative info was created, automatically set to now")
-    .default(trialAdministrativeInfoFieldDefaultValues.createdAt)
+    .optional()
   ,
   updatedAt: z.date()
     .describe("Timestamp of when the trial administrative info was last updated, automatically set to now")
-    .default(trialAdministrativeInfoFieldDefaultValues.updatedAt)
+    .optional()
   ,
 });
 
