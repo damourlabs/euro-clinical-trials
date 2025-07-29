@@ -123,6 +123,7 @@ export const TrialSchema = z.object({
   actualEndDate: z.string()
     .date()
     .nullable()
+    .optional()
     .describe("Actual end date of the trial, if completed")
   ,
   createdAt: z.date()
