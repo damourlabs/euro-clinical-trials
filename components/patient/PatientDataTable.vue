@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { PATIENT_COLUMNS } from '~/models/columns/patients-column';
-import type { Patient } from '~/models/patients';
+import type { Patient } from '~/server/database/schema';
 
 defineProps<{
   patients: Patient[] | undefined
