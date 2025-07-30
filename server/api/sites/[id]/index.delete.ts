@@ -1,11 +1,8 @@
-import { useStorage } from "#imports"
-import type { Site } from "~/models/admin";
-
 import type { ServerResponse } from "~/models/utils"
+import { useDb } from "~/server/utils/drizzle"
 
-// DELETE // Endpoint to delete a clinical trial by ID
+// DELETE // Endpoint to delete a clinical trial site by ID
 export default defineEventHandler(async (event) => {
-    const storage = useStorage<Site>('sites')
     const id = getRouterParam(event, 'id')
 
     if (!id) {
@@ -16,17 +13,17 @@ export default defineEventHandler(async (event) => {
     }
 
     // Check if the site exists
-    const existingSite = await storage.getItem(id)
-    if (!existingSite) {
+    const existingSites = await useDb().select().from(tables.sites).where(eq(tables.sites.uuid, id))
+
+    if (!existingSites || existingSites.length === 0) {
         throw createError({
             statusCode: 404,
             statusMessage: 'Site not found'
         })
     }
 
-
-    // Delete the site from storage
-    await storage.removeItem(id)
+    // Delete the site from database
+    await useDb().delete(tables.sites).where(eq(tables.sites.uuid, id))
 
     const response: ServerResponse<null> = {
         status: 'success',

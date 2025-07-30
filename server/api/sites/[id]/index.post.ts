@@ -1,12 +1,10 @@
 
-import { useStorage } from "#imports"
+import { sitesSchema, type Site } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
 import { z } from "zod";
-import type { Site } from "~/models/admin";
-import { SiteSchema } from "~/models/admin";
+import { useDb } from "~/server/utils/drizzle";
+
 export default defineEventHandler(async (event) => {
-    const storage = useStorage<Site>('sites')
-    // Generate a unique site ID
     const { data: params } = await getValidatedRouterParams(event, z.object({
         id: z.string().uuid()
     }).spa)
@@ -18,8 +16,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { id } = params
-    const { success, error, data } = await readValidatedBody(event, SiteSchema.safeParse)
+    const { success, error, data } = await readValidatedBody(event, sitesSchema.safeParse)
 
     if (!success) {
         console.error('Invalid site data:', error);
@@ -37,8 +34,13 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    // Save the new site to storage
-    await storage.setItem(id, data)
+    console.log('Creating site with data:', data)
+
+    // Save the new site to database
+    await useDb().insert(tables.sites).values({
+        ...data
+    })
+
     // Return the created site
     const response: ServerResponse<Site> = {
         status: 'success',
@@ -48,5 +50,4 @@ export default defineEventHandler(async (event) => {
         data: data
     }
     return response
-
 })
