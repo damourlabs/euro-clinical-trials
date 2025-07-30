@@ -1,12 +1,10 @@
 
-import { useStorage } from "#imports"
+import { PatientSchema, type Patient } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
 import { z } from "zod";
-import type { Patient } from "~/models/patients";
-import { PatientSchema } from "~/models/patients";
+import { useDb } from "~/server/utils/drizzle";
+
 export default defineEventHandler(async (event) => {
-    const storage = useStorage<Patient>('patients')
-    // Generate a unique patient ID
     const { data: params } = await getValidatedRouterParams(event, z.object({
         id: z.string().uuid()
     }).spa)
@@ -18,7 +16,6 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { id } = params
     const { success, error, data } = await readValidatedBody(event, PatientSchema.safeParse)
 
     if (!success) {
@@ -37,8 +34,13 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    // Save the new patient to storage
-    await storage.setItem(id, data)
+    console.log('Creating patient with data:', data)
+
+    // Save the new patient to database
+    await useDb().insert(tables.patients).values({
+        ...data
+    })
+
     // Return the created patient
     const response: ServerResponse<Patient> = {
         status: 'success',
@@ -48,5 +50,4 @@ export default defineEventHandler(async (event) => {
         data: data
     }
     return response
-
 })

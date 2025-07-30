@@ -1,27 +1,15 @@
-import { useStorage } from "#imports"
-import type { Patient } from "~/models/patients"
+import type { Patient } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils";
+import { useDb, tables } from "~/server/utils/drizzle";
 
 export default defineEventHandler(async () => {
-    const storage = useStorage<Patient>('patients')
-    const ids = await storage.getKeys();
-
-    if (!ids || ids.length === 0) {
-        throw createError({
-            statusCode: 404,
-            statusMessage: 'No patients found'
-        })
-    }
-
+    const db = useDb()
+    const patientsTable = tables.patients
 
     // Fetch all patients
-    const patients = await Promise.all(ids.map(async (id) => {
-        const patient = await storage.getItem(id)
-        return patient
-    }))
+    const patients = await db.select().from(patientsTable).limit(100)
 
-    const validPatients = patients.filter((patient) => patient !== null && patient !== undefined)
-    if (validPatients.length === 0) {
+    if (patients.length === 0) {
         throw createError({
             statusCode: 404,
             statusMessage: 'No valid patients found'
@@ -33,7 +21,7 @@ export default defineEventHandler(async () => {
         status: 'success',
         statusText: 'OK',
         statusCode: 200,
-        data: validPatients
+        data: patients
     }
 
     return response

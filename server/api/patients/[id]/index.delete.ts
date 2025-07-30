@@ -1,10 +1,8 @@
-import { useStorage } from "#imports"
-import type { Patient } from "~/models/patients"
 import type { ServerResponse } from "~/models/utils"
+import { useDb } from "~/server/utils/drizzle"
 
 // DELETE // Endpoint to delete a clinical patient by ID
 export default defineEventHandler(async (event) => {
-    const storage = useStorage<Patient>('patients')
     const id = getRouterParam(event, 'id')
 
     if (!id) {
@@ -15,17 +13,17 @@ export default defineEventHandler(async (event) => {
     }
 
     // Check if the patient exists
-    const existingPatient = await storage.getItem(id)
-    if (!existingPatient) {
+    const existingPatients = await useDb().select().from(tables.patients).where(eq(tables.patients.uuid, id))
+
+    if (!existingPatients || existingPatients.length === 0) {
         throw createError({
             statusCode: 404,
             statusMessage: 'Patient not found'
         })
     }
 
-
-    // Delete the patient from storage
-    await storage.removeItem(id)
+    // Delete the patient from database
+    await useDb().delete(tables.patients).where(eq(tables.patients.uuid, id))
 
     const response: ServerResponse<null> = {
         status: 'success',

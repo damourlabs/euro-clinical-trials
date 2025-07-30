@@ -1,10 +1,9 @@
 // PUT // Endpoint to update a patient
-import { useStorage } from "#imports"
-import { PatientSchema, type Patient } from "~/models/patients"
+import { PatientSchema, type Patient } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
+import { useDb } from "~/server/utils/drizzle"
 
 export default defineEventHandler(async (event) => {
-    const storage = useStorage<Patient>('patients')
     const id = getRouterParam(event, 'id')
 
     if (!id) {
@@ -15,16 +14,28 @@ export default defineEventHandler(async (event) => {
     }
 
     // Check if the patient exists
-    const existingPatient = await storage.getItem(id)
-    if (!existingPatient) {
+    const existingPatients = await useDb().select().from(tables.patients).where(eq(tables.patients.uuid, id))
+
+    if (!existingPatients) {
         throw createError({
             statusCode: 404,
             statusMessage: 'Patient not found'
         })
     }
 
+    if (existingPatients.length > 1) {
+        throw createError({
+            statusCode: 500,
+            statusMessage: 'Multiple patients found with the same ID, this should not happen'
+        })
+    }
+
+    // Get the existing patient data
+    const existingPatient = existingPatients[0]
+
     // Get the updated data from the request body
-    const { success, error, data: updatedData } = await readValidatedBody(event, PatientSchema.safeParse)
+    const { success, error, data } = await readValidatedBody(event, PatientSchema.safeParse)
+
     if (!success) {
         console.error('Invalid patient data:', error);
         throw createError({
@@ -34,7 +45,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (!updatedData) {
+    if (!data) {
         throw createError({
             statusCode: 400,
             statusMessage: 'Patient data is required'
@@ -43,11 +54,12 @@ export default defineEventHandler(async (event) => {
 
     const newPatientData = {
         ...existingPatient,
-        ...updatedData
+        ...data,
+        updatedAt: new Date() // Update the timestamp
     }
 
-    // Update the patient in storage
-    await storage.setItem(id, newPatientData)
+    // Update the patient in database
+    await useDb().update(tables.patients).set(newPatientData).where(eq(tables.patients.uuid, id))
 
     const response: ServerResponse<Patient> = {
         status: 'success',
