@@ -36,7 +36,7 @@ onMounted(async () => {
                 message: `Audit with ID ${auditId} not found`
             })
         }
-    } catch (error) {
+    } catch {
         throw createError({
             statusCode: 404,
             statusMessage: 'Audit not found',
@@ -47,7 +47,7 @@ onMounted(async () => {
 
 definePageMeta({
   layout: 'simple',
-  title: computed(() => audit.value ? `Audit ${audit.value.id} - CTMS` : 'Audit Details - CTMS'),
+  title: computed(() => audit.value ? `Audit ${audit.value.uuid} - CTMS` : 'Audit Details - CTMS'),
   meta: [
     { name: 'description', content: 'View detailed information about a specific audit log.' },
     { name: 'robots', content: 'noindex' }
