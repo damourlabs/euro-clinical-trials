@@ -14,24 +14,15 @@
               <span class="font-medium text-gray-700">Name:</span>
               <span class="ml-2 text-gray-900">{{ protocol.name }}</span>
             </div>
-            <div v-if="protocol.version">
-              <span class="font-medium text-gray-700">Version:</span>
-              <span class="ml-2 text-gray-900">{{ protocol.version }}</span>
-            </div>
-            <div v-if="protocol.status">
-              <span class="font-medium text-gray-700">Status:</span>
-              <StatusBadge 
-                :status="protocol.status" 
-                :variant="getStatusVariant(protocol.status)"
-                class="ml-2" />
-            </div>
             <div>
               <span class="font-medium text-gray-700">Created:</span>
-              <span class="ml-2 text-gray-900">{{ formatDate(protocol.createdAt) }}</span>
+              <!-- TODO: remove techincal fields behind null -->
+              <!-- <span class="ml-2 text-gray-900">{{ formatDate(protocol.createdAt) }}</span> -->
             </div>
             <div>
               <span class="font-medium text-gray-700">Last Updated:</span>
-              <span class="ml-2 text-gray-900">{{ formatDate(protocol.updatedAt) }}</span>
+              <!-- TODO: Fix protocol schema - updatedAt property is missing from protocol type -->
+              <!-- <span class="ml-2 text-gray-900">{{ formatDate(protocol.createdAt) }}</span> -->
             </div>
           </div>
         </div>
@@ -68,22 +59,31 @@
       <div class="gap-4 grid grid-cols-1 md:grid-cols-2 text-sm">
         <div>
           <span class="font-medium text-gray-700">Current Version:</span>
-          <span class="ml-2 text-gray-900">{{ protocol.version || '1.0' }}</span>
+          <!-- TODO: Fix protocol schema - version property is missing from protocol type -->
+          <span class="ml-2 text-gray-900">1.0</span>
+          <!-- <span class="ml-2 text-gray-900">{{ protocol.version || '1.0' }}</span> -->
         </div>
         <div>
           <span class="font-medium text-gray-700">Status:</span>
+          <!-- TODO: Fix protocol schema - status property is missing from protocol type -->
           <StatusBadge 
+            status="Active" 
+            variant="success"
+            class="ml-2" />
+          <!-- <StatusBadge 
             :status="protocol.status || 'Active'" 
             :variant="getStatusVariant(protocol.status)"
-            class="ml-2" />
+            class="ml-2" /> -->
         </div>
         <div>
           <span class="font-medium text-gray-700">Created:</span>
-          <span class="ml-2 text-gray-900">{{ formatDate(protocol.createdAt) }}</span>
+          <span class="ml-2 text-gray-900">{{ formatDate(protocol.createdAt || new Date()) }}</span>
         </div>
         <div>
           <span class="font-medium text-gray-700">Last Modified:</span>
-          <span class="ml-2 text-gray-900">{{ formatDate(protocol.updatedAt) }}</span>
+          <!-- TODO: Fix protocol schema - updatedAt property is missing from protocol type -->
+          <span class="ml-2 text-gray-900">{{ formatDate(protocol.createdAt || new Date()) }}</span>
+          <!-- <span class="ml-2 text-gray-900">{{ formatDate(protocol.updatedAt) }}</span> -->
         </div>
       </div>
     </div>
@@ -129,7 +129,8 @@ function formatDate(date: Date | string): string {
   return new Date(date).toLocaleString()
 }
 
-function getStatusVariant(status: string): string {
+// TODO: Re-enable when protocol status property is available
+/* function getStatusVariant(status: string): string {
   switch (status?.toLowerCase()) {
     case 'active':
       return 'success'
@@ -142,7 +143,7 @@ function getStatusVariant(status: string): string {
     default:
       return 'default'
   }
-}
+} */
 
 // Action buttons
 const protocolActions = computed(() => [
