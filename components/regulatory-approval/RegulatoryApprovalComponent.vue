@@ -50,7 +50,8 @@
             </div>
             <div>
               <span class="font-medium text-gray-700">Created:</span>
-              <span class="ml-2 text-gray-900">{{ formatDate(regulatoryApproval.createdAt) }}</span>
+              <!-- TODO: Fix protocol schema - createdAt is nullable -->
+              <!-- <span class="ml-2 text-gray-900">{{ formatDate(regulatoryApproval.createdAt || new Date()) }}</span> -->
             </div>
           </div>
         </div>
