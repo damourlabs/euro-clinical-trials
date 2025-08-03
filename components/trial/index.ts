@@ -1,2 +1,5 @@
+export { default as TrialListComponent } from './TrialListComponent.vue'
 export { default as TrialDataTableDropDown } from './TrialDataTableDropDown.vue'
 export { default as TrialDashboard } from './TrialDashboard.vue'
+export { default as TrialCompactCard } from './TrialCompactCard.vue'
+export { default as TrialCard } from './TrialCard.vue'

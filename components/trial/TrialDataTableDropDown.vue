@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import type { Trial } from '@/server/database/schema'
 
 defineProps<{
-  trial: Trial
+  trialId: string
 }>()
 
 function copy(id: string) {
@@ -25,17 +25,17 @@ function copy(id: string) {
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-      <DropdownMenuItem @click="copy(trial.uuid)">
+      <DropdownMenuItem @click="copy(trialId)">
         Copy trial ID
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem>
-        <NuxtLink :to="`/trials/${trial.uuid}`">
+        <NuxtLink :to="`/trials/${trialId}`">
           View trial details
         </NuxtLink>
       </DropdownMenuItem>
       <DropdownMenuItem>
-        <NuxtLink :to="`/trials/${trial.uuid}/edit`">
+        <NuxtLink :to="`/trials/${trialId}/edit`">
           Edit trial
         </NuxtLink>
       </DropdownMenuItem>
