@@ -9,9 +9,9 @@
 
 <script setup lang="ts">
 import { GDPR_CONSENT_COLUMNS_SIMPLE } from '~/models/columns/gdpr-consents-column-simple'
-import type { GDPRConsent } from '~/server/database/schema'
+import type { GdprConsent } from '~/server/database/schema'
 
 defineProps<{
-  gdprConsents: GDPRConsent[] | undefined
+  gdprConsents: GdprConsent[] | undefined
 }>()
 </script>
