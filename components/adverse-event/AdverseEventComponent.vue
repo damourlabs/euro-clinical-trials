@@ -40,7 +40,7 @@
             </div>
             <div>
               <span class="font-medium text-gray-700">Date Occurred:</span>
-              <span class="ml-2 text-gray-900">{{ formatDate(adverseEvent.dateOccurred) }}</span>
+              <span class="ml-2 text-gray-900">{{ formatDate(adverseEvent.eventDate) }}</span>
             </div>
             <div>
               <span class="font-medium text-gray-700">Reported At:</span>
@@ -76,7 +76,7 @@
           </div>
           <div>
             <p class="font-medium text-gray-900">Event Occurred</p>
-            <p class="text-gray-600 text-sm">{{ formatDate(adverseEvent.dateOccurred) }}</p>
+            <p class="text-gray-600 text-sm">{{ formatDate(adverseEvent.eventDate) }}</p>
           </div>
         </div>
         
