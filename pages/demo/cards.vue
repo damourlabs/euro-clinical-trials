@@ -265,7 +265,6 @@
               { key: 'name', label: 'Primary Endpoint', type: 'text' },
               { key: 'isPrimary', label: 'Type', type: 'badge', colorScheme: 'violet', format: (v) => v ? 'Primary' : 'Secondary' },
               { key: 'actualValue', label: 'Result', type: 'text', format: (v) => `${v} months` },
-              { key: 'pValue', label: 'P-Value', type: 'badge', colorScheme: 'green', format: (v) => v < 0.05 ? 'Significant' : 'Not Significant' }
             ]
           }" />
       </div>
@@ -337,7 +336,7 @@ import { RegulatoryApprovalCard } from '~/components/regulatory-approval'
 import { VisitCard } from '~/components/visit'
 import { EndpointCard } from '~/components/endpoint'
 import { EligibilityCard } from '~/components/eligibility'
-import type { Patient, Site, Trial } from '~/server/database/schema'
+import type { AdverseEvent, Document, EligibilityCriteria, Endpoint, GdprConsent, Patient, RegulatoryApproval, Site, Trial, User, Visit } from '~/server/database/schema'
 
 // Sample data for demonstration
 const sampleTrial: Trial = {
@@ -348,7 +347,10 @@ const sampleTrial: Trial = {
   phase: 'III',
   startDate: '2024-01-15',
   estimatedEndDate: '2025-12-31',
-  description: 'A randomized, double-blind, placebo-controlled study evaluating the efficacy and safety of investigational drug in patients with advanced NSCLC.'
+  description: 'A randomized, double-blind, placebo-controlled study evaluating the efficacy and safety of investigational drug in patients with advanced NSCLC.',
+  principalInvestigatorUuid: 'user-123e4567-e89b-12d3-a456-426614174003',
+  protocolUuid: 'protocol-123e4567-e89b-12d3-a456-426614174003',
+  sponsorUuid: 'user-123e4567-e89b-12d3-a456-426614174002',
 }
 
 const samplePatient: Patient = {
@@ -358,9 +360,10 @@ const samplePatient: Patient = {
   consentStatus: 'Consented',
   enrollmentDate: '2024-02-01',
   randomizationGroup: 'Treatment Arm A',
-  dataCompleteness: 85,
-  lastVisitDate: '2024-07-15',
-  nextVisitDate: '2024-08-15'
+  dataCompleteness: '90.11',
+  siteUuid: 'site-123e4567-e89b-12d3-a456-426614174002',
+  trialUuid: 'trial-123e4567-e89b-12d3-a456-426614174000',
+  createdAt: new Date();
 }
 
 const sampleSite: Site = {
@@ -386,7 +389,7 @@ const sampleSite: Site = {
   updatedAt: new Date()
 }
 
-const sampleUser = {
+const sampleUser: User = {
   uuid: 'user-123e4567-e89b-12d3-a456-426614174003',
   name: 'Dr. Sarah Johnson',
   email: 'sarah.johnson@medcenter.com',
@@ -395,49 +398,48 @@ const sampleUser = {
   phoneNumber: '+1-555-123-4567',
   isActive: true,
   emailVerified: true,
-  lastLoginAt: '2024-07-30T10:30:00Z',
+  
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date()
 }
 
-const sampleDocument = {
+const sampleDocument: Document = {
   uuid: 'doc-123e4567-e89b-12d3-a456-426614174004',
   title: 'Study Protocol Version 2.1',
   url: '/documents/protocol-v2.1.pdf',
   documentType: 'Protocol',
+  siteUuid: 'site-123e4567-e89b-12d3-a456-426614174002',
+  uploadedBy: 'user-123e4567-e89b-12d3-a456-426614174003',
   description: 'Updated study protocol with amendments for inclusion criteria',
   uploadDate: '2024-07-20',
-  uploadedByUuid: 'user-123e4567-e89b-12d3-a456-426614174003',
   trialUuid: 'trial-123e4567-e89b-12d3-a456-426614174000',
   createdAt: new Date('2024-07-20'),
-  updatedAt: new Date()
 }
 
-const sampleAdverseEvent = {
+const sampleAdverseEvent: AdverseEvent = {
   uuid: 'ae-123e4567-e89b-12d3-a456-426614174005',
   patientUuid: 'patient-123e4567-e89b-12d3-a456-426614174001',
-  eventDescription: 'Mild nausea and fatigue following treatment administration',
+  description: 'Mild nausea and fatigue following treatment administration',
   severity: 'Mild',
-  outcome: 'Recovered',
+  outcome: 'Resolved',
   relatedToTrial: true,
-  onsetDate: '2024-07-25',
-  resolutionDate: '2024-07-28',
-  reportedDate: '2024-07-26',
+  eventDate: '2024-07-26',
+  reportedAt: new Date('2024-07-26'),
+  resolvedAt: new Date('2024-08-01'),
   createdAt: new Date('2024-07-26'),
   updatedAt: new Date()
 }
 
-const sampleGDPRConsent = {
+const sampleGDPRConsent: GdprConsent = {
   uuid: 'gdpr-123e4567-e89b-12d3-a456-426614174006',
   trialUuid: 'trial-123e4567-e89b-12d3-a456-426614174000',
   patientUuid: 'patient-123e4567-e89b-12d3-a456-426614174001',
   consentGiven: true,
   consentDate: '2024-02-01',
   legalBasis: 'Consent',
-  consentType: 'Data processing',
-  purpose: 'Clinical trial management',
+  consentType: 'Data_processing',
+  purpose: 'Clinical_trial_management',
   consentStatus: 'Consented',
-  dataCategories: ['Health data', 'Personal identification data'],
   retentionPeriod: 5,
   dataProcessingDetails: 'Data will be processed for clinical trial management and regulatory compliance',
   timestamp: '2024-02-01',
@@ -445,7 +447,7 @@ const sampleGDPRConsent = {
   updatedAt: new Date()
 }
 
-const sampleRegulatoryApproval = {
+const sampleRegulatoryApproval:RegulatoryApproval = {
   uuid: 'reg-123e4567-e89b-12d3-a456-426614174007',
   status: 'Approved',
   type: 'Clinical Trial',
@@ -460,12 +462,12 @@ const sampleRegulatoryApproval = {
   updatedAt: new Date()
 }
 
-const sampleVisit = {
+const sampleVisit: Visit = {
   uuid: 'visit-123e4567-e89b-12d3-a456-426614174008',
   patientUuid: 'patient-123e4567-e89b-12d3-a456-426614174001',
   siteUuid: 'site-123e4567-e89b-12d3-a456-426614174002',
   visitType: 'Screening',
-  scheduledDate: '2024-08-15',
+  visitDate: '2024-08-15',
   actualDate: '2024-08-15',
   status: 'Completed',
   visitNumber: 1,
@@ -475,40 +477,20 @@ const sampleVisit = {
   updatedAt: new Date()
 }
 
-const sampleEndpoint = {
+const sampleEndpoint: Endpoint = {
   uuid: 'endpoint-123e4567-e89b-12d3-a456-426614174009',
-  trialUuid: 'trial-123e4567-e89b-12d3-a456-426614174000',
-  name: 'Overall Survival',
-  type: 'Time-to-event',
   description: 'Time from randomization to death from any cause',
-  measurementUnit: 'months',
-  timeFrame: '24 months',
-  isPrimary: true,
-  methodOfAssessment: 'Survival analysis',
-  population: 'Intent-to-treat',
-  targetValue: 18.5,
-  actualValue: 19.2,
-  pValue: 0.045,
-  confidenceInterval: '95% CI: 16.8-21.6',
-  createdAt: new Date('2024-01-15'),
-  updatedAt: new Date()
+  targetValue: "18.5",
+  createdAt: new Date('2024-01-15')
 }
 
-const sampleEligibility = {
+const sampleEligibility: EligibilityCriteria = {
   uuid: 'elig-123e4567-e89b-12d3-a456-426614174010',
   trialUuid: 'trial-123e4567-e89b-12d3-a456-426614174000',
-  type: 'Medical',
-  category: 'Age',
-  description: 'Patient must be 18 years or older',
-  criteriaText: 'Age ≥ 18 years at the time of informed consent',
   minAge: 18,
-  maxAge: undefined,
-  gender: undefined,
-  healthCondition: 'Non-small cell lung cancer',
-  isInclusion: true,
-  priority: 1,
-  createdAt: new Date('2024-01-15'),
-  updatedAt: new Date()
+  maxAge: 75,
+  sex: 'All',
+  createdAt: new Date('2024-01-15')
 }
 
 definePageMeta({
