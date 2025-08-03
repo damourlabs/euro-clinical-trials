@@ -1,6 +1,6 @@
 import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
-import type { Trial, type RegulatoryApproval } from '~/server/database/schema';
+import type { Trial, RegulatoryApproval } from '~/server/database/schema';
 import {
     StatusBadge,
     FieldDate,
@@ -114,7 +114,7 @@ export const REGULATORY_APPROVAL_COLUMNS: ColumnDef<RegulatoryApproval>[] = [
                     entityUuid: trialUuid,
                     entityType: 'trial',
                     fetchFunction: fetchTrial,
-                    titleField: 'name',
+                    titleField: 'title',
                     subtitleField: 'description',
                     statusField: 'status',
                     colorScheme: 'blue'
