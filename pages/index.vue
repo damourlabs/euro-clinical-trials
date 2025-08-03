@@ -25,10 +25,10 @@
           :icon="Activity" 
           color="green" />
         <UiCommonStatCard 
-          :value="totalEnrolled" 
+          :value="totalEnrolled || 0" 
           label="Enrolled Patients" 
           :icon="Users" 
-          color="purple" />
+          color="purple" /> -->
         <UiCommonStatCard 
           :value="gdprCompliantTrials" 
           label="GDPR Compliant" 
@@ -66,6 +66,24 @@
             description="Manage multiple trial sites with role-based access and real-time coordination"
             :icon="MapPin"
             link="/sites" />
+            
+          <UiCommonFeatureCard 
+            title="Document Management"
+            description="Centralized document storage and management with trial and site associations"
+            :icon="FileText"
+            link="/documents" />
+            
+          <UiCommonFeatureCard 
+            title="Regulatory Approvals"
+            description="Track regulatory approvals, compliance status, and expiry dates across authorities"
+            :icon="Shield"
+            link="/regulatory-approvals" />
+            
+          <UiCommonFeatureCard 
+            title="User Management"
+            description="Manage trial staff, roles, and permissions with comprehensive access control"
+            :icon="Users"
+            link="/users" />
         </div>
       </div>
     </section>
@@ -78,7 +96,7 @@
           <p class="text-gray-600 text-lg">Latest updates from your clinical trials</p>
         </div>
 
-        <div class="gap-8 grid grid-cols-1 lg:grid-cols-2">
+        <div class="gap-8 grid grid-cols-1 lg:grid-cols-3">
           <!-- Recent Trials -->
           <Card class="p-6">
             <CardHeader>
@@ -96,18 +114,11 @@
               <div 
                 v-else-if="recentTrials.length > 0" 
                 class="space-y-3">
-                <div 
-                  v-for="trial in recentTrials.slice(0, 3)" 
-                  :key="trial.id"
-                  class="flex justify-between items-start hover:bg-gray-50 p-3 rounded-lg transition-colors">
-                  <div>
-                    <h4 class="font-medium text-gray-900">{{ trial.basicInfo.title }}</h4>
-                    <p class="text-gray-500 text-sm">{{ trial.basicInfo.indication }}</p>
-                  </div>
-                  <Badge :class="getStatusColor(trial.timeline.status)">
-                    {{ trial.timeline.status }}
-                  </Badge>
-                </div>
+                <TrialCard
+                  v-for="trial in recentTrials.slice(0, 3)"
+                  :key="trial.uuid"
+                  :trial="trial"
+                  size="small" />
               </div>
               <div 
                 v-else 
@@ -115,6 +126,39 @@
                 No trials found. <UiCommonNavLink 
                   to="/trials/create" 
                   class="text-blue-600">Create your first trial</UiCommonNavLink>
+              </div>
+            </CardContent>
+          </Card>
+
+          <!-- Recent Patients -->
+          <Card class="p-6">
+            <CardHeader>
+              <CardTitle class="flex items-center gap-2">
+                <Users class="w-5 h-5 text-purple-600" />
+                Recent Patients
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div 
+                v-if="isLoadingPatients" 
+                class="flex justify-center items-center h-32">
+                <div class="border-purple-600 border-b-2 rounded-full w-8 h-8 animate-spin" />
+              </div>
+              <div 
+                v-else-if="recentPatients.length > 0" 
+                class="space-y-3">
+                <PatientCard
+                  v-for="patient in recentPatients.slice(0, 3)"
+                  :key="patient.uuid"
+                  :patient="patient"
+                  size="small" />
+              </div>
+              <div 
+                v-else 
+                class="py-8 text-gray-500 text-center">
+                No patients enrolled. <UiCommonNavLink 
+                  to="/patients/create" 
+                  class="text-purple-600">Enroll first patient</UiCommonNavLink>
               </div>
             </CardContent>
           </Card>
@@ -187,8 +231,6 @@
 import { 
   FlaskConical, 
   Activity, 
-  Users, 
-  Shield, 
   Microscope, 
   UserCheck, 
   MapPin,   
@@ -199,11 +241,15 @@ import {
   Building, 
   BarChart3, 
   ChevronRight,
-  ChartBarIcon
+  ChartBarIcon,
+  Users,
+  FileText,
+  Shield
 } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { CardContent, CardHeader, CardTitle } from '~ui/components/ui/card'
-import { Badge } from '~ui/components/ui/badge'
+import { TrialCard } from '~/components/trial'
+import { PatientCard } from '~/components/patient'
 import type { HeroProps } from '~ui/components/common/Hero.vue'
 
 definePageMeta({
@@ -219,10 +265,13 @@ useHead({
   ]
 })
 
-// Store and data
-const store = useTrialsStore()
-const { items: trials } = storeToRefs(store)
-const { fetchAll, isLoading } = store
+// Stores and data
+const trialsStore = useTrialsStore()
+const patientsStore = usePatientsStore()
+const { items: trials } = storeToRefs(trialsStore)
+const { items: patients } = storeToRefs(patientsStore)
+const { fetchAll, isLoading } = trialsStore
+const { loading: isLoadingPatients } = patientsStore
 
 const heroProps: HeroProps = {
   actions: [
@@ -244,41 +293,43 @@ const heroProps: HeroProps = {
 // Computed statistics
 const totalTrials = computed(() => trials.value?.length || 0)
 const activeTrials = computed(() => 
-  trials.value?.filter(trial => trial.timeline.status === 'Active').length || 0
+  trials.value?.filter(trial => trial.status === 'Active').length || 0
 )
-const totalEnrolled = computed(() => {
-  if (!trials.value) return 0
-  return trials.value.reduce((sum, trial) => {
-    return sum + (trial.participantEnrollment.currentEnrollment || 0)
-  }, 0)
+
+// const totalPatients = computed(() => patients.value?.length || 0)
+// const activePatients = computed(() => 
+//   patients.value?.filter(patient => patient.status === 'Active').length || 0
+// )
+
+// Recent items
+const recentTrials = computed(() => {
+  if (!trials.value) return []
+  return [...trials.value]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 5)
 })
+
+const recentPatients = computed(() => {
+  if (!patients.value) return []
+  return [...patients.value]
+    .sort((a, b) => new Date(b.enrollmentDate || '').getTime() - new Date(a.enrollmentDate || '').getTime())
+    .slice(0, 5)
+})
+
+const totalEnrolled = computed(() => 
+  patients.value?.filter(patient => patient.status === 'Enrolled').length || 0
+)
+
 const gdprCompliantTrials = computed(() => 
   trials.value?.filter(trial => trial.regulatoryCompliance.complianceStatus.gdprCompliant).length || 0
 )
 
-const recentTrials = computed(() => {
-  if (!trials.value) return []
-  return [...trials.value]
-    .sort((a, b) => new Date(b.timeline.startDate).getTime() - new Date(a.timeline.startDate).getTime())
-    .slice(0, 5)
-})
-
-// Helper functions
-const getStatusColor = (status: string) => {
-  const colors = {
-    'Active': 'bg-green-100 text-green-800',
-    'Planning': 'bg-blue-100 text-blue-800',
-    'Completed': 'bg-gray-100 text-gray-800',
-    'Paused': 'bg-yellow-100 text-yellow-800',
-    'Terminated': 'bg-red-100 text-red-800'
-  }
-  return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800'
-}
-
-
 const { navigationConfig, updateNavigationConfig } = useNavigation();
 // Update the navigation configuration with the provided props
-onMounted(() => {
+onMounted(async () => {
+  // Fetch data
+  await fetchAll()
+  await patientsStore.fetchAll()
   
   updateNavigationConfig({
     ...navigationConfig.value,
