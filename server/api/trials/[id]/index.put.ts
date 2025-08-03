@@ -1,5 +1,5 @@
 // PUT // Endpoint to update a trial
-import { TrialSchema, type Trial } from "~/server/database/schema"
+import { trialSchema, type Trial } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
 import { useDb } from "~/server/utils/drizzle"
 
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
     const existingTrial = existingTrials[0]
 
     // Get the updated data from the request body
-    const { success, error, data } = await readValidatedBody(event, TrialSchema.safeParse)
+    const { success, error, data } = await readValidatedBody(event, trialSchema.safeParse)
 
     if (!success) {
         console.error('Invalid trial data:', error);

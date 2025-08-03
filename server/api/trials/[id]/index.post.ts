@@ -1,4 +1,4 @@
-import { TrialSchema, type Trial } from "~/server/database/schema"
+import { trialSchema, type Trial } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
 import { z } from "zod";
 import { useDb } from "~/server/utils/drizzle";
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     const { id } = params
 
 
-    const { success, error, data } = await readValidatedBody(event, TrialSchema.safeParse)
+    const { success, error, data } = await readValidatedBody(event, trialSchema.safeParse)
 
     if (!success) {
         console.error('Invalid trial data:', error);
