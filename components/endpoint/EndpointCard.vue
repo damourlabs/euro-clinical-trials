@@ -1,5 +1,6 @@
 <template>
   <ResourceCard
+    generic="Endpoint"
     :size="size"
     resource-type="endpoint"
     :data="endpoint"
