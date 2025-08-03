@@ -134,7 +134,7 @@
   </component>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends { uuid?: string, id?: string }">
 import { computed, ref } from 'vue'
 import { Card } from '~ui/components/ui/card'
 import { Button } from '~ui/components/ui/button'
@@ -150,7 +150,7 @@ export interface CardAction {
 export interface CardField {
   key: string
   label: string
-  type?: 'text' | 'badge' | 'date' | 'number' | 'percentage' | 'link'
+  type?: 'text' | 'badge' | 'date' | 'number' | 'percentage' | 'link' | 'uuid'
   colorScheme?: string
   format?: (value: unknown) => string
 }
@@ -158,7 +158,7 @@ export interface CardField {
 interface Props {
   size: 'micro' | 'small' | 'medium' | 'large'
   resourceType: 'trial' | 'patient' | 'site' | 'user' | 'document' | 'adverse-event' | 'gdpr-consent' | 'regulatory-approval' | 'visit' | 'endpoint' | 'eligibility' | 'protocol' | 'audit'
-  data?: Record<string, unknown>
+  data?: T
   loading?: boolean
   error?: boolean
   onRetry?: () => void
@@ -173,6 +173,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  // @ts-expect-error generic type
   data: () => ({}),
   loading: false,
   error: false,
