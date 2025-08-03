@@ -2,6 +2,7 @@ import type { AuditLog } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils";
 import { useDb } from "~/server/utils/drizzle";
 import * as tables from "~/server/database/schema";
+import { isNuxtError } from "nuxt/app";
 
 export default defineEventHandler(async (event) => {
     const db = useDb()
@@ -43,13 +44,14 @@ export default defineEventHandler(async (event) => {
 
         return response
     } catch (error) {
-        if (error.statusCode) {
-            throw error
+        if (!isNuxtError(error)) {
+            throw createError({
+                status: 500,
+                statusMessage: 'Something went wrong',
+                message: "Unknown error occured"
+            })
         }
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Failed to update audit',
-            message: error instanceof Error ? error.message : 'Unknown error occurred'
-        })
+
+        throw error
     }
 })
