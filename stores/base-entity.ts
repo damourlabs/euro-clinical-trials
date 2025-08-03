@@ -21,31 +21,16 @@ export function createEntityStore<
 
 
 
-
+    const getById = (id: string | number): T | undefined => {
+      if (!items.value) return undefined;
+      return items.value.find(item => item.uuid === id);
+    }
     const isLoading = computed(() => loading)
     const hasError = computed(() => !!error)
     const isEmpty = computed(() => !loading && (!items.value || items.value.length === 0))
     const hasItems = computed(() => items.value ? items.value.length > 0 : false)
 
-    const getById = async (id: string | number) => {
-      loading.value = true
-      error.value = undefined
-      let response = undefined
-      try {
-        response = await repository.findById(id)
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          error.value = err.message || 'Failed to fetch item'
-        } else {
-          error.value = 'An unknown error occurred'
-        }
-        throw error
-      } finally {
-        loading.value = false
-      }
 
-      return response
-    }
 
     const fetchAll = async (filters?: BaseRepositoryFilters) => {
       loading.value = true
@@ -79,8 +64,9 @@ export function createEntityStore<
 
       try {
         const item = await repository.findById(id)
+
         if (!items.value) {
-          throw createError('Items list is not initialized')
+          items.value = []
         }
         const index = items.value.findIndex((i: T) => i.uuid === id)
 
