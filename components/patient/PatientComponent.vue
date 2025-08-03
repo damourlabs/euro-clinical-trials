@@ -157,9 +157,6 @@ onMounted(async () => {
       await sitesStore.fetchById(patient.value.siteUuid)
     }
     
-    // Fetch related data using custom methods
-    console.log("Fetching patient related data...")
-    
     visits.value = await patientsStore.customMethods.getPatientVisits(props.patientId)
     adverseEvents.value = await patientsStore.customMethods.getPatientAdverseEvents(props.patientId)
     gdprConsents.value = await patientsStore.customMethods.getPatientGdprConsents(props.patientId)
