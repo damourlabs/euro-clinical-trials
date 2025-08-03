@@ -54,7 +54,7 @@
 
 
   const testDynamicFormSchema = createDynamicForm(PatientSchema, ["trial", "site"])
-  console.log('Dynamic Form Schema:', testDynamicFormSchema)
+
   const { create: createPatient } = usePatientsStore()
 
 
