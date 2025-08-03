@@ -19,22 +19,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import ResourceCard, { type CardAction, type CardField } from '~/components/common/ResourceCard.vue'
-
-interface Visit {
-  uuid: string
-  patientUuid: string
-  siteUuid: string
-  visitType: string
-  scheduledDate: string
-  actualDate?: string
-  status: string
-  visitNumber: number
-  window: string
-  notes?: string
-  missedVisitReason?: string
-  createdAt: Date
-  updatedAt: Date
-}
+import type { Visit } from '~/server/database/schema'
 
 interface Props {
   size: 'micro' | 'small' | 'medium' | 'large'

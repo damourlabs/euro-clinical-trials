@@ -19,31 +19,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import ResourceCard, { type CardAction, type CardField } from '~/components/common/ResourceCard.vue'
-
-interface GDPRConsent {
-  uuid: string
-  trialUuid: string
-  patientUuid: string
-  consentGiven: boolean
-  consentDate: string
-  legalBasis: string
-  withdrawalDate?: string
-  withdrawalMethod?: string
-  withdrawalReason?: string
-  consentType: string
-  purpose: string
-  consentStatus: string
-  dataCategories: string[]
-  retentionPeriod: number
-  dataProcessingDetails: string
-  timestamp: string
-  createdAt: Date
-  updatedAt: Date
-}
+import type { GdprConsent } from '~/server/database/schema'
 
 interface Props {
   size: 'micro' | 'small' | 'medium' | 'large'
-  gdprConsent?: GDPRConsent
+  gdprConsent?: GdprConsent
   loading?: boolean
   error?: boolean
   onRetry?: () => void

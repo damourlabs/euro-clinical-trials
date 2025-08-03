@@ -20,25 +20,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import ResourceCard, { type CardAction, type CardField } from '~/components/common/ResourceCard.vue'
-
-interface Endpoint {
-  uuid: string
-  trialUuid: string
-  name: string
-  type: string
-  description: string
-  measurementUnit?: string
-  timeFrame: string
-  isPrimary: boolean
-  methodOfAssessment: string
-  population?: string
-  targetValue?: number
-  actualValue?: number
-  pValue?: number
-  confidenceInterval?: string
-  createdAt: Date
-  updatedAt: Date
-}
+import type { Endpoint } from '~/server/database/schema'
 
 interface Props {
   size: 'micro' | 'small' | 'medium' | 'large'
