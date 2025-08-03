@@ -1,92 +1,95 @@
 <!-- pages/audits/create.vue -->
 <template>
-  <div class="mx-auto px-4 py-8 container">
-    <div class="bg-white shadow-sm p-6 border border-gray-200 rounded-lg">
-      <h1 class="mb-6 font-bold text-gray-900 text-2xl">Create New Audit Entry</h1>
-      
-      <form @submit.prevent="handleSubmit">
-        <div class="gap-6 grid grid-cols-1 md:grid-cols-2">
-          <div>
-            <label class="block mb-2 font-medium text-gray-700 text-sm">Action</label>
-            <select 
-              v-model="form.action" 
-              class="border-gray-300 focus:border-blue-500 rounded-md focus:ring-blue-500 w-full">
-              <option value="">Select action</option>
-              <option value="Create">Create</option>
-              <option value="Update">Update</option>
-              <option value="Delete">Delete</option>
-              <option value="View">View</option>
-            </select>
-          </div>
+  <Card class="p-6">
+    <CardHeader>
+      <div class="mb-8">
+        <CardTitle class="text-3xl">
+          Create New Audit
+        </CardTitle>
+        <CardDescription>
+          Fill out the form below to create a new audit log entry.
+        </CardDescription>
+      </div>
+    </CardHeader>
 
-          <div>
-            <label class="block mb-2 font-medium text-gray-700 text-sm">Entity Type</label>
-            <select 
-              v-model="form.entityType" 
-              class="border-gray-300 focus:border-blue-500 rounded-md focus:ring-blue-500 w-full">
-              <option value="">Select entity type</option>
-              <option value="Trial">Trial</option>
-              <option value="Patient">Patient</option>
-              <option value="Site">Site</option>
-              <option value="User">User</option>
-              <option value="AdverseEvent">Adverse Event</option>
-            </select>
-          </div>
+    <CardContent>
+      <UiFormsDynamicForm
+        :schema="auditForm"
+        :sections="false"
+        :submit-fn="onFormSubmit" />
+    </CardContent>
 
-          <div>
-            <label class="block mb-2 font-medium text-gray-700 text-sm">Entity ID</label>
-            <input 
-              v-model="form.entityUuid" 
-              type="text" 
-              class="border-gray-300 focus:border-blue-500 rounded-md focus:ring-blue-500 w-full"
-              placeholder="Enter entity UUID">
-          </div>
-
-          <div>
-            <label class="block mb-2 font-medium text-gray-700 text-sm">User ID</label>
-            <input 
-              v-model="form.userUuid" 
-              type="text" 
-              class="border-gray-300 focus:border-blue-500 rounded-md focus:ring-blue-500 w-full"
-              placeholder="Enter user UUID">
-          </div>
-        </div>
-
-        <div class="flex justify-end gap-4 mt-6">
-          <Button 
-            type="button" 
-            variant="outline" 
-            @click="$router.go(-1)">
-            Cancel
-          </Button>
-          <Button 
-            type="submit" 
-            :disabled="loading">
-            {{ loading ? 'Creating...' : 'Create Audit' }}
-          </Button>
-        </div>
-      </form>
-    </div>
-  </div>
+    <CardFooter>
+      <div class="flex justify-end space-x-4">
+        <UiCommonNavLink
+          to="/audits"
+          variant="secondary" icon="i-heroicons-x-mark">
+          Cancel
+        </UiCommonNavLink>
+      </div>
+    </CardFooter>
+  </Card>
 </template>
 
 <script setup lang="ts">
-const auditStore = useAuditsStore()
-const { loading } = storeToRefs(auditStore)
 
-const form = ref({
-  action: '',
-  entityType: '',
-  entityUuid: '',
-  userUuid: ''
+import { auditLogsSchema } from '~/server/database/schema';
+
+const auditForm = createDynamicForm(auditLogsSchema, {
+  fieldsToIgnore: [
+    "uuid", 
+    "createdAt",
+    "updatedAt",
+  ],
+  resourceFields: [
+    {
+      field: 'entityUuid',
+      store: 'auditsStore',
+      displayField: 'entityUuid',
+    },
+    {
+      field: 'userUuid',
+      store: 'usersStore',
+      displayField: 'name',
+    }
+  ]
 })
 
-const handleSubmit = async () => {
+definePageMeta({
+  layout: 'simple'
+})
+
+const { create: createAudit } = useAuditsStore()
+
+const onFormSubmit = async (formData: Record<string, unknown>) => {
   try {
-    await auditStore.create(form.value)
-    await navigateTo('/audits')
+
+    const { success, data: validatedValues, error } = await auditLogsSchema.safeParseAsync(formData)
+    if (!success) {
+      throw createError({
+        status: 400,
+        statusMessage: 'Validation Error',
+
+        message: error?.message || 'Invalid form data'
+      })
+    }
+
+    await createAudit(validatedValues)
+    
+    navigateTo('/audits')
   } catch (error) {
-    console.error('Failed to create audit:', error)
+    if(!isNuxtError(error)) {
+      throw createError({
+        status: 500,
+        statusMessage: 'Failed to create audit',
+        message: error instanceof Error ? error.message : 'Unknown error occurred'
+      })
+    }
+    throw error
   }
 }
+
+
+
+
 </script>
