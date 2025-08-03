@@ -6,7 +6,7 @@
 
 
 <script setup lang="ts">
-import { LayoutDashboardIcon, FlaskConical, UserRoundIcon, MapPinIcon, Cog, CircleHelp } from 'lucide-vue-next'
+import { LayoutDashboardIcon, FlaskConical, UserRoundIcon, MapPinIcon, Cog, CircleHelp, FileText, AlertTriangle, Shield, Users } from 'lucide-vue-next'
 import type { FooterProps } from '~ui/components/nav/Footer.vue'
 import type { NavigationSidebarProps } from '~ui/components/nav/SideBar.vue'
 
@@ -51,6 +51,7 @@ const sidebarProps = ref<NavigationSidebarProps>({
       url: '/patients',
       items: [
         { title: 'All Patients', url: '/patients', isActive: false },
+        { title: 'Dashboard', url: '/patients/dashboard', isActive: false },
         { title: 'Create Patient', url: '/patients/create', isActive: false },
       ],
     },
@@ -63,10 +64,46 @@ const sidebarProps = ref<NavigationSidebarProps>({
         { title: 'Create Site', url: '/sites/create', isActive: false },
       ],
     },
+    {
+      title: 'Users',
+      icon: Users,
+      url: '/users',
+      items: [
+        { title: 'All Users', url: '/users', isActive: false },
+        { title: 'Create User', url: '/users/create', isActive: false },
+      ],
+    },
+    {
+      title: 'Protocols',
+      icon: FileText,
+      url: '/protocols',
+      items: [
+        { title: 'All Protocols', url: '/protocols', isActive: false },
+        { title: 'Create Protocol', url: '/protocols/create', isActive: false },
+      ],
+    },
+    {
+      title: 'Audits',
+      icon: Shield,
+      url: '/audits',
+      items: [
+        { title: 'All Audits', url: '/audits', isActive: false },
+        { title: 'Create Audit', url: '/audits/create', isActive: false },
+      ],
+    },
+    {
+      title: 'Adverse Events',
+      icon: AlertTriangle,
+      url: '/adverse-events',
+      items: [
+        { title: 'All Events', url: '/adverse-events', isActive: false },
+        { title: 'Report Event', url: '/adverse-events/create', isActive: false },
+      ],
+    },
   ],
   links: [
-    { name: 'Settings', url: '/dashboard/settings', icon: Cog },
-    { name: 'Help', url: '/dashboard/help', icon: CircleHelp },
+    { name: 'Settings', url: '/settings', icon: Cog },
+    { name: 'Help', url: '/help', icon: CircleHelp },
   ],
   user: {
     name: ' ',
@@ -80,12 +117,16 @@ const trialsStore = useTrialsStore()
 const sitesStore = useSitesStore()
 const protocolStore = useProtocolsStore()
 const usersStore = useUsersStore()
+const auditsStore = useAuditsStore()
+const adverseEventsStore = useAdverseEventsStore()
 
 provide('patientsStore', patientsStore)
 provide('trialsStore', trialsStore)
 provide('sitesStore', sitesStore)
 provide('protocolsStore', protocolStore)
 provide('usersStore', usersStore)
+provide('auditsStore', auditsStore)
+provide('adverseEventsStore', adverseEventsStore)
 
 const footerProps = ref<FooterProps>({
   credits: `© ${new Date().getFullYear()} Euro Clinical Trials`,
