@@ -20,7 +20,7 @@
           ...testDynamicFormSchema,
           initialValues: patient ? patient : testDynamicFormSchema.initialValues
         }"
-        :on-submit="onFormSubmit" />
+        :submit-fn="onFormSubmit" />
     </CardContent>
     
     <CardFooter>

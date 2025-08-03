@@ -20,7 +20,7 @@
           ...testDynamicFormSchema,
           initialValues: trial ? trial : testDynamicFormSchema.initialValues
         }"
-        :on-submit="onFormSubmit" />
+        :submit-fn="onFormSubmit" />
     </CardContent>
     
     <CardFooter>

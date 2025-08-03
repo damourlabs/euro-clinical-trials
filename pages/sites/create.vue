@@ -19,7 +19,7 @@
     <CardContent>
       <UiFormsDynamicForm
         ref="form"
-        :sections="false" :schema="testDynamicFormSchema" :on-submit="onFormSubmit" />
+        :sections="false" :schema="testDynamicFormSchema" :submit-fn="onFormSubmit" />
     </CardContent>
 
     <CardFooter>

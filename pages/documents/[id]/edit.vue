@@ -21,7 +21,7 @@
           ...documentFormSchema,
           initialValues: document ? document : documentFormSchema.initialValues
         }"
-        :on-submit="onFormSubmit" />
+        :submit-fn="onFormSubmit" />
     </CardContent>
     
     <CardFooter>
