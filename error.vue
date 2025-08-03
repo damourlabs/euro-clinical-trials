@@ -20,8 +20,6 @@ const errorData = computed(() => ({
 
 <template>
   <div>
-
-    ERROR
     <NuxtLayout 
       name="error" 
       :error="errorData"
