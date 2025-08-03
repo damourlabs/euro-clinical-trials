@@ -48,7 +48,7 @@
       </UiDashboardCard>
 
       <!-- Enrollment Progress Card -->
-      <UiDashboardCard size="md">
+      <!-- <UiDashboardCard size="md">
         <CardHeader>
           <CardTitle class="flex items-center gap-2 text-lg">
             <Users class="w-5 h-5 text-green-600" />
@@ -75,7 +75,7 @@
             </div>
           </div>
         </CardContent>
-      </UiDashboardCard>
+      </UiDashboardCard>  -->
 
       <!-- Phase Distribution Card -->
       <UiDashboardCard size="sm">
@@ -127,11 +127,12 @@
         </CardHeader>
         <CardContent>
           <div
-            v-for="trial in recentTrials" :key="trial.id"
+            v-for="trial in recentTrials" :key="trial.uuid"
             class="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-lg transition-colors cursor-pointer">
-            <TrialPreview
+            <TrialCard
+              size="small"
               :trial="trial"
-              :get-status-color="getStatusColor" :format-date="formatDate" />
+            />
           </div>
           <div
             v-if="recentTrials.length === 0"
@@ -149,7 +150,7 @@
             Compliance Status
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <!-- <CardContent>
           <div class="space-y-4">
             <div class="text-center">
               <div class="font-bold text-red-600 text-2xl">{{ gdprCompliantTrials }}</div>
@@ -175,7 +176,7 @@
               </div>
             </div>
           </div>
-        </CardContent>
+        </CardContent> -->
       </UiDashboardCard>
 
       <!-- Timeline Overview Card -->
@@ -245,18 +246,18 @@
               <span class="text-gray-600 text-sm">Avg. Duration</span>
               <span class="font-medium">{{ averageDuration }} months</span>
             </div>
-            <div class="flex justify-between items-center">
+            <!-- <div class="flex justify-between items-center">
               <span class="text-gray-600 text-sm">Sites per Trial</span>
               <span class="font-medium">{{ averageSitesPerTrial }}</span>
-            </div>
+            </div> -->
             <div class="flex justify-between items-center">
               <span class="text-gray-600 text-sm">Success Rate</span>
               <span class="font-medium text-green-600">{{ successRate }}%</span>
             </div>
-            <div class="flex justify-between items-center">
+            <!-- <div class="flex justify-between items-center">
               <span class="text-gray-600 text-sm">Total Approvals</span>
               <span class="font-medium">{{ totalApprovals }}</span>
-            </div>
+            </div> -->
           </div>
         </CardContent>
       </UiDashboardCard>
@@ -271,22 +272,18 @@
 import { storeToRefs } from 'pinia'
 import { 
   FlaskConical, 
-  Users, 
   BarChart3, 
   Activity, 
   Clock, 
   Shield, 
   CalendarDays, 
-  TrendingUp, 
   PlusIcon
 } from 'lucide-vue-next'
 import { CardContent, CardHeader, CardTitle } from '~ui/components/ui/card'
 import { Badge } from '~ui/components/ui/badge'
 import { Button } from '~ui/components/ui/button'
-import { Progress } from '~ui/components/ui/progress'
 import UiDashboardCard from '~ui/components/dashboard/Card.vue'
 import type { TrialStatus, TrialPhase } from '~/server/database/schema/enums'
-import TrialPreview from './TrialPreview.vue'
 
 // Store and data
 const store = useTrialsStore()
@@ -320,18 +317,20 @@ const endingSoonTrials = computed(() => {
   }).length
 })
 
-const totalEnrolled = computed(() => 
-  trials.value?.reduce((sum, trial) => sum + trial.currentEnrollment, 0) || 0
-)
+// TODO: Use patients-trial relationship to query enrolled patients
+// const totalEnrolled = computed(() => 
+//   trials.value?.reduce((sum, trial) => sum + trial.currentEnrollment, 0) || 0
+// )
 
-const totalTarget = computed(() => 
-  trials.value?.reduce((sum, trial) => sum + trial.targetEnrollment, 0) || 0
-)
+// TODO: Use patients-trial relationship to query enrolled patients
+// const totalTarget = computed(() => 
+//   trials.value?.reduce((sum, trial) => sum + trial.targetEnrollment, 0) || 0
+// )
 
-const enrollmentPercentage = computed(() => {
-  if (totalTarget.value === 0) return 0
-  return Math.round((totalEnrolled.value / totalTarget.value) * 100)
-})
+// const enrollmentPercentage = computed(() => {
+//   if (totalTarget.value === 0) return 0
+//   return Math.round((totalEnrolled.value / totalTarget.value) * 100)
+// })
 
 const phaseDistribution = computed(() => {
   if (!trials.value) return {}
@@ -344,8 +343,8 @@ const phaseDistribution = computed(() => {
   }
   
   trials.value.forEach(trial => {
-    if (trial.basicInfo.phase in distribution) {
-      distribution[trial.basicInfo.phase as TrialPhase]++
+    if (trial.phase in distribution) {
+      distribution[trial.phase]++
     }
   })
   
@@ -364,8 +363,8 @@ const statusDistribution = computed(() => {
   }
   
   trials.value.forEach(trial => {
-    if (trial.timeline.status in distribution) {
-      distribution[trial.timeline.status as TrialStatus]++
+    if (trial.status in distribution) {
+      distribution[trial.status as TrialStatus]++
     }
   })
   
@@ -376,41 +375,42 @@ const recentTrials = computed(() => {
   if (!trials.value) return []
   
   return [...trials.value]
-    .sort((a, b) => new Date(b.timeline.startDate).getTime() - new Date(a.timeline.startDate).getTime())
+    .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
     .slice(0, 5)
 })
 
-const gdprCompliantTrials = computed(() => 
-  trials.value?.filter(trial => trial.regulatoryCompliance.complianceStatus.gdprCompliant).length || 0
-)
+// TODO: Use trials-regulatoryCompliance relationship to query compliance
+// const gdprCompliantTrials = computed(() => 
+//   trials.value?.filter(trial => trial.complianceStatus.gdprCompliant).length || 0
+// )
 
-const compliancePercentage = computed(() => {
-  if (totalTrials.value === 0) return 0
-  return Math.round((gdprCompliantTrials.value / totalTrials.value) * 100)
-})
+// const compliancePercentage = computed(() => {
+//   if (totalTrials.value === 0) return 0
+//   return Math.round((gdprCompliantTrials.value / totalTrials.value) * 100)
+// })
 
-const protocolDeviations = computed(() => {
-  if (!trials.value) return { low: 0, high: 0 }
+// const protocolDeviations = computed(() => {
+//   if (!trials.value) return { low: 0, high: 0 }
   
-  let low = 0
-  let high = 0
+//   let low = 0
+//   let high = 0
   
-  trials.value.forEach(trial => {
-    trial.regulatoryCompliance.protocolDeviations.forEach(deviation => {
-      if (deviation.severity === 'Minor') low++
-      else if (deviation.severity === 'Major') high++
-    })
-  })
+//   trials.value.forEach(trial => {
+//     trial.regulatoryCompliance.protocolDeviations.forEach((deviation: ProtocolDeviation) => {
+//       if (deviation.severity === 'Minor') low++
+//       else if (deviation.severity === 'Major') high++
+//     })
+//   })
   
-  return { low, high }
-})
+//   return { low, high }
+// })
 
 const averageDuration = computed(() => {
   if (!trials.value || trials.value.length === 0) return 0
   
   const totalDuration = trials.value.reduce((sum, trial) => {
-    const start = new Date(trial.timeline.startDate)
-    const end = new Date(trial.timeline.actualEndDate || trial.timeline.estimatedEndDate)
+    const start = new Date(trial.startDate)
+    const end = new Date(trial.actualEndDate || trial.estimatedEndDate)
     const months = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 30)
     return sum + months
   }, 0)
@@ -418,25 +418,27 @@ const averageDuration = computed(() => {
   return Math.round(totalDuration / trials.value.length)
 })
 
-const averageSitesPerTrial = computed(() => {
-  if (!trials.value || trials.value.length === 0) return 0
+// TODO: Use trials-sites relationship to calculate average sites
+// const averageSitesPerTrial = computed(() => {
+//   if (!trials.value || trials.value.length === 0) return 0
   
-  const totalSites = trials.value.reduce((sum, trial) => sum + trial.administrative.sites.length, 0)
-  return Math.round(totalSites / trials.value.length * 10) / 10
-})
+//   const totalSites = trials.value.reduce((sum, trial) => sum + trial.administrative.sites.length, 0)
+//   return Math.round(totalSites / trials.value.length * 10) / 10
+// })
 
 const successRate = computed(() => {
   if (totalTrials.value === 0) return 0
   return Math.round((completedTrials.value / totalTrials.value) * 100)
 })
 
-const totalApprovals = computed(() => 
-  trials.value?.reduce((sum, trial) => 
-    sum + trial.regulatoryCompliance.regulatoryApprovals.filter(approval => 
-      approval.status === 'Approved'
-    ).length, 0
-  ) || 0
-)
+// TODO: Use trials-regulatoryCompliance relationship to calculate total approvals
+// const totalApprovals = computed(() => 
+//   trials.value?.reduce((sum, trial) => 
+//     sum + trial.regulatoryCompliance.regulatoryApprovals.filter((approval: RegulatoryApproval) => 
+//       approval.status === 'Approved'
+//     ).length, 0
+//   ) || 0
+// )
 
 // Helper functions
 
