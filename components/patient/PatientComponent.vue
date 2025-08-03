@@ -18,14 +18,6 @@
               <span class="ml-2 text-gray-900 capitalize">{{ patient.status }}</span>
             </div>
             <div>
-              <span class="font-medium text-gray-700">Date of Birth:</span>
-              <span class="ml-2 text-gray-900">{{ patient.dateOfBirth ? new Date(patient.dateOfBirth).toLocaleDateString() : 'N/A' }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Gender:</span>
-              <span class="ml-2 text-gray-900 capitalize">{{ patient.gender }}</span>
-            </div>
-            <div>
               <span class="font-medium text-gray-700">Enrollment Date:</span>
               <span class="ml-2 text-gray-900">{{ patient.enrollmentDate ? new Date(patient.enrollmentDate).toLocaleDateString() : 'N/A' }}</span>
             </div>
