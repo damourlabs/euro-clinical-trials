@@ -11,12 +11,14 @@
       </UiCommonNavLink>
     </div>
     <div
-      v-show="isLoading"
+      v-if="loading"
       class="flex justify-center items-center h-64">
       Loading patients...
     </div>
 
-    <PatientDataTable :patients="items" />  
+    <PatientDataTable
+      v-else
+      :patients="items" />  
 
   </div>
 </template>
@@ -30,16 +32,19 @@ definePageMeta({
 
 
 // Composables
-const store = usePatientsStore()
-const { items } = storeToRefs(store)
-const { fetchAll, isLoading } = store
+const patientStore = usePatientsStore()
+const siteStore = useSitesStore()
+const trialStore = useTrialsStore()
 
+const { items, loading } = storeToRefs(patientStore)
 
 onMounted(async () => {
 
-  console.log('Fetching patients...')
-  await fetchAll()
-  console.log('Patients fetched:', items)
+  await patientStore.fetchAll()
+  
+  // TODO: Fetch filtered data based on patient data
+  await trialStore.fetchAll()
+  await siteStore.fetchAll()
 
 })
 

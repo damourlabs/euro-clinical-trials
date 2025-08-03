@@ -1,20 +1,19 @@
 <!-- pages/patients/[id]/index.vue -->
 <template>
-  <div>
+  <div class="mx-auto p-4 container">
     <template v-if="doWeHaveData">
-      <PatientComponent :patient="patient" />
+      <PatientComponent :patient-id="patientId" />
     </template>
 
-    <div
-      v-show="patient === undefined"
-      class="flex justify-center items-center h-32">
-      <p class="text-muted-foreground">Loading patient data...</p>
-    </div>
+    <ResourceDetailLoadingFallback 
+      v-else
+      resource-type="patient" />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Patient } from '~/models/patients'
+import type { Patient } from '~/server/database/schema'
+import { ResourceDetailLoadingFallback } from '~/components/common'
 
 // Route params
 const route = useRoute()
@@ -37,7 +36,7 @@ onMounted(async () => {
                 message: `Patient with ID ${patientId} not found`
             })
         }
-    } catch (error) {
+    } catch {
         throw createError({
             statusCode: 404,
             statusMessage: 'Patient not found',
@@ -61,7 +60,7 @@ definePageMeta({
     meta: [
         {
             name: 'description',
-            content: computed(() => patient.value !== undefined ? `Details for patient ${patient.value.subjectId} in trial ${patient.value.trialId}` : 'Details of the patient')
+            content: computed(() => patient.value !== undefined ? `Details for patient ${patient.value.subjectId} in trial ${patient.value.siteUuid}` : 'Details of the patient')
         }
     ]
 })
