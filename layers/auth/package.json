@@ -1,0 +1,40 @@
+{
+  "name": "@damourlabs/auth-layer",
+  "version": "1.0.0",
+  "description": "Authentication layer for Nuxt applications with clinical trial management features",
+  "type": "module",
+  "main": "./nuxt.config.ts",
+  "files": [
+    "components/**",
+    "composables/**", 
+    "layouts/**",
+    "middleware/**",
+    "pages/**",
+    "server/**",
+    "stores/**",
+    "types/**",
+    "nuxt.config.ts",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@pinia/nuxt": "^0.11.2",
+    "@types/jsonwebtoken": "^9.0.10",
+    "jsonwebtoken": "^9.0.2",
+    "nuxt": "^3.18.0",
+    "nuxt-auth-utils": "0.5.20",
+    "pinia": "^3.0.3",
+    "zod": "^3.25.76"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt-layer", 
+    "authentication",
+    "auth",
+    "clinical-trials",
+    "gdpr",
+    "two-factor",
+    "magic-link"
+  ],
+  "author": "DamourLabs",
+  "license": "MIT"
+}
