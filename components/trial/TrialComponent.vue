@@ -12,7 +12,7 @@
           <div class="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-sm">
             <div>
               <span class="font-medium text-gray-700">Trial ID:</span>
-              <span class="ml-2 text-gray-900">{{ trial.trialId }}</span>
+              <span class="ml-2 text-gray-900">{{ trial.uuid }}</span>
             </div>
             <div>
               <span class="font-medium text-gray-700">Status:</span>
@@ -28,12 +28,8 @@
             </div>
             <div>
               <span class="font-medium text-gray-700">End Date:</span>
-              <span class="ml-2 text-gray-900">{{ trial.endDate ? new Date(trial.endDate).toLocaleDateString() : 'N/A' }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Type:</span>
-              <span class="ml-2 text-gray-900 capitalize">{{ trial.type }}</span>
-            </div>
+              <span class="ml-2 text-gray-900">{{ trial.actualEndDate ? new Date(trial.actualEndDate).toLocaleDateString() : 'N/A' }}</span>
+            </div>s
           </div>
         </div>
         
