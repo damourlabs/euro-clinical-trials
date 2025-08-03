@@ -1,6 +1,6 @@
 {
   "name": "@damourlabs/euro-clinical-trials",
-  "version": "0.25.1",
+  "version": "0.25.2",
   "type": "module",
   "description": "A Nuxt 3 application for visualizing and managing clinical trials data in Europe, built with modern web technologies.",
   "author": {
