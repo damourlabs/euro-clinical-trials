@@ -208,9 +208,13 @@ type _Test2 = Expect<IsSameType<{ a: number; b: string }, { a: number; b: string
 type _Test3 = Expect<IsSameType<number[], number[]>>; // ✅ Pass
 
 // Test cases that should show errors
+// @ts-expect-error TypeScript should show an error in this case
 type _Test4 = Expect<IsSameType<string, number>>; // ❌ Error: Type '"Type category mismatch: string vs number"' does not satisfy the constraint 'true'
+// @ts-expect-error TypeScript should show an error in this case
 type _Test5 = Expect<IsSameType<{ a: number }, { a: string }>>; // ❌ Error: Type '"Type mismatch in keys: a"' does not satisfy the constraint 'true'
+// @ts-expect-error TypeScript should show an error in this case
 type _Test6 = Expect<IsSameType<{ a: number; b: string }, { a: number }>>; // ❌ Error: Type '"Missing keys in second type: b"' does not satisfy the constraint 'true'
+// @ts-expect-error TypeScript should show an error in this case
 type _Test7 = Expect<IsSameType<{ a: number }, { a: number; b: string }>>; // ❌ Error: Type '"Extra keys in second type: b"' does not satisfy the constraint 'true'
 
 // Advanced example with nested objects
@@ -242,13 +246,21 @@ type _UserWrong = {
 };
 
 // Additional edge case tests
+// @ts-expect-error TypeScript should show an error in this case
 type _Test10 = Expect<IsSameType<string[], number[]>>; // ❌ Error: Type '"Type category mismatch: array vs array"' or similar
+// @ts-expect-error TypeScript should show an error in this case
 type _Test11 = Expect<IsSameType<() => void, () => string>>; // ❌ Error: Type '"Type category mismatch: function vs function"' or similar
+// @ts-expect-error TypeScript should show an error in this case
 type _Test12 = Expect<IsSameType<"literal", string>>; // ❌ Error: Type '"Types are different string types"' does not satisfy the constraint 'true'
+// @ts-expect-error TypeScript should show an error in this case
 type _Test13 = Expect<IsSameType<42, number>>; // ❌ Error: Type '"Types are different number types"' does not satisfy the constraint 'true'
+// @ts-expect-error TypeScript should show an error in this case
 type _Test14 = Expect<IsSameType<string, string[]>>; // ❌ Error: Type '"Type category mismatch: string vs array"' does not satisfy the constraint 'true'
+// @ts-expect-error TypeScript should show an error in this case
 type _Test15 = Expect<IsSameType<null, undefined>>; // ❌ Error: Type '"Type category mismatch: null vs undefined"' does not satisfy the constraint 'true'
 
 // Union types
+// @ts-expect-error TypeScript should show an error in this case
 type _Test16 = Expect<IsSameType<string | number, string>>; // ❌ Should show appropriate error
+// @ts-expect-error TypeScript should show an error in this case
 type _Test17 = Expect<IsSameType<{ a: string } | { b: number }, { a: string }>>; // ❌ Should show appropriate error
