@@ -62,6 +62,6 @@
         ]
     },
     "npm": {
-        "publish": false
+        "publish": true
     }
 }
