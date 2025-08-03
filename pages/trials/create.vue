@@ -79,7 +79,7 @@ const onFormSubmit = async (formValues: Record<string, unknown>,) => {
   try {
 
     // We can validate the form values here if needed
-    const { success, data: validatedValues, error} = await TrialSchema.safeParseAsync(formValues)
+    const { success, data: validatedValues, error} = await trialSchema.safeParseAsync(formValues)
 
     if (!success) {
       throw createError({
