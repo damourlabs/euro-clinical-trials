@@ -141,14 +141,7 @@ import { computed } from 'vue'
 import { CardContent } from '~ui/components/ui/card'
 import { Label } from '~ui/components/ui/label'
 import StatusBadge from './field/StatusBadge.vue'
-
-export interface CardField {
-  key: string
-  label: string
-  type?: 'text' | 'badge' | 'date' | 'number' | 'percentage' | 'link'
-  colorScheme?: string
-  format?: (value: unknown) => string
-}
+import type { CardField } from './ResourceCard.vue'
 
 interface Props {
   data: Record<string, unknown>
