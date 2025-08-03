@@ -277,7 +277,8 @@ export const protocols = pgTable('protocols', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   description: text('description').notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 }, (table) => [
   unique('protocols_unique_per_trial').on(table.uuid, table.name),
 ]);

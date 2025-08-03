@@ -203,7 +203,7 @@ export const trialAdministrativeInfoSchema = z.object({
 });
 
 
-export type Trial = z.infer<typeof TrialSchema>;
+export type Trial = z.infer<typeof trialSchema>;
 export type TrialAdministrativeInfo = z.infer<typeof trialAdministrativeInfoSchema>;
 
 // Validate to check if the schema respects the table structure
