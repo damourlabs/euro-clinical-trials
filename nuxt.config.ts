@@ -64,7 +64,18 @@ export default defineNuxtConfig({
     },
     // Public keys (client-side)
     public: {
-      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+      auth: {
+        // Auth layer configuration - can override defaults
+        enableTwoFactor: true,
+        enableMagicLink: true,
+        enableOAuth: true,
+        sessionTimeout: 24 * 60 * 60 * 1000, // 24 hours
+        requireEmailVerification: true,
+        enableRoleBasedAccess: true,
+        enableGdprConsent: true,
+        enableAuditLogging: true
+      }
     }
   },
   nitro: {
