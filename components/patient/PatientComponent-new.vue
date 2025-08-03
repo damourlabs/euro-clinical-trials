@@ -3,53 +3,30 @@
     v-if="patient" 
     class="space-y-6">
     <!-- Main Patient Information -->
-    <div class="bg-white shadow-sm mb-6 p-6 border border-gray-200 rounded-lg">
-      <div class="flex justify-between items-start mb-4">
-        <div class="flex-1">
-          <h1 class="mb-2 font-bold text-gray-900 text-2xl">Patient {{ patient.subjectId }}</h1>
-          
-          <div class="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-sm">
-            <div>
-              <span class="font-medium text-gray-700">Subject ID:</span>
-              <span class="ml-2 text-gray-900">{{ patient.subjectId }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Status:</span>
-              <span class="ml-2 text-gray-900 capitalize">{{ patient.status }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Date of Birth:</span>
-              <span class="ml-2 text-gray-900">{{ patient.dateOfBirth ? new Date(patient.dateOfBirth).toLocaleDateString() : 'N/A' }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Gender:</span>
-              <span class="ml-2 text-gray-900 capitalize">{{ patient.gender }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Enrollment Date:</span>
-              <span class="ml-2 text-gray-900">{{ patient.enrollmentDate ? new Date(patient.enrollmentDate).toLocaleDateString() : 'N/A' }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Randomization Group:</span>
-              <span class="ml-2 text-gray-900">{{ patient.randomizationGroup || 'N/A' }}</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Action Buttons -->
-        <div class="flex gap-2 ml-4">
-          <Button
-            v-for="action in patientActions"
-            :key="action.label"
-            :variant="action.variant"
-            size="sm"
-            @click="action.onClick">
-            {{ action.label }}
-          </Button>
-        </div>
-      </div>
-    </div>
+    <PatientCard
+      size="large"
+      :patient="patient"
+      :clickable="false"
+      :actions="patientActions"
+      class="mb-6"
+    />
     
+    <!-- Action Buttons -->
+    <div class="flex gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        @click="navigateTo(`/patients/${patient.uuid}/edit`)">
+        Edit Patient
+      </Button>
+      <Button
+        variant="destructive"
+        size="sm"
+        @click="deletePatient">
+        Delete Patient
+      </Button>
+    </div>
+
     <!-- Related Data Sections -->
     
     <!-- Visits Section -->
@@ -103,7 +80,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Visit, AdverseEvent, GdprConsent } from '~/server/database/schema'
+import type { Visit, AdverseEvent, GDPRConsent } from '~/server/database/schema'
+import { PatientCard } from '~/components/patient'
 import { VisitDataTable } from '~/components/visit'
 import { AdverseEventDataTable } from '~/components/adverse-event'
 import { GDPRConsentDataTable } from '~/components/gdpr-consent'
@@ -125,7 +103,7 @@ const sitesStore = useSitesStore()
 const patient = computed(() => patientsStore.getById(props.patientId))
 const visits = ref<Visit[]>([])
 const adverseEvents = ref<AdverseEvent[]>([])
-const gdprConsents = ref<GdprConsent[]>([])
+const gdprConsents = ref<GDPRConsent[]>([])
 
 // Computed properties for related entities
 const trial = computed(() => {
@@ -138,7 +116,7 @@ const site = computed(() => {
   return sitesStore.getById(patient.value.siteUuid)
 })
 
-// Patient actions for the component
+// Patient actions for the ResourceCard
 const patientActions = computed(() => [
   {
     label: 'Edit',
@@ -170,8 +148,8 @@ onMounted(async () => {
     
     visits.value = await patientsStore.customMethods.getPatientVisits(props.patientId)
     adverseEvents.value = await patientsStore.customMethods.getPatientAdverseEvents(props.patientId)
-    gdprConsents.value = await patientsStore.customMethods.getPatientGdprConsents(props.patientId)
-
+    gdprConsents.value = await patientsStore.customMethods.getPatientGDPRConsents(props.patientId)
+    
   } catch (error) {
     console.error('Error fetching patient data:', error)
   }

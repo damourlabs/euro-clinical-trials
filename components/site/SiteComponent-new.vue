@@ -2,57 +2,45 @@
   <div 
     v-if="site" 
     class="space-y-6">
-    <!-- Main Site Information -->
-    <div class="bg-white shadow-sm mb-6 p-6 border border-gray-200 rounded-lg">
-      <div class="flex justify-between items-start mb-4">
-        <div class="flex-1">
-          <h1 class="mb-2 font-bold text-gray-900 text-2xl">{{ site.name }}</h1>
-          <p class="mb-4 text-gray-600">{{ site.address }}</p>
-          
-          <div class="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-sm">
-            <div>
-              <span class="font-medium text-gray-700">Site Name:</span>
-              <span class="ml-2 text-gray-900">{{ site.name }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Status:</span>
-              <span class="ml-2 text-gray-900 capitalize">{{ site.status }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Facility Type:</span>
-              <span class="ml-2 text-gray-900">{{ site.facilityType }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Patients Enrolled:</span>
-              <span class="ml-2 text-gray-900">{{ site.patientsEnrolled || 0 }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Target Enrollment:</span>
-              <span class="ml-2 text-gray-900">{{ site.targetEnrollment || 'N/A' }}</span>
-            </div>
-            <div>
-              <span class="font-medium text-gray-700">Data Completeness:</span>
-              <span class="ml-2 text-gray-900">{{ site.dataCompleteness ? `${site.dataCompleteness}%` : 'N/A' }}</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Action Buttons -->
-        <div class="flex gap-2 ml-4">
-          <Button
-            v-for="action in siteActions"
-            :key="action.label"
-            :variant="action.variant"
-            size="sm"
-            @click="action.onClick">
-            {{ action.label }}
-          </Button>
-        </div>
-      </div>
-    </div>
     
+    <!-- Main Site Information (Large Card) -->
+    <SiteCard
+      size="large"
+      :site="site"
+      :clickable="false"
+      :actions="siteActions"
+      class="mb-6"
+    />
+    
+    <!-- Action Buttons -->
+    <div class="flex gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        @click="navigateTo(`/sites/${site.uuid}/edit`)">
+        Edit Site
+      </Button>
+      <Button
+        variant="destructive"
+        size="sm"
+        @click="deleteSite">
+        Delete Site
+      </Button>
+    </div>
+
     <!-- Site Overview Cards (Medium Size) -->
     <div class="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      
+      <!-- Site Statistics Card -->
+      <div class="space-y-2">
+        <h4 class="font-medium text-gray-700 text-sm">Site Statistics</h4>
+        <SiteCard
+          size="medium"
+          :site="siteWithStats"
+          :clickable="false"
+          :custom-fields="statsFields"
+        />
+      </div>
 
       <!-- Trial Information Card -->
       <div 
@@ -141,6 +129,7 @@
 
 <script setup lang="ts">
 import type { Patient, Visit, Document, ProtocolDeviation } from '~/server/database/schema'
+import { SiteCard } from '~/components/site'
 import { TrialCard } from '~/components/trial'
 import { UserCard } from '~/components/user'
 import { PatientDataTable } from '~/components/patient'
@@ -181,12 +170,34 @@ const studyCoordinator = computed(() => {
   return usersStore.getById(site.value.studyCoordinatorUuid)
 })
 
-// Site actions for the component
+// Enhanced site data for statistics card
+const siteWithStats = computed(() => {
+  if (!site.value) return null
+  return {
+    ...site.value,
+    totalPatients: patients.value.length,
+    totalVisits: visits.value.length,
+    deviationsCount: protocolDeviations.value.length
+  }
+})
+
+// Custom field configurations for different card contexts
+const statsFields = {
+  medium: [
+    { key: 'patientsEnrolled', label: 'Patients Enrolled', type: 'number' as const },
+    { key: 'targetEnrollment', label: 'Target Enrollment', type: 'number' as const },
+    { key: 'dataCompleteness', label: 'Data Complete', type: 'percentage' as const },
+    { key: 'totalVisits', label: 'Total Visits', type: 'number' as const },
+    { key: 'deviationsCount', label: 'Deviations', type: 'number' as const }
+  ]
+}
+
+// Site actions for the ResourceCard
 const siteActions = computed(() => [
   {
     label: 'Edit',
     onClick: () => navigateTo(`/sites/${site.value?.uuid}/edit`),
-    variant: 'outline' as const
+    variant: 'secondary' as const
   },
   {
     label: 'Delete',
@@ -216,12 +227,10 @@ onMounted(async () => {
     // Fetch related data using custom methods
     console.log("Fetching site related data...")
     
-    // Note: These methods would need to be implemented in the store
-    // For now, we'll leave these as empty arrays or mock data
-    patients.value = [] // await sitesStore.customMethods.getSitePatients(props.siteId)
-    visits.value = [] // await sitesStore.customMethods.getSiteVisits(props.siteId)
+    patients.value = await sitesStore.customMethods.getSitePatients(props.siteId)
+    visits.value = await sitesStore.customMethods.getSiteVisits(props.siteId)
     documents.value = await sitesStore.customMethods.getSiteDocuments(props.siteId)
-    protocolDeviations.value = [] // await sitesStore.customMethods.getSiteProtocolDeviations(props.siteId)
+    protocolDeviations.value = await sitesStore.customMethods.getSiteProtocolDeviations(props.siteId)
     
   } catch (error) {
     console.error('Error fetching site data:', error)

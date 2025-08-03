@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { SITE_COLUMNS } from '~/models/columns/sites-column';
-import type { Site } from '~/models/admin';
+import type { Site } from '~/server/database/schema';
 
 defineProps<{
   sites: Site[] | undefined

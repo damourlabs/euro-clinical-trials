@@ -1,0 +1,6 @@
+export { default as PatientComponent } from './PatientComponent.vue'
+export { default as PatientDataTable } from './PatientDataTable.vue'
+export { default as PatientDataTableDropDown } from './PatientDataTableDropDown.vue'
+export { default as PatientListComponent } from './PatientListComponent.vue'
+export { default as PatientCard } from './PatientCard.vue'
+export { default as PatientDashboard } from './PatientDashboard.vue'
