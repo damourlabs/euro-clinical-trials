@@ -4,11 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['nuxt-auth-utils', '@pinia/nuxt'],
   extends: [
-    ['github:damourlabs/ui', {
-      giget: {
-        forceClean: true,
-      },
-    }],
+    '@damourlabs/ui',
   ],
   ignore: [
     "**/.db/**"
