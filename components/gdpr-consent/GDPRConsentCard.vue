@@ -108,14 +108,32 @@ const mediumFields = computed<CardField[]>(() =>
   ]
 )
 
-const detailFields = computed<CardField[]>(() => 
-  props.customFields?.detail || [
+const detailFields = computed<CardField[]>(() => {
+
+  if(props.customFields?.detail !== undefined) {
+    return props.customFields.detail
+  }
+
+  const formatFn = (value: unknown) => {
+    if (typeof value === 'string') {
+      return value
+    }
+    if (Array.isArray(value)) {
+      return value.join(', ')
+    }
+    return String(value)
+  }
+  
+  const defaultDetailFields: CardField[] = [
     ...mediumFields.value,
     { key: 'withdrawalMethod', label: 'Withdrawal Method', type: 'text' },
     { key: 'withdrawalReason', label: 'Withdrawal Reason', type: 'text' },
-    { key: 'dataCategories', label: 'Data Categories', type: 'text', format: (v) => Array.isArray(v) ? v.join(', ') : v },
-    { key: 'dataProcessingDetails', label: 'Processing Details', type: 'text', truncate: true },
+    { key: 'dataCategories', label: 'Data Categories', type: 'text', format: formatFn },
+    { key: 'dataProcessingDetails', label: 'Processing Details', type: 'text'},
     { key: 'createdAt', label: 'Created', type: 'date' }
   ]
+
+  return defaultDetailFields
+  }
 )
 </script>
