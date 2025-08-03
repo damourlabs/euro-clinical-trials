@@ -51,7 +51,7 @@
     try {
 
       // We can validate the form values here if needed
-      const { success, data: validatedValues, error } = await SiteSchema.safeParse(formValues)
+      const { success, data: validatedValues, error } = await sitesSchema.safeParseAsync(formValues)
 
       if (!success) {
         throw createError({
