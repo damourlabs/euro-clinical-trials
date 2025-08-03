@@ -2,10 +2,10 @@ import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import type { regulatoryApprovalsSchema } from '~/server/database/schema/regulatory'
 import type { z } from 'zod'
-import UuidField from '~/components/common/field/UuidField.vue'
 import StatusBadge from '~/components/common/field/StatusBadge.vue'
 import FieldDate from '~/components/common/field/FieldDate.vue'
 import { getHeaderClasses, getCellClasses } from '~/utils/table-helpers'
+import RegulatoryApprovalCard from '~/components/regulatory-approval/RegulatoryApprovalCard.vue'
 
 type RegulatoryApproval = z.infer<typeof regulatoryApprovalsSchema>
 
@@ -14,7 +14,13 @@ export const regulatoryApprovalsColumnSimple: ColumnDef<RegulatoryApproval>[] = 
         accessorKey: 'uuid',
         header: () => h('div', { class: getHeaderClasses() }, 'ID'),
         cell: ({ row }) => h('div', { class: getCellClasses() },
-            h(UuidField, { value: row.getValue('uuid') })
+            h(
+                RegulatoryApprovalCard, {
+                approval: row.original,
+                size: 'micro',
+                detailUrl: `/regulatory-approvals/${row.getValue('uuid')}`
+            }
+            )
         ),
     },
     {
@@ -22,7 +28,7 @@ export const regulatoryApprovalsColumnSimple: ColumnDef<RegulatoryApproval>[] = 
         header: () => h('div', { class: getHeaderClasses() }, 'Type'),
         cell: ({ row }) => h('div', { class: getCellClasses() },
             h(StatusBadge, {
-                status: row.getValue('approvalType'),
+                status: row.getValue('approvalType') as string,
                 variant: 'default'
             })
         ),
@@ -32,7 +38,7 @@ export const regulatoryApprovalsColumnSimple: ColumnDef<RegulatoryApproval>[] = 
         header: () => h('div', { class: getHeaderClasses() }, 'Status'),
         cell: ({ row }) => h('div', { class: getCellClasses() },
             h(StatusBadge, {
-                status: row.getValue('status'),
+                status: row.getValue('status') as string,
                 variant: 'status'
             })
         ),
