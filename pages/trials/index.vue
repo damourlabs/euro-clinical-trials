@@ -2,9 +2,12 @@
 <template>
   <div>
     
-    <NuxtErrorBoundary .value@error="handleError">
-      <TrialListLoadingFallback v-if="!isLoading" />
-      <TrialListComponent v-else/>
+    <NuxtErrorBoundary @error="handleError">
+      <ResourceListLoadingFallback 
+        v-if="loading" 
+        resource-type="trials"
+        :columns="6" />
+      <TrialListComponent v-else />
       
       <template #error="{ error, clearError }">
         <TrialErrorBoundary
@@ -19,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import { ResourceListLoadingFallback } from '~/components/common'
 
 interface AppError {
   statusCode?: number
@@ -27,13 +31,23 @@ interface AppError {
 }
 
 const trialStore = useTrialsStore()
-const { isLoading } = storeToRefs(trialStore)
+const userStore = useUsersStore()
+const protocolsStore = useProtocolsStore()
+const siteStore = useSitesStore()
+const { loading } = storeToRefs(trialStore)
 
-// Fetch trials data asynchronously
-await trialStore.fetchAll()
 
 
 
+onMounted(async () => {
+  // Fetch trials data asynchronously
+  await trialStore.fetchAll()
+
+  // TODO: Filter by data in trials
+  await userStore.fetchAll()
+  await protocolsStore.fetchAll()
+  await siteStore.fetchAll()
+})
 
 // Error handling utilities
 const handleError = (error: AppError | Error | unknown) => {

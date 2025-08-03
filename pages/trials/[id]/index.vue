@@ -1,12 +1,12 @@
 <!-- pages/trials/[id]/index.vue -->
 <template>
-  <div>
+  <div class="mx-auto p-4 container">
     <NuxtErrorBoundary @error="handleError">
       <Suspense>
         <TrialComponent :trial-id="trialId" />
         
         <template #fallback>
-          <TrialLoadingFallback />
+          <ResourceDetailLoadingFallback resource-type="trial" />
         </template>
       </Suspense>
       
@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import { ResourceDetailLoadingFallback } from '~/components/common'
+
 // Define error interface for better type safety
 interface AppError {
   statusCode?: number

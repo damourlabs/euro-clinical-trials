@@ -41,17 +41,19 @@
 
 <script setup lang="ts">
 
-import { TrialSchema } from '~/server/database/schema/trials'
+import { trialSchema } from '~/server/database/schema/trials'
 
 definePageMeta({
   layout: 'simple'
 })
 
 
-const trialForm = createDynamicForm(TrialSchema, {
-  fieldsToIgnore: ["uuid", 
+const trialForm = createDynamicForm(trialSchema, {
+  fieldsToIgnore: [
+    // "uuid", 
     "updatedAt",
     "createdAt",
+    "actualEndDate",
   ],
   resourceFields: [
     {
@@ -68,11 +70,8 @@ const trialForm = createDynamicForm(TrialSchema, {
     field: 'principalInvestigatorUuid',
     store: 'usersStore',
     displayField: 'name'
-  }
-]
-})
-
-console.log(trialForm)
+  },   
+]})
 
 const { create: createTrial } = useTrialsStore()
 
