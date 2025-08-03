@@ -25,14 +25,16 @@
                 :variant="getRoleVariant(user.role)"
                 class="ml-2" />
             </div>
-            <div v-if="user.phone">
+            <!-- TODO: Fix user schema - phone property is missing from user type -->
+            <!-- <div v-if="user.phone">
               <span class="font-medium text-gray-700">Phone:</span>
               <span class="ml-2 text-gray-900">{{ user.phone }}</span>
-            </div>
-            <div v-if="user.department">
+            </div> -->
+            <!-- TODO: Fix user schema - department property is missing from user type -->
+            <!-- <div v-if="user.department">
               <span class="font-medium text-gray-700">Department:</span>
               <span class="ml-2 text-gray-900">{{ user.department }}</span>
-            </div>
+            </div> -->
             <div>
               <span class="font-medium text-gray-700">Status:</span>
               <StatusBadge 
@@ -58,7 +60,8 @@
     </div>
 
     <!-- Contact Information -->
-    <div 
+    <!-- TODO: Fix user schema - phone and address properties are missing from user type -->
+    <!-- <div 
       v-if="user.phone || user.address"
       class="bg-white shadow-sm p-6 border border-gray-200 rounded-lg">
       <h2 class="mb-4 font-semibold text-gray-900 text-lg">Contact Information</h2>
@@ -73,7 +76,7 @@
           <span class="ml-2 text-gray-900">{{ user.address }}</span>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Account Details -->
     <div class="bg-white shadow-sm p-6 border border-gray-200 rounded-lg">
