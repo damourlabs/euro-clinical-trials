@@ -36,7 +36,7 @@ onMounted(async () => {
                 message: `Adverse event with ID ${adverseEventId} not found`
             })
         }
-    } catch (error) {
+    } catch {
         throw createError({
             statusCode: 404,
             statusMessage: 'Adverse event not found',
@@ -47,7 +47,7 @@ onMounted(async () => {
 
 definePageMeta({
   layout: 'simple',
-  title: computed(() => adverseEvent.value ? `Adverse Event ${adverseEvent.value.id} - CTMS` : 'Adverse Event Details - CTMS'),
+  title: computed(() => adverseEvent.value ? `Adverse Event ${adverseEvent.value.uuid} - CTMS` : 'Adverse Event Details - CTMS'),
   meta: [
     { name: 'description', content: 'View detailed information about a specific adverse event.' },
     { name: 'robots', content: 'noindex' }
