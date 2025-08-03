@@ -120,11 +120,8 @@ export class SeedsManager {
     async executeSqlSeed(seedFile: SeedFile): Promise<void> {
         const content = await readFile(seedFile.path, 'utf-8')
 
-        // Split by semicolon and execute each statement
-        const statements = content
-            .split(';')
-            .map(stmt => stmt.trim())
-            .filter(stmt => stmt.length > 0)
+        // Parse SQL statements safely, handling semicolons in strings and comments
+        const statements = this.parseSqlStatements(content)
 
         for (const statement of statements) {
             try {
@@ -135,6 +132,156 @@ export class SeedsManager {
                 throw error
             }
         }
+    }
+
+    /**
+     * Parse SQL statements safely, handling semicolons within string literals and comments
+     */
+    private parseSqlStatements(content: string): string[] {
+        const statements: string[] = []
+        let currentStatement = ''
+        let inSingleQuote = false
+        let inDoubleQuote = false
+        let inDollarQuote = false
+        let dollarTag = ''
+        let inSingleLineComment = false
+        let inMultiLineComment = false
+        let escaped = false
+
+        for (let i = 0; i < content.length; i++) {
+            const char = content[i]
+            const nextChar = content[i + 1]
+            const prevChar = content[i - 1]
+
+            // Handle escape sequences
+            if (escaped) {
+                currentStatement += char
+                escaped = false
+                continue
+            }
+
+            // Handle single-line comments (-- comment)
+            if (!inSingleQuote && !inDoubleQuote && !inDollarQuote && !inMultiLineComment) {
+                if (char === '-' && nextChar === '-') {
+                    inSingleLineComment = true
+                    currentStatement += char
+                    continue
+                }
+            }
+
+            // End single-line comment on newline
+            if (inSingleLineComment && (char === '\n' || char === '\r')) {
+                inSingleLineComment = false
+                currentStatement += char
+                continue
+            }
+
+            // Handle multi-line comments (/* comment */)
+            if (!inSingleQuote && !inDoubleQuote && !inDollarQuote && !inSingleLineComment) {
+                if (char === '/' && nextChar === '*') {
+                    inMultiLineComment = true
+                    currentStatement += char
+                    continue
+                }
+            }
+
+            // End multi-line comment
+            if (inMultiLineComment && char === '/' && prevChar === '*') {
+                inMultiLineComment = false
+                currentStatement += char
+                continue
+            }
+
+            // Skip processing if we're in a comment
+            if (inSingleLineComment || inMultiLineComment) {
+                currentStatement += char
+                continue
+            }
+
+            // Handle dollar-quoted strings ($$text$$ or $tag$text$tag$)
+            if (!inSingleQuote && !inDoubleQuote) {
+                if (char === '$') {
+                    if (!inDollarQuote) {
+                        // Start of potential dollar quote - extract tag
+                        let tagEnd = i + 1
+                        while (tagEnd < content.length &&
+                            content[tagEnd] !== '$' &&
+                            /[a-zA-Z0-9_]/.test(content[tagEnd])) {
+                            tagEnd++
+                        }
+
+                        if (tagEnd < content.length && content[tagEnd] === '$') {
+                            // Valid dollar quote start
+                            dollarTag = content.substring(i, tagEnd + 1)
+                            inDollarQuote = true
+                            currentStatement += char
+                            continue
+                        }
+                    } else {
+                        // Check if this is the end of the current dollar quote
+                        const potentialEndTag = content.substring(i, i + dollarTag.length)
+                        if (potentialEndTag === dollarTag) {
+                            inDollarQuote = false
+                            dollarTag = ''
+                            // Add the closing tag
+                            currentStatement += potentialEndTag
+                            i += dollarTag.length - 1
+                            continue
+                        }
+                    }
+                }
+            }
+
+            // Handle string literals
+            if (!inDollarQuote) {
+                // Single quotes
+                if (char === '\'' && !inDoubleQuote) {
+                    // Check for escaped single quote ('')
+                    if (inSingleQuote && nextChar === '\'') {
+                        currentStatement += char + nextChar
+                        i++ // Skip next character
+                        continue
+                    }
+                    inSingleQuote = !inSingleQuote
+                }
+
+                // Double quotes (identifiers)
+                if (char === '"' && !inSingleQuote) {
+                    // Check for escaped double quote ("")
+                    if (inDoubleQuote && nextChar === '"') {
+                        currentStatement += char + nextChar
+                        i++ // Skip next character
+                        continue
+                    }
+                    inDoubleQuote = !inDoubleQuote
+                }
+
+                // Handle backslash escapes
+                if ((inSingleQuote || inDoubleQuote) && char === '\\') {
+                    escaped = true
+                }
+            }
+
+            // Statement delimiter - only process if we're not inside any quotes or comments
+            if (char === ';' && !inSingleQuote && !inDoubleQuote && !inDollarQuote) {
+                const trimmedStatement = currentStatement.trim()
+                if (trimmedStatement.length > 0) {
+                    statements.push(trimmedStatement)
+                }
+                currentStatement = ''
+                continue
+            }
+
+            currentStatement += char
+        }
+
+        // Add any remaining statement
+        const trimmedStatement = currentStatement.trim()
+        if (trimmedStatement.length > 0) {
+            statements.push(trimmedStatement)
+        }
+
+        return statements.filter(stmt => stmt.length > 0)
     }
 
     async executeJsSeed(seedFile: SeedFile): Promise<void> {
