@@ -31,7 +31,7 @@ export class CachedRepository<T extends Entity> extends BaseRepository<T> {
         this.clearCacheByPattern('findAll')
 
         // Optionally, you can also cache the newly created item
-        const cacheKey = this.getCacheKey('findById', { id: newItem.id })
+        const cacheKey = this.getCacheKey('findById', { id: newItem.uuid })
         this.setCache(cacheKey, newItem)
         return newItem
     }
@@ -83,7 +83,6 @@ export class CachedRepository<T extends Entity> extends BaseRepository<T> {
 
     override async findById(id: string | number, useCache = true): Promise<T> {
         const cacheKey = this.getCacheKey('findById', { id })
-
         if (useCache) {
             const cached = this.getFromCache<T>(cacheKey)
             if (cached) return cached
