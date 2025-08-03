@@ -3,7 +3,6 @@ import type { ColumnDef } from '@tanstack/vue-table'
 import type { Protocol, Trial, User } from '~/server/database/schema'
 import { TrialDataTableDropDown } from '~/components/trial'
 import {
-  UuidField,
   StatusBadge,
   FieldDate,
   GenericCompactCard
