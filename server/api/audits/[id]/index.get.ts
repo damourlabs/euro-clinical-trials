@@ -1,0 +1,51 @@
+import type { AuditLog } from "~/server/database/schema"
+import type { ServerResponse } from "~/models/utils";
+import { useDb } from "~/server/utils/drizzle";
+import * as tables from "~/server/database/schema";
+
+export default defineEventHandler(async (event) => {
+    const db = useDb()
+    const auditLogsTable = tables.auditLogs
+
+    const auditId = getRouterParam(event, 'id')
+
+    if (!auditId) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Audit ID is required'
+        })
+    }
+
+    try {
+        const audit = await db.select()
+            .from(auditLogsTable)
+            .where(eq(auditLogsTable.uuid, auditId))
+            .limit(1)
+
+        if (audit.length === 0) {
+            throw createError({
+                statusCode: 404,
+                statusMessage: 'Audit not found'
+            })
+        }
+
+        const response: ServerResponse<AuditLog> = {
+            message: 'Audit fetched successfully',
+            status: 'success',
+            statusText: 'OK',
+            statusCode: 200,
+            data: audit[0]
+        }
+
+        return response
+    } catch (error) {
+        if (error.statusCode) {
+            throw error
+        }
+        throw createError({
+            statusCode: 500,
+            statusMessage: 'Failed to fetch audit',
+            message: error instanceof Error ? error.message : 'Unknown error occurred'
+        })
+    }
+})
