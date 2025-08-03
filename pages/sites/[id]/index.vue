@@ -1,20 +1,19 @@
 <!-- pages/sites/[id]/index.vue -->
 <template>
-  <div>
+  <div class="mx-auto p-4 container">
     <template v-if="doWeHaveData">
-      <SiteComponent :site="site" />
+      <SiteComponent :site-id="siteId" />
     </template>
 
-    <div
-      v-show="site === undefined"
-      class="flex justify-center items-center h-32">
-      <p class="text-muted-foreground">Loading site data...</p>
-    </div>
+    <ResourceDetailLoadingFallback 
+      v-else
+      resource-type="site" />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Site } from '~/models/admin'
+import { ResourceDetailLoadingFallback } from '~/components/common'
 
 // Route params
 const route = useRoute()

@@ -39,24 +39,11 @@
 
 <script setup lang="ts">
 
-  import { SiteSchema } from '~/models/admin'
+  import { sitesSchema } from '~/server/database/schema'
 
+  const testDynamicFormSchema = createDynamicForm(sitesSchema)
 
-  definePageMeta({
-    layout: 'simple'
-  })
-
-  // Auth check
-  // const { user, isAuthenticated } = useAuth()
-  // if (!isAuthenticated.value) {
-  //   await navigateTo('/login')
-  // }
-
-
-  const testDynamicFormSchema = createDynamicForm(SiteSchema, ["site", "trial"])
-  console.log('Dynamic Form Schema:', testDynamicFormSchema)
   const { create: createSite } = useSitesStore()
-
 
   const onFormSubmit = async (formValues: Record<string, unknown>) => {
 
@@ -116,6 +103,10 @@
     }
 
   }
+
+  definePageMeta({
+    layout: 'simple'
+  })
 
 
   // SEO

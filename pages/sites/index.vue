@@ -1,8 +1,8 @@
-<!-- pages/trials/index.vue -->
+<!-- pages/sites/index.vue -->
 <template>
   <div class="mx-auto px-4 py-8 container">
-
-    <div class="flex justify-between items-center mb-6">
+    <SiteListComponent />
+    <!-- <div class="flex justify-between items-center mb-6">
       <h1 class="font-bold text-gray-900 text-3xl">Sites</h1>
       <UiCommonNavLink
         to="/sites/create"
@@ -10,19 +10,20 @@
         New site
       </UiCommonNavLink>
     </div>
-    <div
-      v-show="isLoading"
-      class="flex justify-center items-center h-64">
-      Loading sites...
-    </div>
+    
+    <ResourceListLoadingFallback 
+      v-if="loading" 
+      resource-type="sites"
+      :columns="4" />
 
-    <SiteDataTable :sites="items" />  
+    <SiteDataTable 
+      v-else
+      :sites="items" />   -->
 
   </div>
 </template>
 
 <script setup lang="ts">
-
 
 definePageMeta({
   layout: 'simple'
@@ -31,15 +32,18 @@ definePageMeta({
 
 // Composables
 const store = useSitesStore()
+
 const { items } = storeToRefs(store)
-const { fetchAll, isLoading } = store
 
 
 onMounted(async () => {
 
-  console.log('Fetching sites...')
-  await fetchAll()
-  console.log('Sites fetched:', items)
+  
+  await store.fetchAll()
+  await useTrialsStore().fetchAll()
+  await useUsersStore().fetchAll()
+  // await useProtocolsStore().fetchAll()
+
 
 })
 
