@@ -82,7 +82,7 @@
 
 
       // Redirect to the site details page or another appropriate page
-      navigateTo(`/sites/${site.id}`, {
+      navigateTo(`/sites/${site.uuid}`, {
         replace: true
       })
 
