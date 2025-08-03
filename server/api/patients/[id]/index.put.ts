@@ -1,5 +1,5 @@
 // PUT // Endpoint to update a patient
-import { PatientSchema, type Patient } from "~/server/database/schema"
+import { patientSchema, type Patient } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
 import { useDb } from "~/server/utils/drizzle"
 
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
     const existingPatient = existingPatients[0]
 
     // Get the updated data from the request body
-    const { success, error, data } = await readValidatedBody(event, PatientSchema.safeParse)
+    const { success, error, data } = await readValidatedBody(event, patientSchema.safeParse)
 
     if (!success) {
         console.error('Invalid patient data:', error);

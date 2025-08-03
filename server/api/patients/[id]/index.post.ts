@@ -1,5 +1,5 @@
 
-import { PatientSchema, type Patient } from "~/server/database/schema"
+import { patientSchema, type Patient } from "~/server/database/schema"
 import type { ServerResponse } from "~/models/utils"
 import { z } from "zod";
 import { useDb } from "~/server/utils/drizzle";
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { success, error, data } = await readValidatedBody(event, PatientSchema.safeParse)
+    const { success, error, data } = await readValidatedBody(event, patientSchema.safeParse)
 
     if (!success) {
         console.error('Invalid patient data:', error);
@@ -33,8 +33,6 @@ export default defineEventHandler(async (event) => {
             statusMessage: 'Patient data is required'
         })
     }
-
-    console.log('Creating patient with data:', data)
 
     // Save the new patient to database
     await useDb().insert(tables.patients).values({
