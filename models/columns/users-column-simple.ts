@@ -19,9 +19,7 @@ export const USER_COLUMNS_SIMPLE: ColumnDef<User>[] = [
                     detailUrl: `/users/${user.uuid}`
                 })
             )
-        },
-        minWidth: 120,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -30,9 +28,7 @@ export const USER_COLUMNS_SIMPLE: ColumnDef<User>[] = [
         cell: ({ row }) => {
             const name = row.getValue('name') as string
             return h('div', { class: getCellClasses() }, name)
-        },
-        minWidth: 150,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -41,9 +37,7 @@ export const USER_COLUMNS_SIMPLE: ColumnDef<User>[] = [
         cell: ({ row }) => {
             const email = row.getValue('email') as string
             return h('div', { class: getCellClasses() }, email)
-        },
-        minWidth: 200,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -54,9 +48,7 @@ export const USER_COLUMNS_SIMPLE: ColumnDef<User>[] = [
             return h('div', { class: getCellClasses('center') },
                 h(StatusBadge, { status: role })
             )
-        },
-        minWidth: 120,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -65,9 +57,7 @@ export const USER_COLUMNS_SIMPLE: ColumnDef<User>[] = [
         cell: ({ row }) => {
             const institution = row.getValue('institution') as string
             return h('div', { class: getCellClasses() }, institution)
-        },
-        minWidth: 150,
-        priority: 2
+        }
     }),
 
     createResponsiveColumn({
@@ -78,8 +68,6 @@ export const USER_COLUMNS_SIMPLE: ColumnDef<User>[] = [
             return h('div', { class: getCellClasses('center') },
                 h(StatusBadge, { status: isActive ? 'Active' : 'Inactive' })
             )
-        },
-        minWidth: 100,
-        priority: 2
+        }
     })
 ]

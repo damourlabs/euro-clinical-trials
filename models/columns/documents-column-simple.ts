@@ -20,9 +20,7 @@ export const DOCUMENT_COLUMNS_SIMPLE: ColumnDef<Document>[] = [
                     detailUrl: `/documents/${document.uuid}`
                 })
             )
-        },
-        minWidth: 120,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -32,9 +30,7 @@ export const DOCUMENT_COLUMNS_SIMPLE: ColumnDef<Document>[] = [
             const title = row.getValue('title') as string
             const truncated = title.length > 40 ? title.substring(0, 40) + '...' : title
             return h('div', { class: getCellClasses(), title }, truncated)
-        },
-        minWidth: 200,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -45,9 +41,7 @@ export const DOCUMENT_COLUMNS_SIMPLE: ColumnDef<Document>[] = [
             return h('div', { class: getCellClasses('center') },
                 h(StatusBadge, { status: documentType })
             )
-        },
-        minWidth: 120,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -58,9 +52,7 @@ export const DOCUMENT_COLUMNS_SIMPLE: ColumnDef<Document>[] = [
             return h('div', { class: getCellClasses('center') },
                 h(FieldDate, { date: uploadDate })
             )
-        },
-        minWidth: 120,
-        priority: 2
+        }
     }),
 
     createResponsiveColumn({
@@ -71,8 +63,6 @@ export const DOCUMENT_COLUMNS_SIMPLE: ColumnDef<Document>[] = [
             if (!description) return h('div', { class: getCellClasses() }, '-')
             const truncated = description.length > 50 ? description.substring(0, 50) + '...' : description
             return h('div', { class: getCellClasses(), title: description }, truncated)
-        },
-        minWidth: 150,
-        priority: 3
+        }
     })
 ]

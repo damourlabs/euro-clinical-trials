@@ -3,13 +3,14 @@ import type { ColumnDef } from '@tanstack/vue-table'
 import type { EligibilityCriteria } from '~/server/database/schema'
 import {
     StatusBadge,
-    FieldDate,
-    GenericCompactCard
+    FieldDate
+    // GenericCompactCard - TODO: Fix type mismatch before re-enabling
 } from '~/components/common/field'
 import { getHeaderClasses, getCellClasses, createResponsiveColumn } from '~/utils/table-helpers'
 import EligibilityCard from '~/components/eligibility/EligibilityCard.vue'
 
-async function fetchTrial(_uuid: string) {
+// TODO: Fix fetchTrial function when GenericCompactCard is re-enabled
+/* async function fetchTrial(_uuid: string) {
     const trial = useTrialsStore().getById(_uuid)
 
     if (trial === undefined) {
@@ -17,7 +18,7 @@ async function fetchTrial(_uuid: string) {
     }
 
     return trial
-}
+} */
 
 export const ELIGIBILITY_COLUMNS: ColumnDef<EligibilityCriteria>[] = [
     createResponsiveColumn({
@@ -31,9 +32,7 @@ export const ELIGIBILITY_COLUMNS: ColumnDef<EligibilityCriteria>[] = [
                     size: 'micro'
                 })
             )
-        },
-        minWidth: 120,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -41,17 +40,15 @@ export const ELIGIBILITY_COLUMNS: ColumnDef<EligibilityCriteria>[] = [
         header: () => h('div', { class: getHeaderClasses('center') }, 'Trial'),
         cell: ({ row }) => {
             const trialUuid = row.getValue('trialUuid') as string
-            return h('div', { class: getCellClasses('center') },
-                h(GenericCompactCard, {
-                    title: 'Trial',
-                    fetchFunction: () => fetchTrial(trialUuid),
-                    detailUrl: `/trials/${trialUuid}`,
-                    displayProperty: 'title'
-                })
-            )
-        },
-        minWidth: 140,
-        priority: 1
+            // TODO: Fix GenericCompactCard props type mismatch - missing required props: entityUuid, entityType, titleField, subtitleField
+            return h('div', { class: getCellClasses('center') }, trialUuid)
+            /* h(GenericCompactCard, {
+                title: 'Trial',
+                fetchFunction: () => fetchTrial(trialUuid),
+                detailUrl: `/trials/${trialUuid}`,
+                displayProperty: 'title'
+            }) */
+        }
     }),
 
     createResponsiveColumn({
@@ -62,9 +59,7 @@ export const ELIGIBILITY_COLUMNS: ColumnDef<EligibilityCriteria>[] = [
             return h('div', { class: getCellClasses('center') + ' font-medium' },
                 `${minAge} years`
             )
-        },
-        minWidth: 100,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -75,9 +70,7 @@ export const ELIGIBILITY_COLUMNS: ColumnDef<EligibilityCriteria>[] = [
             return h('div', { class: getCellClasses('center') + ' font-medium' },
                 `${maxAge} years`
             )
-        },
-        minWidth: 100,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -89,9 +82,7 @@ export const ELIGIBILITY_COLUMNS: ColumnDef<EligibilityCriteria>[] = [
             return h('div', { class: getCellClasses('center') + ' font-medium' },
                 `${minAge} - ${maxAge} years`
             )
-        },
-        minWidth: 120,
-        priority: 2
+        }
     }),
 
     createResponsiveColumn({
@@ -106,9 +97,7 @@ export const ELIGIBILITY_COLUMNS: ColumnDef<EligibilityCriteria>[] = [
                     variant: sexVariant
                 })
             )
-        },
-        minWidth: 100,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -119,9 +108,7 @@ export const ELIGIBILITY_COLUMNS: ColumnDef<EligibilityCriteria>[] = [
             return h('div', { class: getCellClasses('center') },
                 h(FieldDate, { date: createdAt, showTime: true })
             )
-        },
-        minWidth: 140,
-        priority: 3
+        }
     })
 ]
 

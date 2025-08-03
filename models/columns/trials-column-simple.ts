@@ -20,9 +20,7 @@ export const TRIAL_COLUMNS_SIMPLE: ColumnDef<Trial>[] = [
                     detailUrl: `/trials/${trial.uuid}`
                 })
             )
-        },
-        minWidth: 120,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -31,9 +29,7 @@ export const TRIAL_COLUMNS_SIMPLE: ColumnDef<Trial>[] = [
         cell: ({ row }) => {
             const title = row.getValue('title') as string
             return h('div', { class: getCellClasses() }, title)
-        },
-        minWidth: 200,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -42,9 +38,7 @@ export const TRIAL_COLUMNS_SIMPLE: ColumnDef<Trial>[] = [
         cell: ({ row }) => {
             const indication = row.getValue('indication') as string
             return h('div', { class: getCellClasses() }, indication)
-        },
-        minWidth: 150,
-        priority: 2
+        }
     }),
 
     createResponsiveColumn({
@@ -55,9 +49,7 @@ export const TRIAL_COLUMNS_SIMPLE: ColumnDef<Trial>[] = [
             return h('div', { class: getCellClasses('center') },
                 h(StatusBadge, { status })
             )
-        },
-        minWidth: 120,
-        priority: 1
+        }
     }),
 
     createResponsiveColumn({
@@ -66,9 +58,7 @@ export const TRIAL_COLUMNS_SIMPLE: ColumnDef<Trial>[] = [
         cell: ({ row }) => {
             const phase = row.getValue('phase') as string
             return h('div', { class: getCellClasses('center') }, `Phase ${phase}`)
-        },
-        minWidth: 100,
-        priority: 2
+        }
     }),
 
     createResponsiveColumn({
@@ -79,8 +69,6 @@ export const TRIAL_COLUMNS_SIMPLE: ColumnDef<Trial>[] = [
             return h('div', { class: getCellClasses('center') },
                 h(FieldDate, { date: startDate })
             )
-        },
-        minWidth: 120,
-        priority: 3
+        }
     })
 ]
