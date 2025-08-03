@@ -41,7 +41,7 @@
                 {{ associatedSite.name }}
               </NuxtLink>
             </div>
-            <div>
+            <div v-if="document.createdAt">
               <span class="font-medium text-gray-700">Created:</span>
               <span class="ml-2 text-gray-900">{{ formatDate(document.createdAt) }}</span>
             </div>
