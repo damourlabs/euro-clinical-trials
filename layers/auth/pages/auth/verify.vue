@@ -28,7 +28,7 @@
           ref="verificationForm"
           :sections="false"
           :schema="verificationFormSchema"
-          :on-submit="handleVerification"
+          :submit-fn="handleVerification"
         />
 
         <div class="text-center">

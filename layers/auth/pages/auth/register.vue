@@ -47,7 +47,7 @@
         ref="registrationForm"
         :sections="false"
         :schema="registrationFormSchema"
-        :on-submit="handleRegistration"
+        :submit-fn="handleRegistration"
         class="space-y-6 mt-8"
       />
 
