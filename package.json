@@ -18,6 +18,7 @@
     "release": "release-it"
   },
   "dependencies": {
+    "@damourlabs/ui": "^0.27.0",
     "@electric-sql/pglite": "^0.3.6",
     "@nuxt/eslint": "^1.7.1",
     "@nuxt/fonts": "^0.11.4",
@@ -29,7 +30,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@vee-validate/zod": "^4.15.1",
     "class-variance-authority": "^0.7.1",
-    "drizzle-orm": "^0.44.3",
+    "drizzle-orm": "^0.44.4",
     "drizzle-zod": "^0.8.2",
     "ioredis": "^5.6.1",
     "jsonwebtoken": "^9.0.2",
@@ -51,14 +52,14 @@
   "release-it": {
     "git": false,
     "npm": {
-      "publish": false
+      "publish": true
     }
   },
   "packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac",
   "devDependencies": {
-    "esbuild": ">=0.25.0",
     "@nuxtjs/color-mode": "^3.5.2",
     "drizzle-kit": "^0.31.4",
-    "wrangler": "^4.26.0"
+    "esbuild": "^0.25.8",
+    "wrangler": "^4.26.1"
   }
 }
