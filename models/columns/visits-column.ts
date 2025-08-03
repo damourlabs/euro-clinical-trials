@@ -1,6 +1,6 @@
 import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
-import type { Visit } from '~/server/database/schema'
+import type { Patient, Site, Visit } from '~/server/database/schema'
 import {
     StatusBadge,
     FieldDate,
@@ -42,8 +42,6 @@ export const VISIT_COLUMNS: ColumnDef<Visit>[] = [
                 })
             )
         },
-        minWidth: 120,
-        priority: 1
     }),
 
     createResponsiveColumn({
@@ -55,8 +53,6 @@ export const VISIT_COLUMNS: ColumnDef<Visit>[] = [
                 h(StatusBadge, { status: visitType })
             )
         },
-        minWidth: 120,
-        priority: 1
     }),
 
     createResponsiveColumn({
@@ -72,8 +68,6 @@ export const VISIT_COLUMNS: ColumnDef<Visit>[] = [
                 })
             )
         },
-        minWidth: 120,
-        priority: 1
     }),
 
     createResponsiveColumn({
@@ -94,8 +88,6 @@ export const VISIT_COLUMNS: ColumnDef<Visit>[] = [
                 h(FieldDate, { date: visitDate })
             )
         },
-        minWidth: 120,
-        priority: 1
     }),
 
     createResponsiveColumn({
@@ -104,16 +96,17 @@ export const VISIT_COLUMNS: ColumnDef<Visit>[] = [
         cell: ({ row }) => {
             const patientUuid = row.getValue('patientUuid') as string
             return h('div', { class: getCellClasses('center') },
-                h(GenericCompactCard, {
-                    title: 'Patient',
-                    fetchFunction: () => fetchPatient(patientUuid),
-                    detailUrl: `/patients/${patientUuid}`,
-                    displayProperty: 'name'
+                h(GenericCompactCard<Patient>, {
+                    entityUuid: patientUuid,
+                    entityType: 'patient',
+                    fetchFunction: fetchPatient,
+                    titleField: 'subjectId',
+                    subtitleField: 'uuid',
+                    statusField: 'status',
+                    colorScheme: 'green',
                 })
             )
         },
-        minWidth: 140,
-        priority: 2
     }),
 
     createResponsiveColumn({
@@ -122,16 +115,17 @@ export const VISIT_COLUMNS: ColumnDef<Visit>[] = [
         cell: ({ row }) => {
             const siteUuid = row.getValue('siteUuid') as string
             return h('div', { class: getCellClasses('center') },
-                h(GenericCompactCard, {
-                    title: 'Site',
-                    fetchFunction: () => fetchSite(siteUuid),
-                    detailUrl: `/sites/${siteUuid}`,
-                    displayProperty: 'name'
+                h(GenericCompactCard<Site>, {
+                    entityUuid: siteUuid,
+                    entityType: 'site',
+                    fetchFunction: fetchSite,
+                    titleField: 'name',
+                    subtitleField: 'address',
+                    statusField: 'status',
+                    colorScheme: 'blue'
                 })
             )
         },
-        minWidth: 140,
-        priority: 2
     }),
 
     createResponsiveColumn({
@@ -145,8 +139,6 @@ export const VISIT_COLUMNS: ColumnDef<Visit>[] = [
             const truncated = notes.length > 60 ? notes.substring(0, 60) + '...' : notes
             return h('div', { class: getCellClasses(), title: notes }, truncated)
         },
-        minWidth: 200,
-        priority: 3
     }),
 
     createResponsiveColumn({
@@ -158,8 +150,6 @@ export const VISIT_COLUMNS: ColumnDef<Visit>[] = [
                 h(FieldDate, { date: createdAt, showTime: true })
             )
         },
-        minWidth: 140,
-        priority: 4
     }),
 
     createResponsiveColumn({
@@ -171,8 +161,6 @@ export const VISIT_COLUMNS: ColumnDef<Visit>[] = [
                 h(FieldDate, { date: updatedAt, showTime: true })
             )
         },
-        minWidth: 140,
-        priority: 5
     })
 ]
 
