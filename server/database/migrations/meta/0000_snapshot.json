@@ -1,5 +1,5 @@
 {
-  "id": "05e9e456-6bd6-4e33-9a44-4873dfcd9d59",
+  "id": "4d9efa2f-5a1f-49d1-961a-b69987049c9f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -34,16 +34,16 @@
           "notNull": true,
           "default": "CURRENT_DATE"
         },
-        "severity": {
-          "name": "severity",
-          "type": "adverse_event_severity",
+        "adverse_event_severity": {
+          "name": "adverse_event_severity",
+          "type": "adverse_event_severity_enum",
           "primaryKey": false,
           "notNull": true,
           "default": "'Mild'"
         },
-        "outcome": {
-          "name": "outcome",
-          "type": "adverse_event_outcome",
+        "adverse_event_outcome": {
+          "name": "adverse_event_outcome",
+          "type": "adverse_event_outcome_enum",
           "primaryKey": false,
           "notNull": true,
           "default": "'Ongoing'"
@@ -140,7 +140,7 @@
         },
         "adverse_events_resolution_logic": {
           "name": "adverse_events_resolution_logic",
-          "value": "(\"adverse_events\".\"outcome\" = 'Resolved' AND \"adverse_events\".\"resolved_at\" IS NOT NULL) OR (\"adverse_events\".\"outcome\" != 'Resolved' AND \"adverse_events\".\"resolved_at\" IS NULL)"
+          "value": "(\"adverse_events\".\"adverse_event_outcome\" = 'Resolved' AND \"adverse_events\".\"resolved_at\" IS NOT NULL) OR (\"adverse_events\".\"adverse_event_outcome\" != 'Resolved' AND \"adverse_events\".\"resolved_at\" IS NULL)"
         }
       },
       "isRLSEnabled": false
@@ -174,9 +174,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "legalBasis": {
-          "name": "legalBasis",
-          "type": "legal_basis",
+        "legal_basis": {
+          "name": "legal_basis",
+          "type": "legal_basis_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -262,17 +262,17 @@
           "primaryKey": false,
           "notNull": false
         },
-        "action": {
-          "name": "action",
-          "type": "audit_action",
+        "audit_action": {
+          "name": "audit_action",
+          "type": "audit_action_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'View'"
         },
-        "entityType": {
-          "name": "entityType",
-          "type": "audit_entity_type",
+        "audit_entity_type": {
+          "name": "audit_entity_type",
+          "type": "audit_entity_type_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -349,7 +349,7 @@
           "name": "idx_audit_logs_entity",
           "columns": [
             {
-              "expression": "entityType",
+              "expression": "audit_entity_type",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -424,9 +424,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "documentType": {
-          "name": "documentType",
-          "type": "document_type",
+        "document_type": {
+          "name": "document_type",
+          "type": "document_type_enum",
           "primaryKey": false,
           "notNull": true,
           "default": "'Other'"
@@ -670,9 +670,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "criteriaType": {
-          "name": "criteriaType",
-          "type": "criteria_type",
+        "criteria_type": {
+          "name": "criteria_type",
+          "type": "criteria_type_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -814,7 +814,7 @@
         },
         "sex": {
           "name": "sex",
-          "type": "sex",
+          "type": "sex_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -979,9 +979,9 @@
           "notNull": false,
           "default": "now()"
         },
-        "anonymizationMethod": {
-          "name": "anonymizationMethod",
-          "type": "anonymization_method",
+        "anonymization_method": {
+          "name": "anonymization_method",
+          "type": "anonymization_method_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -1052,9 +1052,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "dataType": {
-          "name": "dataType",
-          "type": "data_type",
+        "data_type": {
+          "name": "data_type",
+          "type": "data_type_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -1068,7 +1068,7 @@
         },
         "deletion_trigger": {
           "name": "deletion_trigger",
-          "type": "deletion_trigger",
+          "type": "deletion_trigger_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -1105,7 +1105,7 @@
           "nullsNotDistinct": false,
           "columns": [
             "trial_uuid",
-            "dataType"
+            "data_type"
           ]
         }
       },
@@ -1135,9 +1135,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "requestType": {
-          "name": "requestType",
-          "type": "data_subject_request_type",
+        "request_type": {
+          "name": "request_type",
+          "type": "data_subject_request_type_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -1145,7 +1145,7 @@
         },
         "status": {
           "name": "status",
-          "type": "data_subject_request_status",
+          "type": "data_subject_request_status_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -1255,17 +1255,17 @@
           "notNull": true,
           "default": "CURRENT_DATE"
         },
-        "legalBasis": {
-          "name": "legalBasis",
-          "type": "legal_basis",
+        "legal_basis": {
+          "name": "legal_basis",
+          "type": "legal_basis_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'Consent'"
         },
-        "consentType": {
-          "name": "consentType",
-          "type": "consent_type",
+        "consent_type": {
+          "name": "consent_type",
+          "type": "consent_type_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -1273,7 +1273,7 @@
         },
         "purpose": {
           "name": "purpose",
-          "type": "purpose",
+          "type": "purpose_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -1299,8 +1299,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "consentStatus": {
-          "name": "consentStatus",
+        "consent_status": {
+          "name": "consent_status",
           "type": "consent_status_enum",
           "typeSchema": "public",
           "primaryKey": false,
@@ -1313,19 +1313,19 @@
           "primaryKey": false,
           "notNull": false
         },
-        "withdrawalMethod": {
-          "name": "withdrawalMethod",
-          "type": "withdrawal_method",
+        "withdrawal_method": {
+          "name": "withdrawal_method",
+          "type": "withdrawal_method_enum",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "withdrawalReason": {
-          "name": "withdrawalReason",
-          "type": "withdrawal_reason",
+        "withdrawal_reason": {
+          "name": "withdrawal_reason",
+          "type": "withdrawal_reason_enum",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -1412,7 +1412,7 @@
         },
         "gdpr_consents_withdrawal_logic": {
           "name": "gdpr_consents_withdrawal_logic",
-          "value": "(\"gdpr_consents\".\"consentStatus\" = 'Withdrawn' AND \"gdpr_consents\".\"withdrawal_date\" IS NOT NULL) OR (\"gdpr_consents\".\"consentStatus\" != 'Withdrawn' AND \"gdpr_consents\".\"withdrawal_date\" IS NULL)"
+          "value": "(\"gdpr_consents\".\"consent_status\" = 'Withdrawn' AND \"gdpr_consents\".\"withdrawal_date\" IS NOT NULL) OR (\"gdpr_consents\".\"consent_status\" != 'Withdrawn' AND \"gdpr_consents\".\"withdrawal_date\" IS NULL)"
         }
       },
       "isRLSEnabled": false
@@ -1436,7 +1436,7 @@
         },
         "category": {
           "name": "category",
-          "type": "gdpr_data_category",
+          "type": "gdpr_data_category_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -2087,16 +2087,16 @@
           "primaryKey": false,
           "notNull": false
         },
-        "facilityType": {
-          "name": "facilityType",
+        "facility_type": {
+          "name": "facility_type",
           "type": "facility_type_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'Hospital'"
         },
-        "status": {
-          "name": "status",
+        "site_status": {
+          "name": "site_status",
           "type": "site_status_enum",
           "typeSchema": "public",
           "primaryKey": false,
@@ -2117,8 +2117,8 @@
           "notNull": true,
           "default": 100
         },
-        "dataSubmissionStatus": {
-          "name": "dataSubmissionStatus",
+        "data_submission_status": {
+          "name": "data_submission_status",
           "type": "data_submission_status_enum",
           "typeSchema": "public",
           "primaryKey": false,
@@ -2206,7 +2206,7 @@
               "nulls": "last"
             },
             {
-              "expression": "status",
+              "expression": "site_status",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2336,8 +2336,8 @@
           "notNull": true,
           "default": "'Active'"
         },
-        "consentStatus": {
-          "name": "consentStatus",
+        "consent_status": {
+          "name": "consent_status",
           "type": "consent_status_enum",
           "typeSchema": "public",
           "primaryKey": false,
@@ -3036,7 +3036,7 @@
         },
         "severity": {
           "name": "severity",
-          "type": "severity",
+          "type": "severity_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -3134,7 +3134,7 @@
         },
         "approvalType": {
           "name": "approvalType",
-          "type": "approval_type",
+          "type": "approval_type_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -3142,7 +3142,7 @@
         },
         "status": {
           "name": "status",
-          "type": "approval_status",
+          "type": "approval_status_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -3428,9 +3428,9 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "type": {
-          "name": "type",
-          "type": "randomization_strategy",
+        "randomization_strategy": {
+          "name": "randomization_strategy",
+          "type": "randomization_strategy_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -3616,7 +3616,7 @@
         },
         "blinding": {
           "name": "blinding",
-          "type": "blinding",
+          "type": "blinding_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -3707,8 +3707,8 @@
     }
   },
   "enums": {
-    "public.adverse_event_outcome": {
-      "name": "adverse_event_outcome",
+    "public.adverse_event_outcome_enum": {
+      "name": "adverse_event_outcome_enum",
       "schema": "public",
       "values": [
         "Resolved",
@@ -3716,8 +3716,8 @@
         "Fatal"
       ]
     },
-    "public.adverse_event_severity": {
-      "name": "adverse_event_severity",
+    "public.adverse_event_severity_enum": {
+      "name": "adverse_event_severity_enum",
       "schema": "public",
       "values": [
         "Mild",
@@ -3725,8 +3725,8 @@
         "Severe"
       ]
     },
-    "public.audit_action": {
-      "name": "audit_action",
+    "public.audit_action_enum": {
+      "name": "audit_action_enum",
       "schema": "public",
       "values": [
         "Create",
@@ -3735,8 +3735,8 @@
         "View"
       ]
     },
-    "public.audit_entity_type": {
-      "name": "audit_entity_type",
+    "public.audit_entity_type_enum": {
+      "name": "audit_entity_type_enum",
       "schema": "public",
       "values": [
         "Trial",
@@ -3746,8 +3746,8 @@
         "GDPRConsent"
       ]
     },
-    "public.legal_basis": {
-      "name": "legal_basis",
+    "public.legal_basis_enum": {
+      "name": "legal_basis_enum",
       "schema": "public",
       "values": [
         "Consent",
@@ -3757,8 +3757,8 @@
         "Public_task"
       ]
     },
-    "public.document_type": {
-      "name": "document_type",
+    "public.document_type_enum": {
+      "name": "document_type_enum",
       "schema": "public",
       "values": [
         "Protocol",
@@ -3767,8 +3767,8 @@
         "Other"
       ]
     },
-    "public.criteria_type": {
-      "name": "criteria_type",
+    "public.criteria_type_enum": {
+      "name": "criteria_type_enum",
       "schema": "public",
       "values": [
         "Inclusion",
@@ -3776,8 +3776,8 @@
         "Eligibility"
       ]
     },
-    "public.sex": {
-      "name": "sex",
+    "public.sex_enum": {
+      "name": "sex_enum",
       "schema": "public",
       "values": [
         "All",
@@ -3785,8 +3785,8 @@
         "Male"
       ]
     },
-    "public.anonymization_method": {
-      "name": "anonymization_method",
+    "public.anonymization_method_enum": {
+      "name": "anonymization_method_enum",
       "schema": "public",
       "values": [
         "DataMasking",
@@ -3795,8 +3795,8 @@
         "DataEncryption"
       ]
     },
-    "public.gdpr_data_category": {
-      "name": "gdpr_data_category",
+    "public.gdpr_data_category_enum": {
+      "name": "gdpr_data_category_enum",
       "schema": "public",
       "values": [
         "Health_data",
@@ -3806,8 +3806,8 @@
         "Genetic_data"
       ]
     },
-    "public.consent_type": {
-      "name": "consent_type",
+    "public.consent_type_enum": {
+      "name": "consent_type_enum",
       "schema": "public",
       "values": [
         "Data_processing",
@@ -3815,8 +3815,8 @@
         "Marketing"
       ]
     },
-    "public.data_subject_request_status": {
-      "name": "data_subject_request_status",
+    "public.data_subject_request_status_enum": {
+      "name": "data_subject_request_status_enum",
       "schema": "public",
       "values": [
         "Pending",
@@ -3824,8 +3824,8 @@
         "Rejected"
       ]
     },
-    "public.data_subject_request_type": {
-      "name": "data_subject_request_type",
+    "public.data_subject_request_type_enum": {
+      "name": "data_subject_request_type_enum",
       "schema": "public",
       "values": [
         "Access",
@@ -3835,8 +3835,8 @@
         "Restriction"
       ]
     },
-    "public.data_type": {
-      "name": "data_type",
+    "public.data_type_enum": {
+      "name": "data_type_enum",
       "schema": "public",
       "values": [
         "PersonalData",
@@ -3845,8 +3845,8 @@
         "AggregatedData"
       ]
     },
-    "public.deletion_trigger": {
-      "name": "deletion_trigger",
+    "public.deletion_trigger_enum": {
+      "name": "deletion_trigger_enum",
       "schema": "public",
       "values": [
         "Manual",
@@ -3854,8 +3854,8 @@
         "PolicyBased"
       ]
     },
-    "public.purpose": {
-      "name": "purpose",
+    "public.purpose_enum": {
+      "name": "purpose_enum",
       "schema": "public",
       "values": [
         "Clinical_trial_management",
@@ -3864,8 +3864,8 @@
         "Regulatory_compliance"
       ]
     },
-    "public.withdrawal_method": {
-      "name": "withdrawal_method",
+    "public.withdrawal_method_enum": {
+      "name": "withdrawal_method_enum",
       "schema": "public",
       "values": [
         "Patient_portal",
@@ -3873,8 +3873,8 @@
         "Phone"
       ]
     },
-    "public.withdrawal_reason": {
-      "name": "withdrawal_reason",
+    "public.withdrawal_reason_enum": {
+      "name": "withdrawal_reason_enum",
       "schema": "public",
       "values": [
         "Personal",
@@ -3970,8 +3970,8 @@
         "EthicsCommittee"
       ]
     },
-    "public.approval_status": {
-      "name": "approval_status",
+    "public.approval_status_enum": {
+      "name": "approval_status_enum",
       "schema": "public",
       "values": [
         "Approved",
@@ -3979,8 +3979,8 @@
         "Rejected"
       ]
     },
-    "public.approval_type": {
-      "name": "approval_type",
+    "public.approval_type_enum": {
+      "name": "approval_type_enum",
       "schema": "public",
       "values": [
         "ClinicalTrial",
@@ -3989,8 +3989,8 @@
         "Other"
       ]
     },
-    "public.severity": {
-      "name": "severity",
+    "public.severity_enum": {
+      "name": "severity_enum",
       "schema": "public",
       "values": [
         "Mild",
@@ -3998,8 +3998,8 @@
         "Severe"
       ]
     },
-    "public.blinding": {
-      "name": "blinding",
+    "public.blinding_enum": {
+      "name": "blinding_enum",
       "schema": "public",
       "values": [
         "Single",
@@ -4008,8 +4008,8 @@
         "OpenLabel"
       ]
     },
-    "public.randomization_strategy": {
-      "name": "randomization_strategy",
+    "public.randomization_strategy_enum": {
+      "name": "randomization_strategy_enum",
       "schema": "public",
       "values": [
         "Simple",

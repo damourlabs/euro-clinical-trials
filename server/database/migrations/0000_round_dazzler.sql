@@ -1,21 +1,21 @@
-CREATE TYPE "public"."adverse_event_outcome" AS ENUM('Resolved', 'Ongoing', 'Fatal');--> statement-breakpoint
-CREATE TYPE "public"."adverse_event_severity" AS ENUM('Mild', 'Moderate', 'Severe');--> statement-breakpoint
-CREATE TYPE "public"."audit_action" AS ENUM('Create', 'Update', 'Delete', 'View');--> statement-breakpoint
-CREATE TYPE "public"."audit_entity_type" AS ENUM('Trial', 'Patient', 'Visit', 'AdverseEvent', 'GDPRConsent');--> statement-breakpoint
-CREATE TYPE "public"."legal_basis" AS ENUM('Consent', 'Contract', 'Legal_obligation', 'Vital_interests', 'Public_task');--> statement-breakpoint
-CREATE TYPE "public"."document_type" AS ENUM('Protocol', 'InformedConsent', 'RegulatoryApproval', 'Other');--> statement-breakpoint
-CREATE TYPE "public"."criteria_type" AS ENUM('Inclusion', 'Exclusion', 'Eligibility');--> statement-breakpoint
-CREATE TYPE "public"."sex" AS ENUM('All', 'Female', 'Male');--> statement-breakpoint
-CREATE TYPE "public"."anonymization_method" AS ENUM('DataMasking', 'DataAggregation', 'DataPseudonymization', 'DataEncryption');--> statement-breakpoint
-CREATE TYPE "public"."gdpr_data_category" AS ENUM('Health_data', 'Identification_data', 'Contact_data', 'Demographic_data', 'Genetic_data');--> statement-breakpoint
-CREATE TYPE "public"."consent_type" AS ENUM('Data_processing', 'Data_transfer', 'Marketing');--> statement-breakpoint
-CREATE TYPE "public"."data_subject_request_status" AS ENUM('Pending', 'Processed', 'Rejected');--> statement-breakpoint
-CREATE TYPE "public"."data_subject_request_type" AS ENUM('Access', 'Rectification', 'Erasure', 'Portability', 'Restriction');--> statement-breakpoint
-CREATE TYPE "public"."data_type" AS ENUM('PersonalData', 'SensitiveData', 'AnonymizedData', 'AggregatedData');--> statement-breakpoint
-CREATE TYPE "public"."deletion_trigger" AS ENUM('Manual', 'Automatic', 'PolicyBased');--> statement-breakpoint
-CREATE TYPE "public"."purpose" AS ENUM('Clinical_trial_management', 'Data_analysis', 'Marketing_communication', 'Regulatory_compliance');--> statement-breakpoint
-CREATE TYPE "public"."withdrawal_method" AS ENUM('Patient_portal', 'Email', 'Phone');--> statement-breakpoint
-CREATE TYPE "public"."withdrawal_reason" AS ENUM('Personal', 'Data_breach', 'Other');--> statement-breakpoint
+CREATE TYPE "public"."adverse_event_outcome_enum" AS ENUM('Resolved', 'Ongoing', 'Fatal');--> statement-breakpoint
+CREATE TYPE "public"."adverse_event_severity_enum" AS ENUM('Mild', 'Moderate', 'Severe');--> statement-breakpoint
+CREATE TYPE "public"."audit_action_enum" AS ENUM('Create', 'Update', 'Delete', 'View');--> statement-breakpoint
+CREATE TYPE "public"."audit_entity_type_enum" AS ENUM('Trial', 'Patient', 'Visit', 'AdverseEvent', 'GDPRConsent');--> statement-breakpoint
+CREATE TYPE "public"."legal_basis_enum" AS ENUM('Consent', 'Contract', 'Legal_obligation', 'Vital_interests', 'Public_task');--> statement-breakpoint
+CREATE TYPE "public"."document_type_enum" AS ENUM('Protocol', 'InformedConsent', 'RegulatoryApproval', 'Other');--> statement-breakpoint
+CREATE TYPE "public"."criteria_type_enum" AS ENUM('Inclusion', 'Exclusion', 'Eligibility');--> statement-breakpoint
+CREATE TYPE "public"."sex_enum" AS ENUM('All', 'Female', 'Male');--> statement-breakpoint
+CREATE TYPE "public"."anonymization_method_enum" AS ENUM('DataMasking', 'DataAggregation', 'DataPseudonymization', 'DataEncryption');--> statement-breakpoint
+CREATE TYPE "public"."gdpr_data_category_enum" AS ENUM('Health_data', 'Identification_data', 'Contact_data', 'Demographic_data', 'Genetic_data');--> statement-breakpoint
+CREATE TYPE "public"."consent_type_enum" AS ENUM('Data_processing', 'Data_transfer', 'Marketing');--> statement-breakpoint
+CREATE TYPE "public"."data_subject_request_status_enum" AS ENUM('Pending', 'Processed', 'Rejected');--> statement-breakpoint
+CREATE TYPE "public"."data_subject_request_type_enum" AS ENUM('Access', 'Rectification', 'Erasure', 'Portability', 'Restriction');--> statement-breakpoint
+CREATE TYPE "public"."data_type_enum" AS ENUM('PersonalData', 'SensitiveData', 'AnonymizedData', 'AggregatedData');--> statement-breakpoint
+CREATE TYPE "public"."deletion_trigger_enum" AS ENUM('Manual', 'Automatic', 'PolicyBased');--> statement-breakpoint
+CREATE TYPE "public"."purpose_enum" AS ENUM('Clinical_trial_management', 'Data_analysis', 'Marketing_communication', 'Regulatory_compliance');--> statement-breakpoint
+CREATE TYPE "public"."withdrawal_method_enum" AS ENUM('Patient_portal', 'Email', 'Phone');--> statement-breakpoint
+CREATE TYPE "public"."withdrawal_reason_enum" AS ENUM('Personal', 'Data_breach', 'Other');--> statement-breakpoint
 CREATE TYPE "public"."phase_enum" AS ENUM('I', 'II', 'III', 'IV');--> statement-breakpoint
 CREATE TYPE "public"."status_enum" AS ENUM('Planning', 'Active', 'Paused', 'Completed', 'Terminated');--> statement-breakpoint
 CREATE TYPE "public"."data_submission_status_enum" AS ENUM('OnTime', 'Delayed', 'NotSubmitted');--> statement-breakpoint
@@ -24,25 +24,25 @@ CREATE TYPE "public"."site_status_enum" AS ENUM('Active', 'Inactive', 'Pending',
 CREATE TYPE "public"."consent_status_enum" AS ENUM('Consented', 'NotConsented', 'Withdrawn');--> statement-breakpoint
 CREATE TYPE "public"."patient_status_enum" AS ENUM('Screening', 'Enrolled', 'Active', 'Completed', 'Withdrawn', 'Discontinued');--> statement-breakpoint
 CREATE TYPE "public"."user_role" AS ENUM('Sponsor', 'Investigator', 'Coordinator', 'Monitor', 'Patient', 'Nurse', 'Admin', 'Regulatory', 'DataManager', 'Statistician', 'EthicsCommittee');--> statement-breakpoint
-CREATE TYPE "public"."approval_status" AS ENUM('Approved', 'Pending', 'Rejected');--> statement-breakpoint
-CREATE TYPE "public"."approval_type" AS ENUM('ClinicalTrial', 'MarketingAuthorization', 'DeviceApproval', 'Other');--> statement-breakpoint
-CREATE TYPE "public"."severity" AS ENUM('Mild', 'Moderate', 'Severe');--> statement-breakpoint
-CREATE TYPE "public"."blinding" AS ENUM('Single', 'Double', 'Triple', 'OpenLabel');--> statement-breakpoint
-CREATE TYPE "public"."randomization_strategy" AS ENUM('Simple', 'Stratified', 'Block', 'Adaptive');--> statement-breakpoint
+CREATE TYPE "public"."approval_status_enum" AS ENUM('Approved', 'Pending', 'Rejected');--> statement-breakpoint
+CREATE TYPE "public"."approval_type_enum" AS ENUM('ClinicalTrial', 'MarketingAuthorization', 'DeviceApproval', 'Other');--> statement-breakpoint
+CREATE TYPE "public"."severity_enum" AS ENUM('Mild', 'Moderate', 'Severe');--> statement-breakpoint
+CREATE TYPE "public"."blinding_enum" AS ENUM('Single', 'Double', 'Triple', 'OpenLabel');--> statement-breakpoint
+CREATE TYPE "public"."randomization_strategy_enum" AS ENUM('Simple', 'Stratified', 'Block', 'Adaptive');--> statement-breakpoint
 CREATE TABLE "adverse_events" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"patient_uuid" uuid NOT NULL,
 	"description" text NOT NULL,
 	"event_date" date DEFAULT CURRENT_DATE NOT NULL,
-	"severity" "adverse_event_severity" DEFAULT 'Mild' NOT NULL,
-	"outcome" "adverse_event_outcome" DEFAULT 'Ongoing' NOT NULL,
+	"adverse_event_severity" "adverse_event_severity_enum" DEFAULT 'Mild' NOT NULL,
+	"adverse_event_outcome" "adverse_event_outcome_enum" DEFAULT 'Ongoing' NOT NULL,
 	"related_to_trial" boolean DEFAULT false NOT NULL,
 	"reported_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"resolved_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "adverse_events_description_not_empty" CHECK (LENGTH(TRIM("adverse_events"."description")) > 0),
-	CONSTRAINT "adverse_events_resolution_logic" CHECK (("adverse_events"."outcome" = 'Resolved' AND "adverse_events"."resolved_at" IS NOT NULL) OR ("adverse_events"."outcome" != 'Resolved' AND "adverse_events"."resolved_at" IS NULL))
+	CONSTRAINT "adverse_events_resolution_logic" CHECK (("adverse_events"."adverse_event_outcome" = 'Resolved' AND "adverse_events"."resolved_at" IS NOT NULL) OR ("adverse_events"."adverse_event_outcome" != 'Resolved' AND "adverse_events"."resolved_at" IS NULL))
 );
 --> statement-breakpoint
 CREATE TABLE "audit_log_details" (
@@ -50,7 +50,7 @@ CREATE TABLE "audit_log_details" (
 	"audit_log_uuid" uuid NOT NULL,
 	"consent_uuid" uuid,
 	"patient_uuid" uuid,
-	"legalBasis" "legal_basis" DEFAULT 'Legal_obligation' NOT NULL,
+	"legal_basis" "legal_basis_enum" DEFAULT 'Legal_obligation' NOT NULL,
 	CONSTRAINT "audit_log_details_audit_log_uuid_unique" UNIQUE("audit_log_uuid")
 );
 --> statement-breakpoint
@@ -58,8 +58,8 @@ CREATE TABLE "audit_logs" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"trial_uuid" uuid NOT NULL,
 	"user_uuid" uuid,
-	"action" "audit_action" DEFAULT 'View' NOT NULL,
-	"entityType" "audit_entity_type" DEFAULT 'Trial' NOT NULL,
+	"audit_action" "audit_action_enum" DEFAULT 'View' NOT NULL,
+	"audit_entity_type" "audit_entity_type_enum" DEFAULT 'Trial' NOT NULL,
 	"entity_uuid" uuid NOT NULL,
 	"old_values" jsonb,
 	"new_values" jsonb,
@@ -74,7 +74,7 @@ CREATE TABLE "documents" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"title" varchar(255) NOT NULL,
 	"url" text NOT NULL,
-	"documentType" "document_type" DEFAULT 'Other' NOT NULL,
+	"document_type" "document_type_enum" DEFAULT 'Other' NOT NULL,
 	"description" text,
 	"upload_date" date DEFAULT CURRENT_DATE NOT NULL,
 	"uploaded_by" uuid NOT NULL,
@@ -105,7 +105,7 @@ CREATE TABLE "criteria" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"eligibility_criteria_uuid" uuid NOT NULL,
 	"description" text NOT NULL,
-	"criteriaType" "criteria_type" DEFAULT 'Inclusion' NOT NULL,
+	"criteria_type" "criteria_type_enum" DEFAULT 'Inclusion' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now(),
 	CONSTRAINT "criteria_description_not_empty" CHECK (LENGTH(TRIM("criteria"."description")) > 0)
 );
@@ -122,7 +122,7 @@ CREATE TABLE "eligibility_criteria" (
 	"trial_uuid" uuid NOT NULL,
 	"min_age" integer DEFAULT 0 NOT NULL,
 	"max_age" integer DEFAULT 100 NOT NULL,
-	"sex" "sex" DEFAULT 'All' NOT NULL,
+	"sex" "sex_enum" DEFAULT 'All' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now(),
 	CONSTRAINT "eligibility_criteria_age_range" CHECK ("eligibility_criteria"."min_age" <= "eligibility_criteria"."max_age"),
 	CONSTRAINT "eligibility_criteria_age_positive" CHECK ("eligibility_criteria"."min_age" >= 0 AND "eligibility_criteria"."max_age" >= 0)
@@ -144,7 +144,7 @@ CREATE TABLE "data_anonymization_log" (
 	"patient_uuid" uuid NOT NULL,
 	"trial_uuid" uuid NOT NULL,
 	"anonymization_date" timestamp with time zone DEFAULT now(),
-	"anonymizationMethod" "anonymization_method" DEFAULT 'DataPseudonymization' NOT NULL,
+	"anonymization_method" "anonymization_method_enum" DEFAULT 'DataPseudonymization' NOT NULL,
 	"anonymized_fields" jsonb NOT NULL,
 	"performed_by" uuid NOT NULL
 );
@@ -152,19 +152,19 @@ CREATE TABLE "data_anonymization_log" (
 CREATE TABLE "data_retention_policies" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"trial_uuid" uuid NOT NULL,
-	"dataType" "data_type" DEFAULT 'PersonalData' NOT NULL,
+	"data_type" "data_type_enum" DEFAULT 'PersonalData' NOT NULL,
 	"retention_period_years" integer NOT NULL,
-	"deletion_trigger" "deletion_trigger" DEFAULT 'PolicyBased' NOT NULL,
+	"deletion_trigger" "deletion_trigger_enum" DEFAULT 'PolicyBased' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now(),
-	CONSTRAINT "data_retention_policies_unique_per_trial" UNIQUE("trial_uuid","dataType"),
+	CONSTRAINT "data_retention_policies_unique_per_trial" UNIQUE("trial_uuid","data_type"),
 	CONSTRAINT "data_retention_policies_retention_positive" CHECK ("data_retention_policies"."retention_period_years" > 0)
 );
 --> statement-breakpoint
 CREATE TABLE "data_subject_requests" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"patient_uuid" uuid NOT NULL,
-	"requestType" "data_subject_request_type" DEFAULT 'Access' NOT NULL,
-	"status" "data_subject_request_status" DEFAULT 'Pending' NOT NULL,
+	"request_type" "data_subject_request_type_enum" DEFAULT 'Access' NOT NULL,
+	"status" "data_subject_request_status_enum" DEFAULT 'Pending' NOT NULL,
 	"requested_at" timestamp with time zone DEFAULT now(),
 	"processed_at" timestamp with time zone,
 	"processed_by" uuid,
@@ -178,26 +178,26 @@ CREATE TABLE "gdpr_consents" (
 	"patient_uuid" uuid NOT NULL,
 	"consent_given" boolean DEFAULT false NOT NULL,
 	"consent_date" date DEFAULT CURRENT_DATE NOT NULL,
-	"legalBasis" "legal_basis" DEFAULT 'Consent' NOT NULL,
-	"consentType" "consent_type" DEFAULT 'Data_processing' NOT NULL,
-	"purpose" "purpose" DEFAULT 'Clinical_trial_management' NOT NULL,
+	"legal_basis" "legal_basis_enum" DEFAULT 'Consent' NOT NULL,
+	"consent_type" "consent_type_enum" DEFAULT 'Data_processing' NOT NULL,
+	"purpose" "purpose_enum" DEFAULT 'Clinical_trial_management' NOT NULL,
 	"retention_period" integer DEFAULT 5 NOT NULL,
 	"data_processing_details" text DEFAULT 'Data will be processed for the purpose of clinical trial management and regulatory compliance' NOT NULL,
 	"user_agent" text,
-	"consentStatus" "consent_status_enum" DEFAULT 'NotConsented' NOT NULL,
+	"consent_status" "consent_status_enum" DEFAULT 'NotConsented' NOT NULL,
 	"withdrawal_date" date,
-	"withdrawalMethod" "withdrawal_method",
-	"withdrawalReason" "withdrawal_reason",
+	"withdrawal_method" "withdrawal_method_enum" NOT NULL,
+	"withdrawal_reason" "withdrawal_reason_enum" NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone DEFAULT now(),
 	CONSTRAINT "gdpr_consents_retention_positive" CHECK ("gdpr_consents"."retention_period" > 0),
-	CONSTRAINT "gdpr_consents_withdrawal_logic" CHECK (("gdpr_consents"."consentStatus" = 'Withdrawn' AND "gdpr_consents"."withdrawal_date" IS NOT NULL) OR ("gdpr_consents"."consentStatus" != 'Withdrawn' AND "gdpr_consents"."withdrawal_date" IS NULL))
+	CONSTRAINT "gdpr_consents_withdrawal_logic" CHECK (("gdpr_consents"."consent_status" = 'Withdrawn' AND "gdpr_consents"."withdrawal_date" IS NOT NULL) OR ("gdpr_consents"."consent_status" != 'Withdrawn' AND "gdpr_consents"."withdrawal_date" IS NULL))
 );
 --> statement-breakpoint
 CREATE TABLE "gdpr_data_categories" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"consent_uuid" uuid NOT NULL,
-	"category" "gdpr_data_category" DEFAULT 'Health_data' NOT NULL,
+	"category" "gdpr_data_category_enum" DEFAULT 'Health_data' NOT NULL,
 	CONSTRAINT "gdpr_data_categories_unique_per_consent" UNIQUE("consent_uuid","category")
 );
 --> statement-breakpoint
@@ -282,11 +282,11 @@ CREATE TABLE "sites" (
 	"contact_person_uuid" uuid NOT NULL,
 	"principal_investigator_uuid" uuid NOT NULL,
 	"study_coordinator_uuid" uuid,
-	"facilityType" "facility_type_enum" DEFAULT 'Hospital' NOT NULL,
-	"status" "site_status_enum" DEFAULT 'Active' NOT NULL,
+	"facility_type" "facility_type_enum" DEFAULT 'Hospital' NOT NULL,
+	"site_status" "site_status_enum" DEFAULT 'Active' NOT NULL,
 	"patients_enrolled" integer DEFAULT 0 NOT NULL,
 	"target_enrollment" integer DEFAULT 100 NOT NULL,
-	"dataSubmissionStatus" "data_submission_status_enum" DEFAULT 'NotSubmitted' NOT NULL,
+	"data_submission_status" "data_submission_status_enum" DEFAULT 'NotSubmitted' NOT NULL,
 	"activation_date" date DEFAULT CURRENT_DATE NOT NULL,
 	"data_completeness" numeric(5, 2) DEFAULT '0.00' NOT NULL,
 	"last_monitoring_visit" date,
@@ -308,7 +308,7 @@ CREATE TABLE "patients" (
 	"site_uuid" uuid NOT NULL,
 	"subject_id" varchar(50) NOT NULL,
 	"status" "patient_status_enum" DEFAULT 'Active' NOT NULL,
-	"consentStatus" "consent_status_enum" DEFAULT 'NotConsented' NOT NULL,
+	"consent_status" "consent_status_enum" DEFAULT 'NotConsented' NOT NULL,
 	"data_completeness" numeric(5, 2) DEFAULT '0.00' NOT NULL,
 	"enrollment_date" date DEFAULT CURRENT_DATE,
 	"randomization_group" varchar(50) DEFAULT 'NotAssigned' NOT NULL,
@@ -383,7 +383,7 @@ CREATE TABLE "protocol_deviations" (
 	"site_uuid" uuid,
 	"description" text NOT NULL,
 	"date_occurred" date DEFAULT CURRENT_DATE NOT NULL,
-	"severity" "severity" DEFAULT 'Mild' NOT NULL,
+	"severity" "severity_enum" DEFAULT 'Mild' NOT NULL,
 	"impact_assessment" text,
 	"corrective_action" text,
 	"reported_at" timestamp with time zone DEFAULT now(),
@@ -393,8 +393,8 @@ CREATE TABLE "protocol_deviations" (
 CREATE TABLE "regulatory_approvals" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"trial_uuid" uuid NOT NULL,
-	"approvalType" "approval_type" DEFAULT 'ClinicalTrial' NOT NULL,
-	"status" "approval_status" DEFAULT 'Approved' NOT NULL,
+	"approvalType" "approval_type_enum" DEFAULT 'ClinicalTrial' NOT NULL,
+	"status" "approval_status_enum" DEFAULT 'Approved' NOT NULL,
 	"authority" varchar(255) NOT NULL,
 	"approval_date" date DEFAULT CURRENT_DATE,
 	"expiry_date" date,
@@ -434,7 +434,7 @@ CREATE TABLE "protocols" (
 --> statement-breakpoint
 CREATE TABLE "randomization_strategies" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"type" "randomization_strategy" DEFAULT 'Simple' NOT NULL,
+	"randomization_strategy" "randomization_strategy_enum" DEFAULT 'Simple' NOT NULL,
 	"allocation_ratio" varchar(10),
 	"block_size" integer,
 	"created_at" timestamp with time zone DEFAULT now(),
@@ -459,7 +459,7 @@ CREATE TABLE "stratification_factors" (
 CREATE TABLE "study_designs" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"trial_uuid" uuid NOT NULL,
-	"blinding" "blinding" DEFAULT 'OpenLabel' NOT NULL,
+	"blinding" "blinding_enum" DEFAULT 'OpenLabel' NOT NULL,
 	"randomization_strategy_uuid" uuid NOT NULL,
 	"primary_endpoint_uuid" uuid NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -529,13 +529,13 @@ ALTER TABLE "study_designs" ADD CONSTRAINT "study_designs_primary_endpoint_uuid_
 CREATE INDEX "idx_adverse_events_patient" ON "adverse_events" USING btree ("patient_uuid");--> statement-breakpoint
 CREATE INDEX "idx_adverse_events_date" ON "adverse_events" USING btree ("event_date");--> statement-breakpoint
 CREATE INDEX "idx_audit_logs_timestamp" ON "audit_logs" USING btree ("timestamp");--> statement-breakpoint
-CREATE INDEX "idx_audit_logs_entity" ON "audit_logs" USING btree ("entityType","entity_uuid");--> statement-breakpoint
+CREATE INDEX "idx_audit_logs_entity" ON "audit_logs" USING btree ("audit_entity_type","entity_uuid");--> statement-breakpoint
 CREATE INDEX "idx_gdpr_consents_patient" ON "gdpr_consents" USING btree ("patient_uuid");--> statement-breakpoint
 CREATE INDEX "idx_gdpr_consents_trial" ON "gdpr_consents" USING btree ("trial_uuid");--> statement-breakpoint
 CREATE INDEX "idx_trials_status" ON "trials" USING btree ("status");--> statement-breakpoint
 CREATE INDEX "idx_trials_phase" ON "trials" USING btree ("phase");--> statement-breakpoint
 CREATE INDEX "idx_sites_trial" ON "sites" USING btree ("trial_uuid");--> statement-breakpoint
-CREATE INDEX "idx_sites_trial_status" ON "sites" USING btree ("trial_uuid","status");--> statement-breakpoint
+CREATE INDEX "idx_sites_trial_status" ON "sites" USING btree ("trial_uuid","site_status");--> statement-breakpoint
 CREATE INDEX "idx_patients_trial" ON "patients" USING btree ("trial_uuid");--> statement-breakpoint
 CREATE INDEX "idx_patients_site" ON "patients" USING btree ("site_uuid");--> statement-breakpoint
 CREATE INDEX "idx_patients_status" ON "patients" USING btree ("status");--> statement-breakpoint
