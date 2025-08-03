@@ -53,13 +53,11 @@ const documentFormSchema = createDynamicForm(documentsSchema, {
       field: 'trialUuid',
       store: 'trialsStore',
       displayField: 'title',
-      optional: true
     },
     {
       field: 'siteUuid',
       store: 'sitesStore',
       displayField: 'name',
-      optional: true
     }
   ]
 })
