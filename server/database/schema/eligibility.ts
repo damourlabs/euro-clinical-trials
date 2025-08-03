@@ -29,14 +29,14 @@ export const eligibilityFieldDefaultValues = {
 // --- Eligibility Criteria ---
 // ----------------------------
 
-export const pgSex = pgEnum('sex', SexEnum.options);
+export const pgSex = pgEnum('sex_enum', SexEnum.options);
 
 export const eligibilityCriteria = pgTable('eligibility_criteria', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   trialUuid: uuid('trial_uuid').notNull().references(() => trials.uuid, { onDelete: 'cascade' }),
   minAge: integer('min_age').notNull().default(eligibilityFieldDefaultValues.minAge),
   maxAge: integer('max_age').notNull().default(eligibilityFieldDefaultValues.maxAge),
-  sex: pgSex().notNull().default(eligibilityFieldDefaultValues.sex),
+  sex: pgSex("sex").notNull().default(eligibilityFieldDefaultValues.sex),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 }, (table) => [
   check('eligibility_criteria_age_range', sql`${table.minAge} <= ${table.maxAge}`),
@@ -135,13 +135,13 @@ export const eligibilityConditionsSchema = z.object({
 // --- Criteria for Eligibility ---
 // --------------------------------
 
-export const pgCriteriaType = pgEnum('criteria_type', CriteriaTypeEnum.options);
+export const pgCriteriaType = pgEnum('criteria_type_enum', CriteriaTypeEnum.options);
 
 export const criteria = pgTable('criteria', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   eligibilityCriteriaUuid: uuid('eligibility_criteria_uuid').notNull().references(() => eligibilityCriteria.uuid, { onDelete: 'cascade' }),
   description: text('description').notNull(),
-  criteriaType: pgCriteriaType().notNull().default(eligibilityFieldDefaultValues.criteriaType),
+  criteriaType: pgCriteriaType("criteria_type").notNull().default(eligibilityFieldDefaultValues.criteriaType),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 }, (table) => [
 

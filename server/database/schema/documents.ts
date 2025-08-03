@@ -20,13 +20,13 @@ export const documentsFieldDefaultValues = {
   documentType: DocumentTypeEnum.Enum.Other
 };
 
-export const pgDocumentTypeEnum = pgEnum('document_type', DocumentTypeEnum.Enum);
+export const pgDocumentTypeEnum = pgEnum('document_type_enum', DocumentTypeEnum.Enum);
 
 export const documents = pgTable('documents', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   title: varchar('title', { length: 255 }).notNull(),
   url: text('url').notNull(),
-  documentType: pgDocumentTypeEnum().notNull().default(documentsFieldDefaultValues.documentType),
+  documentType: pgDocumentTypeEnum("document_type").notNull().default(documentsFieldDefaultValues.documentType),
   description: text('description'),
   uploadDate: date('upload_date').notNull().default(sql`CURRENT_DATE`),
   uploadedBy: uuid('uploaded_by').notNull().references(() => users.uuid, { onDelete: 'restrict' }),

@@ -37,11 +37,11 @@ export const gdprFieldDefaultValues = {
   consentStatus: ConsentStatusEnum.Enum.NotConsented,
 };
 
-export const pgLegalBasisEnum = pgEnum('legal_basis', LegalBasisEnum.options);
-export const pgConsentTypeEnum = pgEnum('consent_type', ConsentTypeEnum.options);
-export const pgPurposeEnum = pgEnum('purpose', PurposeEnum.options);
-export const pgWithdrawalMethodEnum = pgEnum('withdrawal_method', WithdrawalMethodEnum.options);
-export const pgWithdrawalReasonEnum = pgEnum('withdrawal_reason', WithdrawalReasonEnum.options);
+export const pgLegalBasisEnum = pgEnum('legal_basis_enum', LegalBasisEnum.options);
+export const pgConsentTypeEnum = pgEnum('consent_type_enum', ConsentTypeEnum.options);
+export const pgPurposeEnum = pgEnum('purpose_enum', PurposeEnum.options);
+export const pgWithdrawalMethodEnum = pgEnum('withdrawal_method_enum', WithdrawalMethodEnum.options);
+export const pgWithdrawalReasonEnum = pgEnum('withdrawal_reason_enum', WithdrawalReasonEnum.options);
 
 export const gdprConsents = pgTable('gdpr_consents', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
@@ -49,16 +49,16 @@ export const gdprConsents = pgTable('gdpr_consents', {
   patientUuid: uuid('patient_uuid').notNull().references(() => patients.uuid, { onDelete: 'cascade' }),
   consentGiven: boolean('consent_given').notNull().default(gdprFieldDefaultValues.consentGiven),
   consentDate: date('consent_date').notNull().default(sql`CURRENT_DATE`),
-  legalBasis: pgLegalBasisEnum().notNull().default(gdprFieldDefaultValues.legalBasis),
-  consentType: pgConsentTypeEnum().notNull().default(gdprFieldDefaultValues.consentType),
-  purpose: pgPurposeEnum().notNull().default(gdprFieldDefaultValues.purpose),
+  legalBasis: pgLegalBasisEnum("legal_basis").notNull().default(gdprFieldDefaultValues.legalBasis),
+  consentType: pgConsentTypeEnum("consent_type").notNull().default(gdprFieldDefaultValues.consentType),
+  purpose: pgPurposeEnum("purpose").notNull().default(gdprFieldDefaultValues.purpose),
   retentionPeriod: integer('retention_period').notNull().default(gdprFieldDefaultValues.retentionPeriod),
   dataProcessingDetails: text('data_processing_details').notNull().default(gdprFieldDefaultValues.dataProcessingDetails),
   userAgent: text('user_agent'),
-  consentStatus: pgConsentStatusEnum().notNull().default(gdprFieldDefaultValues.consentStatus),
+  consentStatus: pgConsentStatusEnum("consent_status").notNull().default(gdprFieldDefaultValues.consentStatus),
   withdrawalDate: date('withdrawal_date'),
-  withdrawalMethod: pgWithdrawalMethodEnum(),
-  withdrawalReason: pgWithdrawalReasonEnum(),
+  withdrawalMethod: pgWithdrawalMethodEnum("withdrawal_method").notNull(),
+  withdrawalReason: pgWithdrawalReasonEnum("withdrawal_reason").notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 }, (table) => [
@@ -124,11 +124,9 @@ export const gdprConsentsSchema = z.object({
     .describe("Date when consent was withdrawn")
   ,
   withdrawalMethod: WithdrawalMethodEnum
-    .nullable()
     .describe("Method used to withdraw consent")
   ,
   withdrawalReason: WithdrawalReasonEnum
-    .nullable()
     .describe("Reason for withdrawing consent")
   ,
   createdAt: z.date()
@@ -146,12 +144,12 @@ export const gdprConsentsSchema = z.object({
 // --- GDPR Data Categories ---
 // ----------------------------
 
-export const pgCategoryEnum = pgEnum('gdpr_data_category', DataCategoriesEnum.options);
+export const pgCategoryEnum = pgEnum('gdpr_data_category_enum', DataCategoriesEnum.options);
 
 export const gdprDataCategories = pgTable('gdpr_data_categories', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   consentUuid: uuid('consent_uuid').notNull().references(() => gdprConsents.uuid, { onDelete: 'cascade' }),
-  category: pgCategoryEnum().notNull().default(DataCategoriesEnum.Enum.Health_data),
+  category: pgCategoryEnum("category").notNull().default(DataCategoriesEnum.Enum.Health_data),
 }, (table) => [
   unique('gdpr_data_categories_unique_per_consent').on(table.consentUuid, table.category),
 ]);
@@ -181,13 +179,13 @@ const dataRententionPoliciesFieldDefaultValues = {
   dataType: TrialDataTypeEnum.Enum.PersonalData,
 };
 
-export const pgDeletionTriggerEnum = pgEnum('deletion_trigger', DeletionTriggerEnum.options)
-export const pgDataTypeEnum = pgEnum('data_type', TrialDataTypeEnum.options);
+export const pgDeletionTriggerEnum = pgEnum('deletion_trigger_enum', DeletionTriggerEnum.options)
+export const pgDataTypeEnum = pgEnum('data_type_enum', TrialDataTypeEnum.options);
 
 export const dataRetentionPolicies = pgTable('data_retention_policies', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   trialUuid: uuid('trial_uuid').notNull().references(() => trials.uuid, { onDelete: 'cascade' }),
-  dataType: pgDataTypeEnum().notNull().default(dataRententionPoliciesFieldDefaultValues.dataType),
+  dataType: pgDataTypeEnum("data_type").notNull().default(dataRententionPoliciesFieldDefaultValues.dataType),
   retentionPeriodYears: integer('retention_period_years').notNull(),
   deletionTrigger: pgDeletionTriggerEnum('deletion_trigger').notNull().default(dataRententionPoliciesFieldDefaultValues.deletionTrigger),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
@@ -235,8 +233,8 @@ const dataSubjectRequestsFieldDefaultValues = {
   requestType: DataSubjectRequestTypeEnum.Enum.Access,
 }
 
-export const pgDataSubjectRequestTypeEnum = pgEnum('data_subject_request_type', DataSubjectRequestTypeEnum.options);
-export const pgDataSubjectRequestStatusEnum = pgEnum('data_subject_request_status', DataSubjectRequestStatusEnum.options);
+export const pgDataSubjectRequestTypeEnum = pgEnum('data_subject_request_type_enum', DataSubjectRequestTypeEnum.options);
+export const pgDataSubjectRequestStatusEnum = pgEnum('data_subject_request_status_enum', DataSubjectRequestStatusEnum.options);
 
 
 
@@ -263,8 +261,8 @@ export type DataSubjectRequestResponseData = z.infer<typeof DataSubjectRequestRe
 export const dataSubjectRequests = pgTable('data_subject_requests', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   patientUuid: uuid('patient_uuid').notNull().references(() => patients.uuid, { onDelete: 'cascade' }),
-  requestType: pgDataSubjectRequestTypeEnum().notNull().default(dataSubjectRequestsFieldDefaultValues.requestType),
-  status: pgDataSubjectRequestStatusEnum().notNull().default(dataSubjectRequestsFieldDefaultValues.status),
+  requestType: pgDataSubjectRequestTypeEnum("request_type").notNull().default(dataSubjectRequestsFieldDefaultValues.requestType),
+  status: pgDataSubjectRequestStatusEnum("status").notNull().default(dataSubjectRequestsFieldDefaultValues.status),
   requestedAt: timestamp('requested_at', { withTimezone: true }).defaultNow(),
   processedAt: timestamp('processed_at', { withTimezone: true }),
   processedBy: uuid('processed_by').references(() => users.uuid, { onDelete: 'set null' }),
@@ -322,7 +320,7 @@ const gdprAnonymizationFieldDefaultValues = {
   anonymizationMethod: AnonymizationMethodEnum.Enum.DataPseudonymization,
 }
 
-export const pgAnonymizationMethodEnum = pgEnum('anonymization_method', AnonymizationMethodEnum.options);
+export const pgAnonymizationMethodEnum = pgEnum('anonymization_method_enum', AnonymizationMethodEnum.options);
 
 const AnonymizedFieldsSchema = z.object({
   fieldName: z.string(),
@@ -335,7 +333,7 @@ export const dataAnonymizationLog = pgTable('data_anonymization_log', {
   patientUuid: uuid('patient_uuid').notNull(),
   trialUuid: uuid('trial_uuid').notNull().references(() => trials.uuid, { onDelete: 'cascade' }),
   anonymizationDate: timestamp('anonymization_date', { withTimezone: true }).defaultNow(),
-  anonymizationMethod: pgAnonymizationMethodEnum().notNull().default(gdprAnonymizationFieldDefaultValues.anonymizationMethod),
+  anonymizationMethod: pgAnonymizationMethodEnum("anonymization_method").notNull().default(gdprAnonymizationFieldDefaultValues.anonymizationMethod),
   anonymizedFields: jsonb('anonymized_fields').$type<AnonymizedField>().notNull(),
   performedBy: uuid('performed_by').notNull().references(() => users.uuid, { onDelete: 'restrict' }),
 }, () => []);

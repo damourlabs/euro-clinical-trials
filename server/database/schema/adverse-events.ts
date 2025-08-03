@@ -22,16 +22,16 @@ const adverseEventFieldsDefaultsValues = {
   relatedToTrial: false,
 };
 
-export const pgAESeverityEnum = pgEnum('adverse_event_severity', AESeverityEnum.Enum);
-export const pgAEOutcomeEnum = pgEnum('adverse_event_outcome', AEOutcomeEnum.Enum);
+export const pgAESeverityEnum = pgEnum('adverse_event_severity_enum', AESeverityEnum.Enum);
+export const pgAEOutcomeEnum = pgEnum('adverse_event_outcome_enum', AEOutcomeEnum.Enum);
 
 export const adverseEvents = pgTable('adverse_events', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   patientUuid: uuid('patient_uuid').notNull().references(() => patients.uuid, { onDelete: 'cascade' }),
   description: text('description').notNull(),
   eventDate: date('event_date').notNull().default(sql`CURRENT_DATE`),
-  severity: pgAESeverityEnum().notNull().default(adverseEventFieldsDefaultsValues.severity),
-  outcome: pgAEOutcomeEnum().notNull().default(adverseEventFieldsDefaultsValues.outcome),
+  severity: pgAESeverityEnum("adverse_event_severity").notNull().default(adverseEventFieldsDefaultsValues.severity),
+  outcome: pgAEOutcomeEnum("adverse_event_outcome").notNull().default(adverseEventFieldsDefaultsValues.outcome),
   relatedToTrial: boolean('related_to_trial').notNull().default(adverseEventFieldsDefaultsValues.relatedToTrial),
   reportedAt: timestamp('reported_at', { withTimezone: true }).notNull().defaultNow(),
   resolvedAt: timestamp('resolved_at', { withTimezone: true }),

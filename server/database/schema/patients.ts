@@ -38,8 +38,8 @@ export const patients = pgTable('patients', {
   trialUuid: uuid('trial_uuid').notNull().references(() => trials.uuid, { onDelete: 'cascade' }),
   siteUuid: uuid('site_uuid').notNull().references(() => sites.uuid, { onDelete: 'cascade' }),
   subjectId: varchar('subject_id', { length: 50 }).notNull(),
-  status: pgPatientStatusEnum().notNull().default(patiensFieldDefaultValues.status),
-  consentStatus: pgConsentStatusEnum().notNull().default(patiensFieldDefaultValues.consentStatus),
+  status: pgPatientStatusEnum("status").notNull().default(patiensFieldDefaultValues.status),
+  consentStatus: pgConsentStatusEnum("consent_status").notNull().default(patiensFieldDefaultValues.consentStatus),
   dataCompleteness: decimal('data_completeness', { precision: 5, scale: 2 }).notNull().default(patiensFieldDefaultValues.dataCompleteness),
   enrollmentDate: date('enrollment_date').default(sql`CURRENT_DATE`),
   randomizationGroup: varchar('randomization_group', { length: 50 }).notNull().default(patiensFieldDefaultValues.randomizationGroup),
@@ -56,7 +56,7 @@ export const patients = pgTable('patients', {
 ]);
 
 
-export const PatientSchema = z.object({
+export const patientSchema = z.object({
   uuid: z.string()
     .uuid()
     .min(1, "Patient UUID is required")
@@ -279,7 +279,7 @@ export const PatientStatisticsSchema = z.object({
   patientsByStatus: z.record(PatientStatusEnum, z.number().int().min(0)).describe("Count of patients grouped by their current status in the trial"),
 });
 
-export type Patient = z.infer<typeof PatientSchema>;
+export type Patient = z.infer<typeof patientSchema>;
 export type Visit = z.infer<typeof VisitSchema>;
 export type VitalSigns = z.infer<typeof VitalSignsSchema>;
 export type PatientStatistics = z.infer<typeof PatientStatisticsSchema>;

@@ -21,8 +21,8 @@ export const auditFieldDefaultValues = {
   entityType: AuditEntityType.Enum.Trial,
 };
 
-export const pgAction = pgEnum('audit_action', AuditAction.options);
-export const pgEntityType = pgEnum('audit_entity_type', AuditEntityType.options);
+export const pgAction = pgEnum('audit_action_enum', AuditAction.options);
+export const pgEntityType = pgEnum('audit_entity_type_enum', AuditEntityType.options);
 
 const ValuesShapeSchema = z.object({}).catchall(z.unknown())
 const ValueChangesSchema = z.object({
@@ -38,8 +38,8 @@ export const auditLogs = pgTable('audit_logs', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   trialUuid: uuid('trial_uuid').references(() => trials.uuid, { onDelete: 'cascade' }).notNull(),
   userUuid: uuid('user_uuid').references(() => users.uuid, { onDelete: 'set null' }),
-  action: pgAction().notNull().default(auditFieldDefaultValues.action),
-  entityType: pgEntityType().notNull().default(auditFieldDefaultValues.entityType),
+  action: pgAction("audit_action").notNull().default(auditFieldDefaultValues.action),
+  entityType: pgEntityType("audit_entity_type").notNull().default(auditFieldDefaultValues.entityType),
   entityUuid: uuid('entity_uuid').notNull(),
   oldValues: jsonb('old_values').$type<ValuesShape>(),
   newValues: jsonb('new_values').$type<ValuesShape>(),
@@ -102,14 +102,14 @@ const auditLogDetailsDefaultValues = {
   legalBasis: LegalBasisEnum.Enum.Legal_obligation
 };
 
-export const pgLegalBasis = pgEnum('legal_basis', LegalBasisEnum.options);
+export const pgLegalBasis = pgEnum('legal_basis_enum', LegalBasisEnum.options);
 
 export const auditLogDetails = pgTable('audit_log_details', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   auditLogUuid: uuid('audit_log_uuid').notNull().unique().references(() => auditLogs.uuid, { onDelete: 'cascade' }),
   consentUuid: uuid('consent_uuid').references(() => gdprConsents.uuid, { onDelete: 'cascade' }),
   patientUuid: uuid('patient_uuid').references(() => patients.uuid, { onDelete: 'cascade' }),
-  legalBasis: pgLegalBasis().notNull().default(auditLogDetailsDefaultValues.legalBasis)
+  legalBasis: pgLegalBasis("legal_basis").notNull().default(auditLogDetailsDefaultValues.legalBasis)
 });
 
 

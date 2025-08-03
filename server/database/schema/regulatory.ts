@@ -27,8 +27,8 @@ export const regulatoryFieldDefaultValues = {
   severity: AESeverityEnum.Enum.Mild
 };
 
-export const pgApprovalType = pgEnum('approval_type', ApprovalTypeEnum.options);
-export const pgApprovalStatus = pgEnum('approval_status', ApprovalStatusEnum.options);
+export const pgApprovalType = pgEnum('approval_type_enum', ApprovalTypeEnum.options);
+export const pgApprovalStatus = pgEnum('approval_status_enum', ApprovalStatusEnum.options);
 
 // ----------------------------
 // --- Regulatory Approvals ---
@@ -132,7 +132,7 @@ export const complianceStatusSchema = z.object({
 // --- Protocol Deviations ---
 // ---------------------------
 
-export const pgSeverity = pgEnum('severity', AESeverityEnum.options)
+export const pgSeverity = pgEnum('severity_enum', AESeverityEnum.options)
 
 export const protocolDeviations = pgTable('protocol_deviations', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
@@ -141,7 +141,7 @@ export const protocolDeviations = pgTable('protocol_deviations', {
   siteUuid: uuid('site_uuid').references(() => sites.uuid, { onDelete: 'cascade' }),
   description: text('description').notNull(),
   dateOccurred: date('date_occurred').notNull().default(sql`CURRENT_DATE`),
-  severity: pgSeverity().notNull().default(regulatoryFieldDefaultValues.severity),
+  severity: pgSeverity("severity").notNull().default(regulatoryFieldDefaultValues.severity),
   impactAssessment: text('impact_assessment'),
   correctiveAction: text('corrective_action'),
   reportedAt: timestamp('reported_at', { withTimezone: true }).defaultNow(),

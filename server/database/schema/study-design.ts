@@ -26,11 +26,11 @@ const randomizationStrategiesDefaultValues = {
   type: RandomizationStrategyEnum.Enum.Simple,
 }
 
-export const pgRandomizationStrategy = pgEnum('randomization_strategy', RandomizationStrategyEnum.options);
+export const pgRandomizationStrategy = pgEnum('randomization_strategy_enum', RandomizationStrategyEnum.options);
 
 export const randomizationStrategies = pgTable('randomization_strategies', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
-  type: pgRandomizationStrategy().notNull().default(randomizationStrategiesDefaultValues.type),
+  type: pgRandomizationStrategy("randomization_strategy").notNull().default(randomizationStrategiesDefaultValues.type),
   allocationRatio: varchar('allocation_ratio', { length: 10 }),
   blockSize: integer('block_size'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
@@ -156,12 +156,12 @@ export const studyDesignFieldDefaultValues = {
   blinding: BlindingEnum.Enum.OpenLabel,
 };
 
-export const pgBlinding = pgEnum('blinding', BlindingEnum.options);
+export const pgBlinding = pgEnum('blinding_enum', BlindingEnum.options);
 
 export const studyDesigns = pgTable('study_designs', {
   uuid: uuid('uuid').primaryKey().defaultRandom(),
   trialUuid: uuid('trial_uuid').notNull().unique().references(() => trials.uuid, { onDelete: 'cascade' }),
-  blinding: pgBlinding().notNull().default(studyDesignFieldDefaultValues.blinding),
+  blinding: pgBlinding("blinding").notNull().default(studyDesignFieldDefaultValues.blinding),
   randomizationStrategyUuid: uuid('randomization_strategy_uuid').notNull().references(() => randomizationStrategies.uuid, { onDelete: 'restrict' }),
   primaryEndpointUuid: uuid('primary_endpoint_uuid').notNull().references(() => endpoints.uuid, { onDelete: 'restrict' }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

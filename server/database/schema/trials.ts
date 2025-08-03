@@ -41,8 +41,8 @@ export const trials = pgTable('trials', {
   description: text('description').notNull().default(trialsFieldDefaultValues.description),
   protocolUuid: uuid('protocol_uuid').notNull().references(() => protocols.uuid, { onDelete: 'set null' }),
   indication: varchar('indication', { length: 255 }).notNull().default(trialsFieldDefaultValues.indication),
-  phase: pgTrialPhaseEnum().notNull().default(trialsFieldDefaultValues.phase),
-  status: pgTrialStatusEnum().notNull().default(trialsFieldDefaultValues.status),
+  phase: pgTrialPhaseEnum("phase").notNull().default(trialsFieldDefaultValues.phase),
+  status: pgTrialStatusEnum("status").notNull().default(trialsFieldDefaultValues.status),
   sponsorUuid: uuid('sponsor_uuid').notNull().references(() => users.uuid, { onDelete: 'restrict' }),
   principalInvestigatorUuid: uuid('principal_investigator_uuid').notNull().references(() => users.uuid, { onDelete: 'restrict' }),
   startDate: date('start_date').notNull().default(sql`CURRENT_DATE`),
@@ -59,7 +59,7 @@ export const trials = pgTable('trials', {
   check('trials_title_not_empty', sql`LENGTH(TRIM(${table.title})) > 0`),
 ]);
 
-export const TrialSchema = z.object({
+export const trialSchema = z.object({
   uuid: z.string()
     .uuid()
     .describe("Unique identifier for the trial, automatically generated if not provided")
