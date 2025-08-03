@@ -1,4 +1,3 @@
-<!-- Example usage of the new unified ResourceCard system -->
 <template>
   <div class="space-y-8 mx-auto px-4 py-8 container">
     <div class="mb-8">
