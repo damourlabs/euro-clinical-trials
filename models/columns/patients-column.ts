@@ -11,7 +11,6 @@ import {
 import SimplePercentage from '~/components/common/field/SimplePercentage.vue'
 import { getHeaderClasses, getCellClasses, createResponsiveColumn } from '~/utils/table-helpers'
 
-// Mock fetch functions - replace with actual API calls
 async function fetchTrial(_uuid: string) {
     const trial = useTrialsStore().getById(_uuid)
 
