@@ -363,7 +363,7 @@ const samplePatient: Patient = {
   dataCompleteness: '90.11',
   siteUuid: 'site-123e4567-e89b-12d3-a456-426614174002',
   trialUuid: 'trial-123e4567-e89b-12d3-a456-426614174000',
-  createdAt: new Date();
+  createdAt: new Date()
 }
 
 const sampleSite: Site = {
