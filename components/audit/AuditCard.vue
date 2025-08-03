@@ -67,15 +67,20 @@ const previewFields = computed<CardField[]>(() =>
   ]
 )
 
-const mediumFields = computed<CardField[]>(() => 
-  props.customFields?.medium || [
+const mediumFields = computed<CardField[]>(() => {
+  if (props.customFields?.medium !== undefined) {
+    return props.customFields.medium
+  } 
+  
+  const defaultMeidumField: CardField[] = [
     { key: 'action', label: 'Action' },
     { key: 'entityType', label: 'Entity Type' },
     { key: 'entityUuid', label: 'Entity ID', type: 'uuid' },
     { key: 'userUuid', label: 'User ID', type: 'uuid' },
-    { key: 'timestamp', label: 'Timestamp', type: 'date' }
-  ]
-)
+    { key: 'timestamp', label: 'Timestamp', type: 'date' }] 
+
+    return defaultMeidumField
+})
 
 const detailFields = computed<CardField[]>(() => 
   props.customFields?.detail || [
