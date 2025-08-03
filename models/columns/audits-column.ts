@@ -75,12 +75,16 @@ export const AUDIT_COLUMNS: ColumnDef<AuditLog>[] = [
         accessorKey: 'entityUuid',
         header: () => h('div', { class: getHeaderClasses('center') }, 'Entity'),
         cell: ({ row }) => {
-            const entityUuid = row.getValue('entityUuid') as string
             const entityType = row.getValue('entityType') as string
+            const entityUuid = row.getValue('entityUuid') as string
             const detailUrl = getEntityDetailUrl(entityType, entityUuid)
 
             return h('div', { class: getCellClasses('center') },
-                h('span', {}, entityType)
+                h(UuidField, {
+                    uuid: entityUuid,
+                    shortDisplay: true,
+                    detailUrl: detailUrl
+                })
             )
         },
     }),
@@ -117,8 +121,8 @@ export const AUDIT_COLUMNS: ColumnDef<AuditLog>[] = [
                     entityUuid: trialUuid,
                     entityType: 'trial',
                     fetchFunction: fetchTrial,
-                    titleField: 'name',
-                    subtitleField: 'shortName',
+                    titleField: 'title',
+                    subtitleField: 'description',
                     statusField: 'status',
                     colorScheme: 'blue'
 
