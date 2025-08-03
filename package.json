@@ -2,6 +2,41 @@
   "name": "@damourlabs/euro-clinical-trials",
   "version": "0.25.1",
   "type": "module",
+  "description": "A Nuxt 3 application for visualizing and managing clinical trials data in Europe, built with modern web technologies.",
+  "author": {
+    "name": "Damour Labs",
+    "email": "contact@damourlabs.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/damourLabs/euro-clinical-trials.git"
+  },
+  "main": "./nuxt.config.ts",
+  "keywords": [
+    "nuxt",
+    "nuxt3",
+    "nuxtjs",
+    "vue",
+    "vue3",
+    "tailwindcss",
+    "shadcn-ui",
+    "reka-ui",
+    "drizzle-orm",
+    "pglite",
+    "electric-sql",
+    "pinia",
+    "clinical-trials",
+    "europe",
+    "healthcare",
+    "research",
+    "data-visualization",
+    "charts",
+    "gdpr",
+    "privacy",
+    "open-source",
+    "damourlabs"
+  ],
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
